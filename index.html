@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexCord | NexGen Chat</title>
+    <title>NexCord | Local System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -12,64 +12,64 @@
         .custom-scrollbar::-webkit-scrollbar { width: 3px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-msg { animation: fadeIn 0.4s cubic-bezier(0, 0, 0.2, 1) forwards; }
+        .animate-msg { animation: fadeIn 0.3s ease-out forwards; }
     </style>
 </head>
 <body class="flex h-screen">
 
     <div id="auth-screen" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#050505]">
-        <div class="glass p-12 rounded-[3rem] w-[400px] text-center border-white/10 shadow-2xl">
-            <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-blue-600/30 text-2xl font-black italic">N</div>
-            <h1 class="text-3xl font-black mb-2 tracking-tighter">NexCord</h1>
-            <p id="auth-msg" class="text-gray-500 mb-10 text-sm font-medium">Initialisation du système...</p>
+        <div class="glass p-10 rounded-[2.5rem] w-[420px] text-center border-white/10 shadow-2xl">
+            <h1 class="text-4xl font-black mb-2 tracking-tighter italic text-blue-500">NexCord</h1>
+            <p class="text-gray-500 mb-8 text-sm font-medium italic">Créez votre identité locale</p>
             
-            <button id="btn-google" class="hidden w-full bg-white text-black font-bold py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-200 transition-all active:scale-95 shadow-lg">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" class="w-5">
-                Continuer avec Google
-            </button>
-
-            <div id="loader" class="flex justify-center">
-                <div class="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <div class="space-y-4">
+                <div class="relative group">
+                    <img id="preview-pfp" src="https://ui-avatars.com/api/?name=?&background=0D8ABC&color=fff" class="w-20 h-20 mx-auto rounded-2xl object-cover mb-4 border-2 border-white/5 group-hover:border-blue-500 transition-all cursor-pointer">
+                    <input type="file" id="input-pfp" class="hidden" accept="image/*">
+                    <p class="text-[10px] text-gray-600 uppercase font-bold mb-4">Cliquez pour changer la photo</p>
+                </div>
+                
+                <input type="text" id="reg-name" placeholder="Nom complet" class="w-full bg-white/5 p-4 rounded-xl outline-none border border-white/5 focus:border-blue-500/50 transition-all text-sm">
+                <input type="text" id="reg-user" placeholder="Nom d'utilisateur" class="w-full bg-white/5 p-4 rounded-xl outline-none border border-white/5 focus:border-blue-500/50 transition-all text-sm">
+                
+                <button id="btn-enter" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl mt-4 shadow-xl shadow-blue-600/20 transition-all active:scale-95 uppercase tracking-widest text-xs">
+                    Rejoindre le salon
+                </button>
             </div>
         </div>
     </div>
 
     <div id="main-ui" class="hidden flex h-screen w-full">
         <aside class="w-72 bg-[#080808] border-r border-white/5 flex flex-col">
-            <div class="p-6 h-16 border-b border-white/5 flex items-center justify-between">
-                <span class="font-black text-blue-500 italic tracking-tighter text-lg">NEXCORD</span>
-            </div>
+            <div class="p-6 h-16 border-b border-white/5 flex items-center font-black text-blue-500 italic tracking-tighter">NEXCORD</div>
             
-            <div class="p-4 text-[10px] font-bold text-gray-600 uppercase tracking-[0.2em]">Membres en ligne</div>
+            <div class="p-4 text-[10px] font-bold text-gray-600 uppercase tracking-widest">En ligne</div>
             <div id="users-list" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar"></div>
 
             <div class="p-4 bg-black/40 border-t border-white/5 flex items-center gap-3">
-                <img id="my-pfp" class="w-10 h-10 rounded-full object-cover border border-white/10">
+                <img id="my-pfp" class="w-10 h-10 rounded-full object-cover bg-gray-800">
                 <div class="flex-1 truncate">
-                    <p id="my-name" class="text-xs font-bold truncate text-gray-200">Pseudo</p>
-                    <div class="flex items-center gap-1.5 mt-0.5">
-                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                        <span class="text-[8px] text-gray-500 font-bold uppercase tracking-widest">Connecté</span>
-                    </div>
+                    <p id="my-name" class="text-xs font-bold truncate">Pseudo</p>
+                    <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span><span class="text-[8px] text-gray-500 font-bold uppercase tracking-widest italic">Actif</span></div>
                 </div>
+                <select id="status-select" class="bg-transparent text-[10px] text-gray-500 outline-none cursor-pointer">
+                    <option value="Libre" class="bg-black text-green-500">Libre</option>
+                    <option value="Occupé" class="bg-black text-red-500">Occupé</option>
+                    <option value="En appel" class="bg-black text-purple-500">En appel</option>
+                </select>
             </div>
         </aside>
 
         <main class="flex-1 flex flex-col bg-[#0a0a0a]">
             <header class="h-16 border-b border-white/5 flex items-center px-8 bg-black/10 backdrop-blur-md">
-                <div class="flex items-center gap-2">
-                    <span class="text-blue-500 font-bold text-xl">#</span>
-                    <span class="font-bold text-sm tracking-widest uppercase text-gray-400">Salon-Global</span>
-                </div>
+                <span class="text-blue-500 font-bold mr-2 text-xl italic">#</span><span class="font-bold text-xs uppercase tracking-widest text-gray-400">Salon-Global</span>
             </header>
-
             <div id="chat-box" class="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar"></div>
-
             <div class="px-8 pb-8">
                 <div id="typing-indicator" class="text-[10px] text-gray-600 h-4 mb-2 ml-4 italic"></div>
                 <div class="glass rounded-2xl flex items-center p-2 border-white/10 focus-within:border-blue-500/50 transition-all shadow-2xl">
-                    <input type="text" id="chat-input" autocomplete="off" placeholder="Envoyer un message sur NexCord..." class="flex-1 bg-transparent py-4 px-4 outline-none text-sm text-gray-200">
-                    <button id="btn-send" class="bg-blue-600 px-8 py-3 rounded-xl hover:bg-blue-500 transition-all text-xs font-bold uppercase tracking-widest active:scale-95">Envoyer</button>
+                    <input type="text" id="chat-input" placeholder="Envoyer un message..." class="flex-1 bg-transparent py-4 px-4 outline-none text-sm text-gray-200">
+                    <button id="btn-send" class="bg-blue-600 px-8 py-3 rounded-xl hover:bg-blue-500 transition-all text-xs font-bold uppercase">Envoyer</button>
                 </div>
             </div>
         </main>
@@ -77,10 +77,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, push, set, onChildAdded, onValue, serverTimestamp, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // CONFIGURATION CORRIGÉE
         const firebaseConfig = {
             apiKey: "AIzaSyDZUfpKI7Cby-H0Qy2046Ez3VP7MjS6qOE",
             authDomain: "jaster-8fdd4.firebaseapp.com",
@@ -88,71 +86,65 @@
             projectId: "jaster-8fdd4",
             storageBucket: "jaster-8fdd4.firebasestorage.app",
             messagingSenderId: "1074590705898",
-            appId: "1:1074590705898:web:df5c533cdd011d074c8f93",
-            measurementId: "G-HHVXCKFP3Q"
+            appId: "1:1074590705898:web:df5c533cdd011d074c8f93"
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getDatabase(app);
-        const provider = new GoogleAuthProvider();
+        let currentUser = null;
+        let base64Pfp = "https://ui-avatars.com/api/?name=User&background=random";
 
-        // --- GESTION DE LA REDIRECTION (FIX) ---
-        getRedirectResult(auth).then((result) => {
-            if (result) console.log("Login Redirect Success");
-        }).catch((error) => {
-            console.error("Redirect Error", error);
-            document.getElementById('auth-msg').innerText = "Erreur de connexion. Réessayez.";
-        });
-
-        // --- ÉCOUTE DE L'ÉTAT AUTH ---
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('main-ui').classList.remove('hidden');
-                startApp(user);
-            } else {
-                document.getElementById('loader').classList.add('hidden');
-                document.getElementById('btn-google').classList.remove('hidden');
-                document.getElementById('auth-msg').innerText = "Veuillez vous connecter";
-            }
-        });
-
-        // --- BOUTON LOGIN ---
-        document.getElementById('btn-google').onclick = () => {
-            document.getElementById('btn-google').classList.add('hidden');
-            document.getElementById('loader').classList.remove('hidden');
-            document.getElementById('auth-msg').innerText = "Ouverture de Google...";
-
-            // Mode intelligent : Popup pour local, Redirect pour web
-            if (window.location.protocol === 'file:') {
-                signInWithPopup(auth, provider).catch(() => signInWithRedirect(auth, provider));
-            } else {
-                signInWithRedirect(auth, provider);
-            }
+        // --- GESTION PHOTO DE PROFIL ---
+        document.getElementById('preview-pfp').onclick = () => document.getElementById('input-pfp').click();
+        document.getElementById('input-pfp').onchange = (e) => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                base64Pfp = reader.result;
+                document.getElementById('preview-pfp').src = base64Pfp;
+            };
+            if (file) reader.readAsDataURL(file);
         };
 
-        // --- LOGIQUE CORE ---
-        function startApp(user) {
-            document.getElementById('my-name').innerText = user.displayName;
-            document.getElementById('my-pfp').src = user.photoURL;
+        // --- CONNEXION ---
+        document.getElementById('btn-enter').onclick = async () => {
+            const name = document.getElementById('reg-name').value.trim();
+            const username = document.getElementById('reg-user').value.trim().toLowerCase();
 
-            // Presence en ligne
-            const myPresenceRef = ref(db, `online_users/${user.uid}`);
-            set(myPresenceRef, { name: user.displayName, pfp: user.photoURL });
-            onDisconnect(myPresenceRef).remove();
+            if (!name || !username) return alert("Veuillez remplir les champs !");
 
-            // Lire les messages
+            currentUser = { name, username, pfp: base64Pfp, status: "Libre" };
+            
+            // UI Update
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('main-ui').classList.remove('hidden');
+            document.getElementById('my-name').innerText = name;
+            document.getElementById('my-pfp').src = base64Pfp;
+
+            startApp();
+        };
+
+        function startApp() {
+            // Présence
+            const presenceRef = ref(db, `online_users/${currentUser.username}`);
+            set(presenceRef, currentUser);
+            onDisconnect(presenceRef).remove();
+
+            // Status
+            document.getElementById('status-select').onchange = (e) => {
+                set(ref(db, `online_users/${currentUser.username}/status`), e.target.value);
+            };
+
+            // Messages
             onChildAdded(ref(db, 'messages'), (snap) => {
                 const m = snap.val();
-                const time = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '--:--';
-                
+                const time = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
                 document.getElementById('chat-box').innerHTML += `
                     <div class="flex gap-4 animate-msg">
-                        <img src="${m.pfp}" class="w-10 h-10 rounded-xl object-cover border border-white/10 shadow-lg">
+                        <img src="${m.pfp}" class="w-10 h-10 rounded-xl object-cover border border-white/5 shadow-lg">
                         <div class="flex-1">
                             <div class="flex items-center gap-2 mb-1">
-                                <span class="text-blue-500 font-bold text-[10px] uppercase tracking-tighter">${m.author}</span>
+                                <span class="text-blue-500 font-extrabold text-[10px] uppercase tracking-tighter">${m.author}</span>
                                 <span class="text-[9px] text-gray-700 font-bold">${time}</span>
                             </div>
                             <p class="text-gray-300 text-sm leading-relaxed">${m.text}</p>
@@ -161,51 +153,56 @@
                 document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
             });
 
-            // Envoyer un message
+            // Envoi
             const send = () => {
                 const input = document.getElementById('chat-input');
-                if (input.value.trim() !== "") {
+                if (input.value.trim()) {
                     push(ref(db, 'messages'), {
-                        author: user.displayName,
-                        pfp: user.photoURL,
+                        author: currentUser.name,
+                        pfp: currentUser.pfp,
                         text: input.value,
                         timestamp: serverTimestamp()
                     });
                     input.value = "";
-                    remove(ref(db, `typing/${user.uid}`));
+                    remove(ref(db, `typing/${currentUser.username}`));
                 }
             };
-
             document.getElementById('btn-send').onclick = send;
             document.getElementById('chat-input').onkeypress = (e) => { if(e.key === 'Enter') send(); };
 
-            // Indicateur de frappe
+            // Typing
             document.getElementById('chat-input').oninput = () => {
-                set(ref(db, `typing/${user.uid}`), user.displayName);
-                setTimeout(() => remove(ref(db, `typing/${user.uid}`)), 3000);
+                set(ref(db, `typing/${currentUser.username}`), currentUser.name);
+                setTimeout(() => remove(ref(db, `typing/${currentUser.username}`)), 3000);
             };
 
             onValue(ref(db, 'typing'), (snap) => {
                 const typers = snap.val();
                 const el = document.getElementById('typing-indicator');
                 if (!typers) return el.innerText = "";
-                const names = Object.values(typers).filter(n => n !== user.displayName);
-                el.innerText = names.length > 0 ? names.join(', ') + " écrit..." : "";
+                const names = Object.values(typers).filter(n => n !== currentUser.name);
+                el.innerText = names.length > 0 ? names.join(', ') + " est en train d'écrire..." : "";
             });
 
-            // Liste des membres
+            // Membres
             onValue(ref(db, 'online_users'), (snap) => {
                 const users = snap.val();
                 const container = document.getElementById('users-list');
                 container.innerHTML = "";
                 for (let id in users) {
+                    const u = users[id];
+                    const s = u.status || "Libre";
+                    const dotColor = s === "Libre" ? "bg-green-500" : (s === "Occupé" ? "bg-red-500" : "bg-purple-500");
                     container.innerHTML += `
                         <div class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-all">
                             <div class="relative">
-                                <img src="${users[id].pfp}" class="w-8 h-8 rounded-lg object-cover">
-                                <div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-green-500 border-2 border-[#080808] rounded-full"></div>
+                                <img src="${u.pfp}" class="w-9 h-9 rounded-lg object-cover">
+                                <div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 ${dotColor} border-2 border-[#080808] rounded-full"></div>
                             </div>
-                            <span class="text-xs font-bold text-gray-300">${users[id].name}</span>
+                            <div class="truncate">
+                                <p class="text-[11px] font-bold text-gray-200">${u.name}</p>
+                                <p class="text-[8px] text-gray-600 uppercase font-black">${s}</p>
+                            </div>
                         </div>`;
                 }
             });
