@@ -3,117 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexCord Online</title>
+    <title>NexCord | Online</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f0f0f; color: #e5e7eb; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .msg-anim { animation: fadeIn 0.3s ease-out forwards; }
+    </style>
+</head>
+<body class="flex h-screen">
+
+    <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0a0a]">
+        <div class="glass p-8 rounded-2xl w-96 text-center shadow-2xl">
+            <h1 class="text-3xl font-bold mb-2 text-blue-500">NexCord</h1>
+            <p class="text-gray-400 text-sm mb-6">Connectez-vous au réseau</p>
+            <input type="text" id="login-input" placeholder="Votre pseudo..." 
+                   class="w-full bg-[#151515] p-3 rounded-lg border border-white/10 mb-4 outline-none focus:ring-2 ring-blue-500 transition-all">
+            <button id="btn-login" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-lg transition-all shadow-lg shadow-blue-900/20">
+                Rejoindre
+            </button>
+        </div>
+    </div>
+
+    <aside class="w-64 bg-[#111111] flex flex-col border-r border-white/5">
+        <div class="p-4 h-12 border-b border-white/5 flex items-center font-bold text-sm tracking-tight">
+            <span class="text-blue-500 mr-2">●</span> NexCord Home
+        </div>
+        
+        <div class="flex-1 overflow-y-auto custom-scrollbar p-3" id="user-list-container">
+            <p class="text-[10px] font-bold text-gray-500 uppercase px-2 mb-3 tracking-widest">Utilisateurs Online</p>
+            <div id="online-users" class="space-y-1">
+                </div>
+        </div>
+
+        <div class="p-3 bg-[#0d0d0d] flex items-center justify-between border-t border-white/5">
+            <div class="flex items-center gap-3">
+                <div id="my-avatar" class="w-9 h-9 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-full flex items-center justify-center font-bold text-white shadow-inner">?</div>
+                <div>
+                    <p id="my-username" class="text-xs font-bold leading-none mb-1 text-white">Pseudo</p>
+                    <p class="text-[10px] text-green-500 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> en ligne
+                    </p>
+                </div>
+            </div>
+            <button onclick="location.reload()" class="text-gray-500 hover:text-white transition-colors text-xs">Déconnexion</button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col bg-[#161616]">
+        <header class="h-12 border-b border-white/5 flex items-center px-6 bg-[#161616]/80 backdrop-blur-md sticky top-0 z-10">
+            <span class="text-gray-500 font-light text-xl mr-2">#</span>
+            <span class="font-semibold text-sm">salon-général</span>
+        </header>
+
+        <div id="chat-box" class="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+            </div>
+
+        <div class="px-6 pb-6">
+            <div class="glass rounded-xl flex items-center px-4 shadow-2xl border border-white/5 focus-within:border-blue-500/50 transition-all">
+                <input type="text" id="msg-input" placeholder="Écrire dans #salon-général..." 
+                       class="w-full bg-transparent py-4 outline-none text-sm text-gray-200">
+            </div>
+        </div>
+    </main>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, push, onChildAdded, set, onValue } 
+        import { getDatabase, ref, push, set, onChildAdded, onValue, serverTimestamp, onDisconnect } 
         from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // --- 1. REMPLACE AVEC TA CONFIG FIREBASE ICI ---
+        // TA CONFIGURATION FIREBASE
         const firebaseConfig = {
-            apiKey: "TON_API_KEY",
-            authDomain: "TON_PROJET.firebaseapp.com",
-            databaseURL: "https://TON_PROJET.firebaseio.com",
-            projectId: "TON_PROJET",
-            storageBucket: "TON_PROJET.appspot.com",
-            messagingSenderId: "12345",
-            appId: "1:12345:web:abcde"
+            apiKey: "AIzaSyDZUfpKI7Cby-H0Qy2046Ez3VP7MjS6qOE",
+            authDomain: "jaster-8fdd4.firebaseapp.com",
+            projectId: "jaster-8fdd4",
+            storageBucket: "jaster-8fdd4.firebasestorage.app",
+            messagingSenderId: "1074590705898",
+            appId: "1:1074590705898:web:df5c533cdd011d074c8f93",
+            measurementId: "G-HHVXCKFP3Q",
+            databaseURL: "https://jaster-8fdd4-default-rtdb.firebaseio.com" // Ajouté pour la Realtime DB
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        const messagesRef = ref(db, 'chat_messages');
-        const usersRef = ref(db, 'online_users');
 
-        // --- 2. LOGIQUE DE CONNEXION ---
-        window.login = function() {
+        let user = null;
+
+        // --- GESTION DE LA CONNEXION ---
+        document.getElementById('btn-login').onclick = () => {
             const name = document.getElementById('login-input').value.trim();
-            if(name.length < 2) return;
-
-            const userData = { name: name, status: 'online', lastSeen: Date.now() };
-            localStorage.setItem('nc_user', JSON.stringify(userData));
+            if (name.length < 2) return alert("Choisis un pseudo plus long !");
             
-            // Ajouter à la liste des utilisateurs en ligne
-            set(ref(db, 'online_users/' + name), userData);
-            
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('user-display').innerText = name;
+            user = { name: name, id: "u_" + Date.now() };
+            setupApp();
         };
 
-        // --- 3. ENVOYER UN MESSAGE ---
-        document.getElementById('msg-input').addEventListener('keypress', (e) => {
-            if(e.key === 'Enter' && e.target.value.trim() !== "") {
-                const user = JSON.parse(localStorage.getItem('nc_user'));
-                push(messagesRef, {
-                    author: user.name,
-                    content: e.target.value,
-                    timestamp: Date.now()
-                });
-                e.target.value = "";
-            }
-        });
+        function setupApp() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('my-username').innerText = user.name;
+            document.getElementById('my-avatar').innerText = user.name[0].toUpperCase();
 
-        // --- 4. RÉCEPTION EN TEMPS RÉEL ---
-        onChildAdded(messagesRef, (data) => {
-            const msg = data.val();
+            // S'enregistrer sur la Database
+            const userRef = ref(db, 'online_users/' + user.id);
+            set(userRef, { name: user.name, status: "online" });
+
+            // Se supprimer automatiquement à la fermeture de l'onglet
+            onDisconnect(userRef).remove();
+
+            initChat();
+            initUserList();
+        }
+
+        // --- GESTION DU CHAT ---
+        function initChat() {
+            const msgInput = document.getElementById('msg-input');
             const chatBox = document.getElementById('chat-box');
-            const time = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            
-            chatBox.innerHTML += `
-                <div class="flex gap-4 mb-4 animate-in fade-in">
-                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center font-bold">${msg.author[0]}</div>
-                    <div>
-                        <p class="text-sm"><span class="font-bold text-blue-400">${msg.author}</span> <span class="text-[10px] text-gray-500">${time}</span></p>
-                        <p class="text-gray-300 text-sm">${msg.content}</p>
+
+            msgInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && msgInput.value.trim() !== "") {
+                    push(ref(db, 'messages'), {
+                        author: user.name,
+                        text: msgInput.value,
+                        timestamp: serverTimestamp()
+                    });
+                    msgInput.value = "";
+                }
+            });
+
+            onChildAdded(ref(db, 'messages'), (snap) => {
+                const data = snap.val();
+                const time = data.timestamp ? new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+                
+                chatBox.innerHTML += `
+                    <div class="flex gap-4 msg-anim">
+                        <div class="w-10 h-10 bg-gray-800 border border-white/5 rounded-xl flex items-center justify-center font-bold text-blue-400">
+                            ${data.author[0].toUpperCase()}
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 mb-0.5">
+                                <span class="text-blue-400 font-semibold text-sm cursor-pointer hover:underline">${data.author}</span>
+                                <span class="text-[10px] text-gray-500 font-medium">${time}</span>
+                            </div>
+                            <p class="text-gray-300 text-sm leading-relaxed">${data.text}</p>
+                        </div>
                     </div>
-                </div>
-            `;
-            chatBox.scrollTop = chatBox.scrollHeight;
-        });
+                `;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
+        }
 
-        // --- 5. LISTE D'UTILISATEURS EN LIGNE ---
-        onValue(usersRef, (snapshot) => {
-            const users = snapshot.val();
-            const list = document.getElementById('friend-list');
-            list.innerHTML = "";
-            for(let id in users) {
-                list.innerHTML += `<div class="p-2 text-sm text-gray-400">🟢 ${users[id].name}</div>`;
-            }
-        });
+        // --- LISTE DES UTILISATEURS ---
+        function initUserList() {
+            onValue(ref(db, 'online_users'), (snap) => {
+                const users = snap.val();
+                const container = document.getElementById('online-users');
+                container.innerHTML = "";
+                for (let id in users) {
+                    container.innerHTML += `
+                        <div class="flex items-center gap-3 p-2 hover:bg-white/5 rounded-lg transition-all group">
+                            <div class="relative w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center text-[10px] font-bold border border-white/5">
+                                ${users[id].name[0].toUpperCase()}
+                                <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#111111] rounded-full"></div>
+                            </div>
+                            <span class="text-sm text-gray-400 group-hover:text-white transition-colors">${users[id].name}</span>
+                        </div>
+                    `;
+                }
+            });
+        }
     </script>
-
-    <style>
-        body { background-color: #101010; color: white; font-family: sans-serif; }
-        .glass { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
-    </style>
-</head>
-<body class="flex h-screen overflow-hidden">
-
-    <div id="login-screen" class="fixed inset-0 bg-black z-50 flex items-center justify-center">
-        <div class="glass p-8 rounded-xl w-80">
-            <h2 class="text-xl font-bold mb-4">NexCord Online</h2>
-            <input id="login-input" type="text" placeholder="Ton pseudo" class="w-full p-2 bg-gray-800 rounded mb-4 outline-none border border-white/10">
-            <button onclick="login()" class="w-full bg-blue-600 py-2 rounded font-bold">Rejoindre le Chat</button>
-        </div>
-    </div>
-
-    <aside class="w-64 bg-[#151515] flex flex-col border-r border-white/5">
-        <div class="p-4 font-bold border-b border-white/5">NexCord</div>
-        <div class="flex-1 p-4" id="friend-list">
-            </div>
-        <div class="p-4 bg-[#0a0a0a] flex items-center gap-2">
-            <div class="w-8 h-8 bg-blue-500 rounded-full"></div>
-            <span id="user-display" class="text-sm font-bold">---</span>
-        </div>
-    </aside>
-
-    <main class="flex-1 flex flex-col">
-        <div id="chat-box" class="flex-1 overflow-y-auto p-6 bg-[#1a1a1a]"></div>
-        <div class="p-4">
-            <input id="msg-input" type="text" placeholder="Envoyer un message..." class="w-full p-3 bg-[#252525] rounded-lg outline-none focus:ring-1 ring-blue-500">
-        </div>
-    </main>
-
 </body>
 </html>
