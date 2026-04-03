@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexCord | Live jaster-8fdd4</title>
+    <title>NexCord | v2.1 Fixed</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -11,73 +11,57 @@
         .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
         .custom-scrollbar::-webkit-scrollbar { width: 3px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .msg-anim { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .fade-in { animation: fadeIn 0.5s ease-in-out forwards; }
     </style>
 </head>
-<body class="flex h-screen text-gray-100">
+<body class="flex h-screen">
 
     <div id="auth-screen" class="fixed inset-0 z-[100] flex items-center justify-center bg-black">
         <div class="glass p-12 rounded-[3rem] w-[400px] text-center border-white/10 shadow-2xl">
-            <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-blue-600/20 text-2xl font-black">N</div>
+            <div id="auth-logo" class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-blue-600/20 text-2xl font-black">N</div>
             <h1 class="text-3xl font-black mb-2 tracking-tighter">NexCord</h1>
-            <p class="text-gray-500 mb-10 text-sm font-medium">Connexion via Google sécurisée</p>
-            <button id="btn-google" class="w-full bg-white text-black font-bold py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-200 transition-all active:scale-95">
+            <p id="auth-msg" class="text-gray-500 mb-10 text-sm font-medium italic">Vérification de la session...</p>
+            
+            <button id="btn-google" class="hidden w-full bg-white text-black font-bold py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-200 transition-all active:scale-95">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" class="w-5">
                 Continuer avec Google
             </button>
-            <p id="auth-status" class="mt-4 text-[10px] text-gray-600 uppercase font-bold tracking-widest hidden">Redirection...</p>
+            <div id="loader" class="flex justify-center"><div class="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div></div>
         </div>
     </div>
 
-    <aside class="w-72 bg-[#080808] border-r border-white/5 flex flex-col">
-        <div class="p-6 h-16 border-b border-white/5 flex items-center font-black text-blue-500 italic tracking-tighter">NEXCORD</div>
-        <div id="users-list" class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-2 text-sm text-gray-400">
+    <div id="main-ui" class="hidden flex h-screen w-full fade-in">
+        <aside class="w-72 bg-[#080808] border-r border-white/5 flex flex-col">
+            <div class="p-6 h-16 border-b border-white/5 flex items-center font-black text-blue-500 italic tracking-tighter">NEXCORD</div>
+            <div id="users-list" class="flex-1 overflow-y-auto p-4 space-y-2 text-sm custom-scrollbar"></div>
+            <div class="p-4 bg-black/40 border-t border-white/5 flex items-center gap-3">
+                <img id="my-pfp" class="w-10 h-10 rounded-full object-cover bg-gray-800">
+                <div class="flex-1 truncate">
+                    <p id="my-name" class="text-xs font-bold truncate">Pseudo</p>
+                    <span class="text-[8px] text-green-500 font-bold uppercase tracking-widest">Connecté</span>
+                </div>
             </div>
-        <div class="p-4 bg-black/40 border-t border-white/5 flex items-center gap-3">
-            <img id="my-pfp" class="w-10 h-10 rounded-full object-cover bg-gray-800">
-            <div class="flex-1 truncate">
-                <p id="my-name" class="text-sm font-bold truncate">Chargement...</p>
-                <span class="text-[9px] text-green-500 font-bold uppercase tracking-widest">Connecté</span>
-            </div>
-            <button onclick="document.getElementById('settings-modal').classList.remove('hidden')" class="text-gray-500 hover:text-white">⚙️</button>
-        </div>
-    </aside>
+        </aside>
 
-    <main class="flex-1 flex flex-col bg-[#0a0a0a]">
-        <header class="h-16 border-b border-white/5 flex items-center px-8 bg-black/10 backdrop-blur-md">
-            <span class="text-blue-500 font-bold mr-2">#</span>
-            <span class="font-bold text-sm">salon-principal</span>
-        </header>
-        <div id="chat-box" class="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar"></div>
-        <div class="px-8 pb-8">
-            <div id="typing-indicator" class="text-[10px] text-gray-600 h-4 mb-2 ml-4 italic"></div>
-            <div class="glass rounded-2xl flex items-center p-2 border-white/10 focus-within:border-blue-500/50 transition-all shadow-2xl">
-                <label class="p-3 hover:bg-white/5 rounded-xl cursor-pointer">
-                    ➕<input type="file" id="chat-file" class="hidden" accept="image/*">
-                </label>
-                <input type="text" id="chat-input" placeholder="Envoyer un message..." class="flex-1 bg-transparent py-4 px-2 outline-none text-sm">
-                <button id="btn-send" class="bg-blue-600 px-6 py-3 rounded-xl hover:bg-blue-500 transition-all text-xs font-bold uppercase tracking-widest">Envoyer</button>
+        <main class="flex-1 flex flex-col bg-[#0a0a0a]">
+            <header class="h-16 border-b border-white/5 flex items-center px-8 bg-black/10 backdrop-blur-md">
+                <span class="text-blue-500 font-bold mr-2">#</span><span class="font-bold text-sm uppercase tracking-widest text-gray-400">Salon-Global</span>
+            </header>
+            <div id="chat-box" class="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar"></div>
+            <div class="px-8 pb-8">
+                <div class="glass rounded-2xl flex items-center p-2 border-white/10 focus-within:border-blue-500/50 transition-all shadow-2xl">
+                    <input type="text" id="chat-input" placeholder="Écris quelque chose..." class="flex-1 bg-transparent py-4 px-4 outline-none text-sm text-gray-200">
+                    <button id="btn-send" class="bg-blue-600 px-6 py-3 rounded-xl hover:bg-blue-500 transition-all text-xs font-bold uppercase">Envoyer</button>
+                </div>
             </div>
-        </div>
-    </main>
-
-    <div id="settings-modal" class="hidden fixed inset-0 z-[110] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4">
-        <div class="glass w-full max-w-sm rounded-[2rem] p-8 border border-white/10">
-            <h2 class="text-xl font-black mb-6 uppercase tracking-tighter">Profil</h2>
-            <div class="space-y-4">
-                <textarea id="set-bio" class="w-full bg-white/5 p-4 rounded-xl outline-none border border-white/5 h-24 text-xs" placeholder="Ta bio ici..."></textarea>
-                <button id="save-bio" class="w-full bg-blue-600 py-4 rounded-xl font-bold text-xs uppercase tracking-widest">Enregistrer</button>
-                <button onclick="document.getElementById('settings-modal').classList.add('hidden')" class="w-full text-gray-600 text-[10px] font-bold uppercase">Fermer</button>
-            </div>
-        </div>
+        </main>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, push, set, onChildAdded, onValue, serverTimestamp, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-        import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+        import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, push, set, onChildAdded, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDZUfpKI7Cby-H0Qy2046Ez3VP7MjS6qOE",
@@ -92,100 +76,102 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
-        const storage = getStorage(app);
         const provider = new GoogleAuthProvider();
 
-        let user = null;
+        // 1. GÉRER LE RETOUR DE REDIRECTION IMMÉDIATEMENT
+        getRedirectResult(auth)
+            .then((result) => {
+                if (result) {
+                    console.log("Connecté via redirection !");
+                }
+            })
+            .catch((error) => {
+                console.error("Erreur de redirection : ", error);
+                document.getElementById('auth-msg').innerText = "Erreur. Veuillez réessayer.";
+            });
 
-        // AUTHENTICATION PAR REDIRECTION (Plus stable pour localhost)
-        document.getElementById('btn-google').onclick = () => {
-            document.getElementById('auth-status').classList.remove('hidden');
-            signInWithRedirect(auth, provider);
-        };
-
-        // Gérer le retour de la redirection
-        getRedirectResult(auth).catch((error) => console.error("Erreur redirection:", error));
-
-        onAuthStateChanged(auth, (u) => {
-            if (u) {
-                user = u;
-                document.getElementById('auth-screen').style.display = 'none';
-                syncProfile();
-                initChat();
-                initMembres();
+        // 2. ÉCOUTER L'ÉTAT DE L'UTILISATEUR
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('main-ui').classList.remove('hidden');
+                initApp(user);
+            } else {
+                // Si pas de session, on montre le bouton
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('btn-google').classList.remove('hidden');
+                document.getElementById('auth-msg').innerText = "Connectez-vous pour continuer";
             }
         });
 
-        async function syncProfile() {
-            document.getElementById('my-name').innerText = user.displayName;
-            document.getElementById('my-pfp').src = user.photoURL;
-            onValue(ref(db, `users/${user.uid}`), (snap) => {
-                const data = snap.val() || {};
-                document.getElementById('set-bio').value = data.bio || "";
-                set(ref(db, `online_users/${user.uid}`), { name: user.displayName, pfp: user.photoURL, bio: data.bio || "" });
-            });
-        }
-
-        document.getElementById('save-bio').onclick = () => {
-            set(ref(db, `users/${user.uid}/bio`), document.getElementById('set-bio').value);
-            document.getElementById('settings-modal').classList.add('hidden');
+        // 3. ACTION DU BOUTON (Tentative Redirect -> Fallback Popup)
+        document.getElementById('btn-google').onclick = () => {
+            document.getElementById('btn-google').classList.add('hidden');
+            document.getElementById('loader').classList.remove('hidden');
+            document.getElementById('auth-msg').innerText = "Redirection vers Google...";
+            
+            // Si on est sur un fichier local (file://), Popup est parfois plus stable
+            if (window.location.protocol === 'file:') {
+                signInWithPopup(auth, provider).catch(e => {
+                    console.log("Popup bloqué, tentative redirection...");
+                    signInWithRedirect(auth, provider);
+                });
+            } else {
+                signInWithRedirect(auth, provider);
+            }
         };
 
-        function initChat() {
+        // 4. LOGIQUE DE L'APPLICATION
+        function initApp(user) {
+            document.getElementById('my-name').innerText = user.displayName;
+            document.getElementById('my-pfp').src = user.photoURL;
+
+            // Presence
+            set(ref(db, `online_users/${user.uid}`), {
+                name: user.displayName,
+                pfp: user.photoURL
+            });
+
+            // Chat Read
             onChildAdded(ref(db, 'messages'), (snap) => {
                 const m = snap.val();
-                const time = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
-                const content = m.type === 'image' ? `<img src="${m.url}" class="max-w-xs rounded-2xl mt-2 border border-white/10">` : `<p class="text-gray-300 text-sm">${m.text}</p>`;
-                
                 document.getElementById('chat-box').innerHTML += `
-                    <div class="flex gap-4 msg-anim">
-                        <img src="${m.pfp}" class="w-10 h-10 rounded-xl object-cover shadow-lg border border-white/5">
+                    <div class="flex gap-4 animate-msg">
+                        <img src="${m.pfp}" class="w-10 h-10 rounded-xl object-cover border border-white/10">
                         <div>
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="text-blue-500 font-bold text-[11px] uppercase">${m.author}</span>
-                                <span class="text-[9px] text-gray-700 font-bold">${time}</span>
-                            </div>
-                            ${content}
+                            <p class="text-blue-500 font-bold text-[10px] uppercase mb-1">${m.author}</p>
+                            <p class="text-gray-300 text-sm">${m.text}</p>
                         </div>
                     </div>`;
                 document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
             });
-        }
 
-        // ENVOI MESSAGE & IMAGE
-        const sendMsg = (data) => push(ref(db, 'messages'), { author: user.displayName, pfp: user.photoURL, timestamp: serverTimestamp(), ...data });
+            // Chat Write
+            const send = () => {
+                const el = document.getElementById('chat-input');
+                if(el.value.trim()){
+                    push(ref(db, 'messages'), {
+                        author: user.displayName,
+                        pfp: user.photoURL,
+                        text: el.value,
+                        timestamp: serverTimestamp()
+                    });
+                    el.value = "";
+                }
+            };
+            document.getElementById('btn-send').onclick = send;
+            document.getElementById('chat-input').onkeypress = (e) => { if(e.key === 'Enter') send(); };
 
-        document.getElementById('btn-send').onclick = () => {
-            const el = document.getElementById('chat-input');
-            if(el.value.trim()){ sendMsg({ text: el.value, type: 'text' }); el.value = ""; }
-        };
-
-        document.getElementById('chat-file').onchange = async (e) => {
-            const file = e.target.files[0];
-            if(!file) return;
-            const fileRef = sRef(storage, `chat/${Date.now()}`);
-            await uploadBytes(fileRef, file);
-            const url = await getDownloadURL(fileRef);
-            sendMsg({ url, type: 'image' });
-        };
-
-        function initMembres() {
+            // Users List
             onValue(ref(db, 'online_users'), (snap) => {
                 const users = snap.val();
                 const container = document.getElementById('users-list');
                 container.innerHTML = "";
-                for(let id in users) {
-                    const u = users[id];
+                for(let id in users){
                     container.innerHTML += `
-                        <div class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-all group">
-                            <div class="relative">
-                                <img src="${u.pfp}" class="w-9 h-9 rounded-lg object-cover border border-white/5 shadow-md">
-                                <div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-green-500 border-2 border-[#080808] rounded-full"></div>
-                            </div>
-                            <div class="truncate">
-                                <p class="text-xs font-bold text-gray-200">${u.name}</p>
-                                <p class="text-[9px] text-gray-600 truncate italic">${u.bio || 'NexCord User'}</p>
-                            </div>
+                        <div class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-all">
+                            <img src="${users[id].pfp}" class="w-8 h-8 rounded-lg object-cover">
+                            <span class="font-bold text-xs text-gray-300">${users[id].name}</span>
                         </div>`;
                 }
             });
