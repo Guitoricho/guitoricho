@@ -3,90 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexCord | Live Chat</title>
+    <title>NexCord Pro | jaster-8fdd4</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0f0f0f; color: #e5e7eb; font-family: 'Inter', sans-serif; overflow: hidden; }
+        body { background-color: #0d0d0d; color: #e5e7eb; font-family: 'Inter', sans-serif; overflow: hidden; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .msg-anim { animation: fadeIn 0.3s ease-out forwards; }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .status-libre { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+        .status-occupé { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
+        .status-appel { background: #a855f7; box-shadow: 0 0 8px #a855f7; }
     </style>
 </head>
 <body class="flex h-screen">
 
-    <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0a0a]">
-        <div class="glass p-10 rounded-3xl w-[400px] text-center shadow-2xl">
-            <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-600/30">
-                <span class="text-3xl font-bold text-white">N</span>
+    <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#070707]">
+        <div class="glass p-10 rounded-[2rem] w-[450px] shadow-2xl border border-white/10">
+            <h1 class="text-4xl font-black mb-2 text-center bg-gradient-to-r from-blue-500 to-indigo-400 bg-clip-text text-transparent italic">NexCord</h1>
+            <p class="text-gray-500 text-center text-sm mb-8">Créez votre profil pour rejoindre</p>
+            
+            <div class="space-y-4">
+                <input type="text" id="reg-name" placeholder="Nom complet" class="w-full bg-[#121212] p-4 rounded-xl border border-white/5 outline-none focus:ring-2 ring-blue-500/50 transition-all">
+                <input type="text" id="reg-user" placeholder="Nom d'utilisateur (unique)" class="w-full bg-[#121212] p-4 rounded-xl border border-white/5 outline-none focus:ring-2 ring-blue-500/50 transition-all">
+                <input type="password" id="reg-pass" placeholder="Mot de passe" class="w-full bg-[#121212] p-4 rounded-xl border border-white/5 outline-none focus:ring-2 ring-blue-500/50 transition-all">
+                <input type="text" id="reg-pfp" placeholder="URL Photo de profil (Optionnel)" class="w-full bg-[#121212] p-4 rounded-xl border border-white/5 outline-none focus:ring-2 ring-blue-500/50 transition-all text-xs">
+                
+                <button id="btn-join" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl mt-4 shadow-xl shadow-blue-600/20 transition-all active:scale-95">
+                    Entrer dans le réseau
+                </button>
             </div>
-            <h1 class="text-3xl font-bold mb-2 text-white tracking-tight">Bienvenue</h1>
-            <p class="text-gray-400 text-sm mb-8">Entrez un pseudo pour rejoindre le live.</p>
-            <input type="text" id="login-input" placeholder="Ton pseudo..." 
-                   class="w-full bg-[#151515] p-4 rounded-xl border border-white/10 mb-4 outline-none focus:ring-2 ring-blue-500 transition-all text-center">
-            <button id="btn-login" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:scale-[1.02] active:scale-95">
-                Rejoindre NexCord
-            </button>
         </div>
     </div>
 
-    <aside class="w-72 bg-[#111111] flex flex-col border-r border-white/5">
-        <div class="p-6 h-16 border-b border-white/5 flex items-center font-bold text-sm uppercase tracking-widest text-gray-400">
-            <span class="w-2 h-2 bg-blue-500 rounded-full mr-3 animate-pulse"></span> NexCord Home
+    <aside class="w-72 bg-[#0f0f0f] flex flex-col border-r border-white/5">
+        <div class="p-6 h-16 border-b border-white/5 flex items-center justify-between">
+            <span class="font-black text-blue-500 tracking-tighter">NEXCORD</span>
+            <select id="status-select" class="bg-transparent text-[10px] font-bold text-gray-500 outline-none cursor-pointer uppercase tracking-widest">
+                <option value="Libre" class="bg-black text-green-500">Libre</option>
+                <option value="Occupé" class="bg-black text-red-500">Occupé</option>
+                <option value="En appel" class="bg-black text-purple-500">En appel</option>
+            </select>
         </div>
         
-        <div class="flex-1 overflow-y-auto custom-scrollbar p-4">
-            <p class="text-[10px] font-bold text-gray-500 uppercase px-2 mb-4 tracking-widest">Membres en ligne</p>
-            <div id="online-users" class="space-y-2">
-                </div>
-        </div>
+        <div id="online-users" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar"></div>
 
-        <div class="p-4 bg-[#0d0d0d] flex items-center justify-between border-t border-white/5">
-            <div class="flex items-center gap-3">
-                <div id="my-avatar" class="w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-full flex items-center justify-center font-bold text-white shadow-lg">?</div>
-                <div>
-                    <p id="my-username" class="text-sm font-bold text-white leading-none mb-1">Pseudo</p>
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                        <span class="text-[10px] text-gray-400 font-medium">Connecté</span>
-                    </div>
-                </div>
+        <div class="p-4 bg-[#0a0a0a] border-t border-white/5 flex items-center gap-3">
+            <div class="relative">
+                <img id="my-pfp-img" src="" class="w-11 h-11 rounded-full object-cover border border-white/10 hidden">
+                <div id="my-pfp-alt" class="w-11 h-11 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white text-lg">?</div>
+                <div id="my-status-dot" class="absolute bottom-0 right-0 status-dot status-libre border-2 border-black"></div>
             </div>
-            <button onclick="location.reload()" class="p-2 hover:bg-white/5 rounded-lg transition-colors" title="Se déconnecter">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-            </button>
+            <div class="flex-1 truncate">
+                <p id="my-display-name" class="text-sm font-bold text-white leading-none mb-1">Pseudo</p>
+                <p id="my-display-user" class="text-[10px] text-gray-500">@utilisateur</p>
+            </div>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col bg-[#161616]">
-        <header class="h-16 border-b border-white/5 flex items-center px-8 bg-[#161616]/90 backdrop-blur-md">
-            <div class="flex items-center gap-3">
-                <span class="text-gray-500 font-light text-2xl">#</span>
-                <span class="font-bold text-base">salon-général</span>
-            </div>
+    <main class="flex-1 flex flex-col bg-[#121212]">
+        <header class="h-16 border-b border-white/5 flex items-center px-8 bg-[#121212]/80 backdrop-blur-md z-10">
+            <span class="text-blue-500 font-bold text-xl mr-2">#</span>
+            <span class="font-bold text-sm tracking-tight">salon-général</span>
         </header>
 
-        <div id="chat-box" class="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar">
-            </div>
+        <div id="chat-box" class="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar"></div>
 
-        <div class="px-8 pb-8">
-            <div class="glass rounded-2xl flex items-center px-6 shadow-2xl border border-white/5 focus-within:ring-1 ring-blue-500/50 transition-all">
-                <input type="text" id="msg-input" placeholder="Envoyer un message dans #salon-général..." 
-                       class="w-full bg-transparent py-5 outline-none text-sm text-gray-200 placeholder:text-gray-600">
+        <div class="px-8 pb-4">
+            <div id="typing-indicator" class="text-[10px] text-gray-500 h-4 ml-2 mb-2 font-medium italic"></div>
+            
+            <div class="glass rounded-2xl flex items-center px-6 border border-white/5 focus-within:border-blue-500/50 transition-all shadow-2xl">
+                <input type="text" id="msg-input" placeholder="Tapez un message..." class="w-full bg-transparent py-5 outline-none text-sm text-gray-200">
             </div>
         </div>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, push, set, onChildAdded, onValue, serverTimestamp, onDisconnect } 
+        import { getDatabase, ref, push, set, onChildAdded, onValue, serverTimestamp, onDisconnect, remove } 
         from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // CONFIGURATION FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyDZUfpKI7Cby-H0Qy2046Ez3VP7MjS6qOE",
             authDomain: "jaster-8fdd4.firebaseapp.com",
@@ -99,86 +96,133 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        let user = null;
+        let typingTimeout = null;
 
-        let currentUser = null;
+        // --- AUTHENTIFICATION ---
+        document.getElementById('btn-join').onclick = async () => {
+            const name = document.getElementById('reg-name').value.trim();
+            const username = document.getElementById('reg-user').value.trim().toLowerCase();
+            const pass = document.getElementById('reg-pass').value;
+            const pfp = document.getElementById('reg-pfp').value.trim();
 
-        // --- CONNEXION ---
-        document.getElementById('btn-login').onclick = () => {
-            const name = document.getElementById('login-input').value.trim();
-            if (name.length < 2) return alert("Choisis un pseudo de plus de 2 caractères !");
+            if (!name || !username || !pass) return alert("Veuillez remplir les champs obligatoires !");
+
+            user = { name, username, pfp, status: "Libre" };
             
-            currentUser = { name: name, id: "u_" + Date.now() };
-            setupApp();
+            // Sauvegarder/Update le profil
+            const userRef = ref(db, 'users/' + username);
+            await set(userRef, user);
+
+            // Gérer la session online
+            const onlineRef = ref(db, 'online_users/' + username);
+            set(onlineRef, user);
+            onDisconnect(onlineRef).remove();
+
+            // UI Update
+            document.getElementById('auth-screen').classList.add('hidden');
+            updateMyProfileUI();
+            startApp();
         };
 
-        function setupApp() {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('my-username').innerText = currentUser.name;
-            document.getElementById('my-avatar').innerText = currentUser.name[0].toUpperCase();
-
-            // Gestion de la présence
-            const userRef = ref(db, 'online_users/' + currentUser.id);
-            set(userRef, { name: currentUser.name, status: "online" });
-            onDisconnect(userRef).remove();
-
-            initChat();
-            initUserList();
+        function updateMyProfileUI() {
+            document.getElementById('my-display-name').innerText = user.name;
+            document.getElementById('my-display-user').innerText = "@" + user.username;
+            if(user.pfp) {
+                document.getElementById('my-pfp-img').src = user.pfp;
+                document.getElementById('my-pfp-img').classList.remove('hidden');
+                document.getElementById('my-pfp-alt').classList.add('hidden');
+            } else {
+                document.getElementById('my-pfp-alt').innerText = user.name[0];
+            }
         }
 
-        // --- CHAT LOGIC ---
-        function initChat() {
-            const msgInput = document.getElementById('msg-input');
-            const chatBox = document.getElementById('chat-box');
+        // --- STATUS & TYPING ---
+        document.getElementById('status-select').onchange = (e) => {
+            const newStatus = e.target.value;
+            set(ref(db, `online_users/${user.username}/status`), newStatus);
+            
+            const dot = document.getElementById('my-status-dot');
+            dot.className = `absolute bottom-0 right-0 status-dot status-${newStatus.toLowerCase().replace(" ", "")} border-2 border-black`;
+        };
 
-            msgInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && msgInput.value.trim() !== "") {
-                    push(ref(db, 'messages'), {
-                        author: currentUser.name,
-                        text: msgInput.value,
-                        timestamp: serverTimestamp()
-                    });
-                    msgInput.value = "";
-                }
-            });
+        document.getElementById('msg-input').oninput = () => {
+            set(ref(db, `typing/${user.username}`), user.name);
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                remove(ref(db, `typing/${user.username}`));
+            }, 2000);
+        };
 
+        // --- LOGIQUE CHAT ---
+        function startApp() {
+            // Messages
             onChildAdded(ref(db, 'messages'), (snap) => {
                 const data = snap.val();
-                const time = data.timestamp ? new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '...';
+                const isMe = data.author === user.name;
+                const time = data.timestamp ? new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
                 
-                chatBox.innerHTML += `
-                    <div class="flex gap-5 msg-anim">
-                        <div class="w-12 h-12 bg-[#202020] border border-white/5 rounded-2xl flex items-center justify-center font-bold text-blue-500 shadow-md">
-                            ${data.author[0].toUpperCase()}
+                document.getElementById('chat-box').innerHTML += `
+                    <div class="flex gap-4 animate-fade-in group">
+                        <div class="w-10 h-10 rounded-xl overflow-hidden bg-blue-600 flex-shrink-0 flex items-center justify-center font-bold border border-white/5">
+                            ${data.pfp ? `<img src="${data.pfp}" class="w-full h-full object-cover">` : data.author[0]}
                         </div>
-                        <div class="flex-1">
-                            <div class="flex items-center gap-3 mb-1">
-                                <span class="text-blue-400 font-bold text-sm hover:underline cursor-pointer">${data.author}</span>
-                                <span class="text-[10px] text-gray-600 font-bold uppercase tracking-tighter">${time}</span>
+                        <div>
+                            <div class="flex items-center gap-2 mb-0.5">
+                                <span class="text-blue-400 font-bold text-sm">${data.author}</span>
+                                <span class="text-[10px] text-gray-600 font-bold">${time}</span>
                             </div>
-                            <p class="text-[#d1d1d1] text-[15px] leading-relaxed">${data.text}</p>
+                            <p class="text-gray-300 text-[14px] leading-relaxed">${data.text}</p>
                         </div>
                     </div>
                 `;
-                chatBox.scrollTop = chatBox.scrollHeight;
+                const box = document.getElementById('chat-box');
+                box.scrollTop = box.scrollHeight;
             });
-        }
 
-        // --- USER LIST LOGIC ---
-        function initUserList() {
+            document.getElementById('msg-input').onkeypress = (e) => {
+                if (e.key === 'Enter' && e.target.value.trim() !== "") {
+                    push(ref(db, 'messages'), {
+                        author: user.name,
+                        username: user.username,
+                        pfp: user.pfp,
+                        text: e.target.value,
+                        timestamp: serverTimestamp()
+                    });
+                    e.target.value = "";
+                    remove(ref(db, `typing/${user.username}`));
+                }
+            };
+
+            // Indicateur de frappe
+            onValue(ref(db, 'typing'), (snap) => {
+                const typers = snap.val();
+                const el = document.getElementById('typing-indicator');
+                if (!typers) return el.innerText = "";
+                const names = Object.values(typers).filter(n => n !== user.name);
+                el.innerText = names.length > 0 ? names.join(', ') + " est en train d'écrire..." : "";
+            });
+
+            // Liste des membres
             onValue(ref(db, 'online_users'), (snap) => {
                 const users = snap.val();
                 const container = document.getElementById('online-users');
                 container.innerHTML = "";
-                if (!users) return;
-
                 for (let id in users) {
+                    const u = users[id];
+                    const statusClass = u.status.toLowerCase().replace(" ", "");
                     container.innerHTML += `
-                        <div class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl transition-all cursor-default group">
-                            <div class="relative w-9 h-9 bg-[#1a1a1a] rounded-full flex items-center justify-center text-xs font-bold border border-white/5 text-gray-300">
-                                ${users[id].name[0].toUpperCase()}
-                                <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-[#111111] rounded-full"></div>
+                        <div class="flex items-center gap-3 group cursor-default">
+                            <div class="relative">
+                                <div class="w-9 h-9 rounded-full bg-[#1a1a1a] flex items-center justify-center text-xs font-bold border border-white/5 overflow-hidden text-gray-400">
+                                    ${u.pfp ? `<img src="${u.pfp}" class="w-full h-full object-cover">` : u.name[0]}
+                                </div>
+                                <div class="absolute -bottom-0.5 -right-0.5 status-dot status-${statusClass} border-2 border-[#0f0f0f]"></div>
                             </div>
-                            <span class="text-sm font-semibold text-gray-400 group-hover:text-white transition-colors">${users[id].name}</span>
+                            <div class="flex-1 truncate">
+                                <p class="text-xs font-bold text-gray-300 group-hover:text-white transition-colors">${u.name}</p>
+                                <p class="text-[9px] text-gray-500 uppercase tracking-tighter">${u.status}</p>
+                            </div>
                         </div>
                     `;
                 }
