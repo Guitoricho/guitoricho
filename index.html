@@ -1,164 +1,1905 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IA Chat - guitoricho</title>
-    <style>
-        :root {
-            --bg: #121212;
-            --card: #1e1e1e;
-            --primary: #007bff;
-            --text: #e0e0e0;
-        }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column; 
-            height: 100vh; 
-        }
-        header {
-            background: var(--card);
-            padding: 1rem;
-            text-align: center;
-            border-bottom: 1px solid #333;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-        #chat-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 15px;
-            line-height: 1.4;
-            white-space: pre-wrap;
-        }
-        .user {
-            align-self: flex-end;
-            background: var(--primary);
-            color: white;
-        }
-        .ai {
-            align-self: flex-start;
-            background: #333;
-        }
-        .input-area {
-            background: var(--card);
-            padding: 20px;
-            display: flex;
-            gap: 10px;
-            border-top: 1px solid #333;
-        }
-        input {
-            flex: 1;
-            padding: 12px;
-            border-radius: 5px;
-            border: 1px solid #444;
-            background: #252525;
-            color: white;
-            outline: none;
-        }
-        button {
-            padding: 10px 20px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        button:disabled {
-            background: #555;
-            cursor: not-allowed;
-        }
-        #loading {
-            font-size: 0.8rem;
-            color: #888;
-            display: none;
-            margin-left: 20px;
-            margin-bottom: 10px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shadow Monarch — Solo Leveling Idle</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-void: #03010a;
+    --bg-dark: #08041a;
+    --bg-panel: #0d0820;
+    --bg-card: #120d2a;
+    --border-glow: #4a1fc8;
+    --border-dim: #1e1240;
+    --accent-purple: #7b2fff;
+    --accent-blue: #1a8cff;
+    --accent-cyan: #00f5ff;
+    --accent-gold: #ffd700;
+    --accent-red: #ff3355;
+    --accent-shadow: #9b59b6;
+    --text-primary: #e8e0ff;
+    --text-secondary: #8878bb;
+    --text-dim: #4a3f6e;
+    --glow-purple: 0 0 20px #7b2fff88, 0 0 40px #4a1fc844;
+    --glow-cyan: 0 0 15px #00f5ff88;
+    --glow-gold: 0 0 20px #ffd70088;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg-void);
+    color: var(--text-primary);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Animated star background */
+  body::before {
+    content:'';
+    position:fixed;
+    inset:0;
+    background: 
+      radial-gradient(ellipse at 20% 50%, #1a0a3a22 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, #0a1a4a22 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 100%, #2a0a1a11 0%, transparent 50%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  #stars { position:fixed; inset:0; pointer-events:none; z-index:0; }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 10px;
+  }
+
+  /* HEADER */
+  header {
+    text-align: center;
+    padding: 18px 10px 10px;
+    position: relative;
+  }
+
+  header h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.2rem, 3vw, 2.2rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, #7b2fff, #00f5ff, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    letter-spacing: 2px;
+    animation: titlePulse 3s ease-in-out infinite;
+  }
+
+  @keyframes titlePulse {
+    0%,100% { filter: brightness(1); }
+    50% { filter: brightness(1.3) drop-shadow(0 0 20px #7b2fff); }
+  }
+
+  header p {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    letter-spacing: 4px;
+    margin-top: 4px;
+  }
+
+  /* SYSTEM NOTIFICATION */
+  #system-notification {
+    background: linear-gradient(135deg, #0d0820, #1a0d35);
+    border: 1px solid var(--accent-purple);
+    border-left: 3px solid var(--accent-cyan);
+    padding: 8px 16px;
+    margin: 8px 0;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    color: var(--accent-cyan);
+    box-shadow: var(--glow-cyan);
+    animation: notifFlicker 4s ease-in-out infinite;
+    border-radius: 2px;
+  }
+
+  @keyframes notifFlicker {
+    0%,90%,100% { opacity:1; }
+    95% { opacity:0.7; }
+  }
+
+  /* MAIN GRID */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr 260px;
+    grid-template-rows: auto auto auto;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  @media (max-width:900px) {
+    .main-grid { grid-template-columns: 1fr 1fr; }
+    .col-mid { grid-column: 1/-1; order:-1; }
+  }
+  @media (max-width:600px) {
+    .main-grid { grid-template-columns: 1fr; }
+  }
+
+  /* PANELS */
+  .panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-dim);
+    border-radius: 4px;
+    padding: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .panel::before {
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:2px;
+    background: linear-gradient(90deg, transparent, var(--accent-purple), var(--accent-cyan), transparent);
+    opacity: 0.6;
+  }
+
+  .panel-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 3px;
+    color: var(--accent-cyan);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-dim);
+  }
+
+  /* PLAYER STATS */
+  .player-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1rem;
+    color: var(--accent-gold);
+    text-shadow: var(--glow-gold);
+    margin-bottom: 4px;
+  }
+
+  .player-rank {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.65rem;
+    color: var(--accent-purple);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 4px 0;
+    font-size: 0.8rem;
+  }
+
+  .stat-label { color: var(--text-secondary); font-weight:500; }
+  .stat-val { 
+    color: var(--text-primary); 
+    font-family: 'Orbitron', monospace; 
+    font-size: 0.7rem;
+    font-weight:700;
+  }
+
+  /* XP BAR */
+  .xp-bar-wrap {
+    margin: 8px 0;
+  }
+  .xp-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    margin-bottom: 3px;
+    font-family: 'Orbitron', monospace;
+  }
+  .bar-track {
+    height: 6px;
+    background: #1a1030;
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid var(--border-dim);
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+    position: relative;
+  }
+  .bar-fill.xp { background: linear-gradient(90deg, #4a1fc8, #7b2fff, #00f5ff); box-shadow: 0 0 8px #7b2fff88; }
+  .bar-fill.hp { background: linear-gradient(90deg, #8b0000, #ff3355); }
+  .bar-fill.mp { background: linear-gradient(90deg, #001a8b, #1a8cff); }
+
+  /* GATE / HUNT AREA */
+  .gate-display {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 10px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gate-display::after {
+    content:'';
+    position:absolute;
+    inset:-50%;
+    background: conic-gradient(from 0deg, transparent 0%, #7b2fff11 20%, transparent 40%);
+    animation: gateRotate 8s linear infinite;
+    pointer-events:none;
+  }
+
+  @keyframes gateRotate { to { transform: rotate(360deg); } }
+
+  .gate-rank-badge {
+    display: inline-block;
+    font-family: 'Orbitron', monospace;
+    font-size: 2rem;
+    font-weight:900;
+    padding: 8px 20px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    position: relative;
+    z-index:1;
+  }
+
+  .gate-rank-badge.E { color:#aaa; border:2px solid #aaa; text-shadow: 0 0 10px #aaa; }
+  .gate-rank-badge.D { color:#4CAF50; border:2px solid #4CAF50; text-shadow: 0 0 10px #4CAF5088; }
+  .gate-rank-badge.C { color:#2196F3; border:2px solid #2196F3; text-shadow: 0 0 10px #2196F388; }
+  .gate-rank-badge.B { color:#9C27B0; border:2px solid #9C27B0; text-shadow: 0 0 10px #9C27B088; }
+  .gate-rank-badge.A { color:#FF9800; border:2px solid #FF9800; text-shadow: 0 0 10px #FF980088; }
+  .gate-rank-badge.S { color:#ffd700; border:2px solid #ffd700; text-shadow: 0 0 20px #ffd700; animation:sRankPulse 2s infinite; }
+  .gate-rank-badge.SS { color:#ff3355; border:2px solid #ff3355; text-shadow: 0 0 30px #ff3355; animation:ssRankPulse 1.5s infinite; }
+
+  @keyframes sRankPulse { 0%,100%{box-shadow:0 0 20px #ffd70044} 50%{box-shadow:0 0 40px #ffd700aa} }
+  @keyframes ssRankPulse { 0%,100%{box-shadow:0 0 20px #ff335544} 50%{box-shadow:0 0 60px #ff3355cc} }
+
+  .gate-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    position:relative;z-index:1;
+  }
+
+  .monster-display {
+    margin: 8px 0;
+    position:relative;z-index:1;
+  }
+
+  .monster-hp-bar {
+    height:8px;
+    background:#1a1030;
+    border-radius:4px;
+    border:1px solid var(--accent-red);
+    overflow:hidden;
+    margin:4px 0;
+  }
+  .monster-hp-fill {
+    height:100%;
+    background: linear-gradient(90deg, #8b0000, #ff3355, #ff6677);
+    border-radius:4px;
+    transition: width 0.2s;
+    box-shadow: 0 0 8px #ff335588;
+  }
+
+  .monster-name {
+    font-size:0.85rem;
+    color: var(--accent-red);
+    font-weight:600;
+  }
+
+  /* BUTTONS */
+  .btn {
+    display:block;
+    width:100%;
+    padding: 8px 12px;
+    border:none;
+    border-radius:3px;
+    cursor:pointer;
+    font-family: 'Orbitron', monospace;
+    font-size:0.6rem;
+    font-weight:700;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    transition: all 0.2s;
+    position:relative;
+    overflow:hidden;
+    margin: 3px 0;
+  }
+
+  .btn::after {
+    content:'';
+    position:absolute;
+    inset:0;
+    background: linear-gradient(transparent 50%, rgba(255,255,255,0.05));
+  }
+
+  .btn-hunt {
+    background: linear-gradient(135deg, #2a0a5e, #4a1fc8);
+    color: var(--accent-cyan);
+    border: 1px solid var(--accent-purple);
+    box-shadow: 0 0 15px #4a1fc844;
+  }
+  .btn-hunt:hover:not(:disabled) { 
+    box-shadow: 0 0 25px #7b2fff88, inset 0 0 15px #7b2fff22;
+    transform: translateY(-1px);
+  }
+
+  .btn-auto {
+    background: linear-gradient(135deg, #0a2a0a, #1a4a1a);
+    color: #4eff4e;
+    border: 1px solid #2a6a2a;
+  }
+  .btn-auto.active {
+    background: linear-gradient(135deg, #1a4a1a, #2a6a2a);
+    box-shadow: 0 0 15px #4eff4e44;
+    animation: autoPulse 1s ease-in-out infinite;
+  }
+  @keyframes autoPulse { 0%,100%{opacity:1} 50%{opacity:0.8} }
+
+  .btn-upgrade {
+    background: linear-gradient(135deg, #2a1a0a, #4a3a1a);
+    color: var(--accent-gold);
+    border: 1px solid #6a5a2a;
+  }
+  .btn-upgrade:hover:not(:disabled) { box-shadow: var(--glow-gold); }
+  .btn-upgrade:disabled { opacity:0.4; cursor:not-allowed; }
+
+  .btn-skill {
+    background: linear-gradient(135deg, #1a0a2a, #3a1a4a);
+    color: var(--accent-shadow);
+    border: 1px solid #5a2a7a;
+    text-align:left;
+    padding:8px 10px;
+  }
+  .btn-skill:hover:not(:disabled) { box-shadow: 0 0 15px #9b59b688; }
+  .btn-skill:disabled { opacity:0.3; cursor:not-allowed; }
+
+  .btn-small {
+    display:inline-block;
+    width:auto;
+    padding:4px 10px;
+    font-size:0.55rem;
+  }
+
+  /* SKILLS */
+  .skill-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    border-radius:3px;
+    padding:8px;
+    margin:4px 0;
+    position:relative;
+    transition: border-color 0.2s;
+  }
+  .skill-card.unlocked { border-color: #5a2a7a; }
+  .skill-card.equipped { border-color: var(--accent-purple); box-shadow: 0 0 10px #7b2fff44; }
+
+  .skill-name {
+    font-family:'Orbitron', monospace;
+    font-size:0.65rem;
+    color: var(--accent-shadow);
+    font-weight:700;
+  }
+  .skill-desc { font-size:0.7rem; color:var(--text-dim); margin:2px 0; }
+  .skill-cost { font-size:0.65rem; color:var(--accent-gold); }
+
+  /* SHADOW ARMY */
+  .shadow-card {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--bg-card);
+    border:1px solid var(--border-dim);
+    border-radius:3px;
+    padding:6px 8px;
+    margin:3px 0;
+    transition: all 0.2s;
+  }
+  .shadow-card:hover { border-color: var(--accent-purple); }
+  .shadow-icon { font-size:1.2rem; }
+  .shadow-info { flex:1; }
+  .shadow-name { font-size:0.75rem; font-weight:600; color:var(--text-primary); }
+  .shadow-stats { font-size:0.65rem; color:var(--text-secondary); font-family:'Orbitron',monospace; }
+  .shadow-count {
+    font-family:'Orbitron',monospace;
+    font-size:0.65rem;
+    color:var(--accent-purple);
+    background:#1a0a3a;
+    padding:2px 6px;
+    border-radius:2px;
+    border:1px solid var(--border-glow);
+  }
+
+  /* TABS */
+  .tabs {
+    display:flex;
+    gap:4px;
+    margin-bottom:8px;
+    flex-wrap:wrap;
+  }
+  .tab-btn {
+    background:var(--bg-card);
+    border:1px solid var(--border-dim);
+    color:var(--text-dim);
+    padding:5px 10px;
+    font-family:'Orbitron',monospace;
+    font-size:0.55rem;
+    letter-spacing:1px;
+    cursor:pointer;
+    border-radius:2px;
+    transition:all 0.2s;
+    flex:1;
+    min-width:60px;
+  }
+  .tab-btn.active {
+    background: linear-gradient(135deg, #1a0a3a, #2a1a4a);
+    border-color: var(--accent-purple);
+    color: var(--accent-cyan);
+    box-shadow: 0 0 10px #7b2fff44;
+  }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+
+  /* LOG */
+  #battle-log {
+    height:120px;
+    overflow-y:auto;
+    background:var(--bg-void);
+    border:1px solid var(--border-dim);
+    border-radius:3px;
+    padding:8px;
+    font-size:0.7rem;
+    font-family:'Rajdhani',sans-serif;
+    scrollbar-width:thin;
+    scrollbar-color: var(--accent-purple) transparent;
+  }
+  #battle-log::-webkit-scrollbar { width:4px; }
+  #battle-log::-webkit-scrollbar-thumb { background:var(--accent-purple); border-radius:2px; }
+
+  .log-entry { 
+    padding:1px 0; 
+    border-bottom:1px solid #1a0a3a;
+    animation: logAppear 0.3s ease;
+  }
+  @keyframes logAppear { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:none} }
+  .log-combat { color:#ff8866; }
+  .log-loot { color: var(--accent-gold); }
+  .log-system { color: var(--accent-cyan); }
+  .log-level { color: #00ff88; font-weight:700; }
+  .log-shadow { color: var(--accent-shadow); }
+  .log-death { color: var(--accent-red); font-weight:700; }
+
+  /* RESOURCES */
+  .res-grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+    margin-bottom:8px;
+  }
+  .res-item {
+    background:var(--bg-card);
+    border:1px solid var(--border-dim);
+    border-radius:3px;
+    padding:6px 8px;
+    text-align:center;
+  }
+  .res-icon { font-size:1rem; }
+  .res-name { font-size:0.55rem; color:var(--text-dim); font-family:'Orbitron',monospace; letter-spacing:1px; }
+  .res-amount { font-size:0.8rem; color:var(--text-primary); font-weight:700; font-family:'Orbitron',monospace; }
+
+  /* PRESTIGE */
+  .prestige-panel {
+    background: linear-gradient(135deg, #0a0020, #1a0030, #0a0020);
+    border:2px solid #4a1fc8;
+    border-radius:4px;
+    padding:12px;
+    text-align:center;
+    margin-top:8px;
+    box-shadow: 0 0 30px #4a1fc844;
+  }
+  .prestige-title {
+    font-family:'Cinzel Decorative',serif;
+    font-size:0.9rem;
+    color:var(--accent-gold);
+    text-shadow: var(--glow-gold);
+    margin-bottom:6px;
+  }
+
+  /* FLOATING DAMAGE */
+  .dmg-float {
+    position:fixed;
+    pointer-events:none;
+    font-family:'Orbitron',monospace;
+    font-weight:900;
+    font-size:1rem;
+    color:#ff8866;
+    text-shadow: 0 0 10px #ff386688;
+    z-index:999;
+    animation: floatUp 1s ease forwards;
+  }
+  .dmg-float.crit { color:#ffd700; font-size:1.3rem; text-shadow: var(--glow-gold); }
+  .dmg-float.heal { color:#4eff4e; }
+  .dmg-float.shadow-dmg { color: var(--accent-shadow); }
+
+  @keyframes floatUp {
+    0%  { opacity:1; transform:translateY(0) scale(1); }
+    100%{ opacity:0; transform:translateY(-60px) scale(0.7); }
+  }
+
+  /* QUEST */
+  .quest-item {
+    background:var(--bg-card);
+    border:1px solid var(--border-dim);
+    border-radius:3px;
+    padding:8px;
+    margin:4px 0;
+  }
+  .quest-name { font-size:0.75rem; font-weight:600; color:var(--accent-cyan); }
+  .quest-desc { font-size:0.7rem; color:var(--text-dim); margin:2px 0; }
+  .quest-prog { 
+    height:4px; 
+    background:#1a1030; 
+    border-radius:2px;
+    margin-top:4px;
+    overflow:hidden;
+  }
+  .quest-prog-fill { height:100%; background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan)); border-radius:2px; transition:width 0.3s; }
+
+  /* SHOP */
+  .shop-item {
+    background:var(--bg-card);
+    border:1px solid var(--border-dim);
+    border-radius:3px;
+    padding:8px;
+    margin:4px 0;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .shop-icon { font-size:1.3rem; }
+  .shop-info { flex:1; }
+  .shop-name { font-size:0.75rem; font-weight:600; color:var(--text-primary); }
+  .shop-effect { font-size:0.65rem; color:var(--text-dim); }
+  .shop-cost { font-size:0.7rem; color:var(--accent-gold); font-family:'Orbitron',monospace; }
+
+  /* ACHIEVEMENT */
+  .ach-badge {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--bg-card);
+    border:1px solid var(--border-dim);
+    border-radius:20px;
+    padding:4px 10px;
+    margin:3px;
+    font-size:0.65rem;
+    transition:all 0.3s;
+  }
+  .ach-badge.earned { border-color:var(--accent-gold); color:var(--accent-gold); box-shadow:var(--glow-gold); }
+
+  /* NOTIFICATION POPUP */
+  #popup-container {
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:1000;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    pointer-events:none;
+  }
+  .popup {
+    background: linear-gradient(135deg, #0d0820, #1a0d35);
+    border:1px solid var(--accent-purple);
+    border-left:3px solid var(--accent-gold);
+    padding:10px 16px;
+    border-radius:3px;
+    font-family:'Orbitron',monospace;
+    font-size:0.65rem;
+    color:var(--accent-gold);
+    box-shadow: 0 0 20px #7b2fff44;
+    animation: popupSlide 3s ease forwards;
+    max-width:280px;
+  }
+  @keyframes popupSlide {
+    0%  { opacity:0; transform:translateX(40px); }
+    10% { opacity:1; transform:translateX(0); }
+    80% { opacity:1; }
+    100%{ opacity:0; transform:translateX(40px); }
+  }
+
+  .col-left { grid-column:1; }
+  .col-mid  { grid-column:2; }
+  .col-right { grid-column:3; }
+
+  .mb-4 { margin-bottom:4px; }
+  .mb-8 { margin-bottom:8px; }
+  .text-center { text-align:center; }
+  .text-gold { color:var(--accent-gold); }
+  .text-cyan { color:var(--accent-cyan); }
+  .text-purple { color:var(--accent-purple); }
+  .text-sm { font-size:0.7rem; }
+  .text-xs { font-size:0.65rem; font-family:'Orbitron',monospace; }
+  .divider { border:none; border-top:1px solid var(--border-dim); margin:8px 0; }
+
+  /* ANIMATE LEVEL UP */
+  @keyframes levelFlash {
+    0%,100%{box-shadow:none}
+    50%{box-shadow:0 0 60px #ffd70088, inset 0 0 30px #ffd70022}
+  }
+
+  .gate-area-anim { animation: levelFlash 0.8s ease; }
+
+  /* Gear row */
+  .gear-grid {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:4px;
+  }
+  .gear-slot {
+    aspect-ratio:1;
+    background:var(--bg-void);
+    border:1px solid var(--border-dim);
+    border-radius:3px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:all 0.2s;
+    padding:4px;
+    font-size:0.5rem;
+    color:var(--text-dim);
+    text-align:center;
+  }
+  .gear-slot:hover { border-color:var(--accent-purple); }
+  .gear-slot.equipped-gear { border-color:var(--accent-gold); }
+  .gear-slot .gear-icon { font-size:1.2rem; }
+  .gear-slot .gear-name { font-size:0.55rem; color:var(--text-secondary); margin-top:2px; }
+
+  /* HP/MP tiny bars in header */
+  .vitals { margin-top:6px; }
+
+  /* Guild */
+  .guild-header {
+    background: linear-gradient(90deg, #1a0a3a, #0a0a2a, #1a0a3a);
+    border:1px solid var(--border-glow);
+    border-radius:3px;
+    padding:10px;
+    text-align:center;
+    margin-bottom:8px;
+  }
+</style>
 </head>
 <body>
 
-<header>Mon Assistant IA Personnel</header>
+<canvas id="stars"></canvas>
+<div id="popup-container"></div>
 
-<div id="chat-container">
-    <div class="message ai">Bonjour ! Je suis l'IA de guitoricho. Comment puis-je vous aider aujourd'hui ?</div>
-</div>
+<div class="container">
+  <header>
+    <h1>⚔ SHADOW MONARCH ⚔</h1>
+    <p>SOLO LEVELING — ARISE FROM THE ASHES</p>
+  </header>
 
-<div id="loading">L'IA réfléchit...</div>
+  <div id="system-notification">
+    ⬡ SYSTEM: You have been selected as a Player. Your journey to become the Shadow Monarch begins now. ⬡
+  </div>
 
-<div class="input-area">
-    <input type="text" id="user-input" placeholder="Posez une question..." onkeypress="if(event.key === 'Enter') sendMessage()">
-    <button id="send-btn" onclick="sendMessage()">Envoyer</button>
+  <div class="main-grid">
+
+    <!-- LEFT: Player Stats -->
+    <div class="col-left">
+      <div class="panel">
+        <div class="panel-title">▸ Hunter Status</div>
+        <div class="player-name" id="player-name">Sung Jin-Woo</div>
+        <div class="player-rank" id="player-rank">[ E-RANK HUNTER ]</div>
+
+        <div class="vitals">
+          <div class="xp-bar-wrap">
+            <div class="xp-label"><span>HP</span><span id="hp-txt">100/100</span></div>
+            <div class="bar-track"><div class="bar-fill hp" id="hp-bar" style="width:100%"></div></div>
+          </div>
+          <div class="xp-bar-wrap">
+            <div class="xp-label"><span>MP</span><span id="mp-txt">50/50</span></div>
+            <div class="bar-track"><div class="bar-fill mp" id="mp-bar" style="width:100%"></div></div>
+          </div>
+          <div class="xp-bar-wrap">
+            <div class="xp-label"><span>XP</span><span id="xp-txt">0/100</span></div>
+            <div class="bar-track"><div class="bar-fill xp" id="xp-bar" style="width:0%"></div></div>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="stat-row"><span class="stat-label">⚔ STR</span><span class="stat-val" id="stat-str">10</span></div>
+        <div class="stat-row"><span class="stat-label">🏃 AGI</span><span class="stat-val" id="stat-agi">10</span></div>
+        <div class="stat-row"><span class="stat-label">🎯 INT</span><span class="stat-val" id="stat-int">10</span></div>
+        <div class="stat-row"><span class="stat-label">🛡 END</span><span class="stat-val" id="stat-end">10</span></div>
+        <div class="stat-row"><span class="stat-label">✨ SEN</span><span class="stat-val" id="stat-sen">10</span></div>
+        <div class="stat-row"><span class="stat-label">💀 DMG</span><span class="stat-val" id="stat-dmg">10</span></div>
+        <div class="stat-row"><span class="stat-label">🔢 LVL</span><span class="stat-val" id="stat-level">1</span></div>
+        <div class="stat-row"><span class="stat-label">💀 Kills</span><span class="stat-val" id="stat-kills">0</span></div>
+
+        <hr class="divider">
+        <div class="panel-title">▸ Resources</div>
+        <div class="res-grid">
+          <div class="res-item"><div class="res-icon">💰</div><div class="res-name">GOLD</div><div class="res-amount" id="res-gold">0</div></div>
+          <div class="res-item"><div class="res-icon">💎</div><div class="res-name">CRYSTALS</div><div class="res-amount" id="res-crystals">0</div></div>
+          <div class="res-item"><div class="res-icon">🧿</div><div class="res-name">MANA STONES</div><div class="res-amount" id="res-mana">0</div></div>
+          <div class="res-item"><div class="res-icon">💀</div><div class="res-name">SOULS</div><div class="res-amount" id="res-souls">0</div></div>
+        </div>
+
+        <hr class="divider">
+        <div class="panel-title">▸ Stat Upgrades</div>
+        <button class="btn btn-upgrade" id="btn-str" onclick="buyStatUp('str')">⚔ +STR <span class="text-gold text-xs" id="cost-str">100g</span></button>
+        <button class="btn btn-upgrade" id="btn-agi" onclick="buyStatUp('agi')">🏃 +AGI <span class="text-gold text-xs" id="cost-agi">100g</span></button>
+        <button class="btn btn-upgrade" id="btn-int" onclick="buyStatUp('int')">🎯 +INT <span class="text-gold text-xs" id="cost-int">100g</span></button>
+        <button class="btn btn-upgrade" id="btn-end" onclick="buyStatUp('end')">🛡 +END <span class="text-gold text-xs" id="cost-end">100g</span></button>
+        <button class="btn btn-upgrade" id="btn-sen" onclick="buyStatUp('sen')">✨ +SEN <span class="text-gold text-xs" id="cost-sen">100g</span></button>
+      </div>
+    </div>
+
+    <!-- MID: Gate / Battle -->
+    <div class="col-mid">
+      <div class="panel" id="gate-panel">
+        <div class="panel-title">▸ Gate — Dungeon</div>
+        <div class="gate-display" id="gate-display">
+          <div class="gate-rank-badge E" id="gate-badge">E</div>
+          <div class="gate-name" id="gate-name">Abandoned Ruins</div>
+          <div class="monster-display">
+            <div class="monster-name" id="monster-name">Iron Golem</div>
+            <div class="xp-label mb-4"><span id="monster-hp-txt">100 HP</span><span id="monster-lvl-txt">Lv.1</span></div>
+            <div class="monster-hp-bar"><div class="monster-hp-fill" id="monster-hp-bar" style="width:100%"></div></div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
+          <button class="btn btn-hunt" onclick="hunt()">⚔ ATTACK</button>
+          <button class="btn btn-auto" id="btn-auto" onclick="toggleAuto()">⚡ AUTO OFF</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:8px;">
+          <button class="btn btn-skill btn-small" onclick="castSkill(0)" id="skill-btn-0">—</button>
+          <button class="btn btn-skill btn-small" onclick="castSkill(1)" id="skill-btn-1">—</button>
+          <button class="btn btn-skill btn-small" onclick="castSkill(2)" id="skill-btn-2">—</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px;">
+          <button class="btn btn-upgrade btn-small" onclick="changeGate(-1)">◀ PREV GATE</button>
+          <button class="btn btn-upgrade btn-small" onclick="changeGate(1)">NEXT GATE ▶</button>
+        </div>
+
+        <div id="battle-log"></div>
+      </div>
+
+      <div class="panel" style="margin-top:8px;">
+        <div class="panel-title">▸ System — Quests</div>
+        <div id="quest-container"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Skills / Shadow Army / Shop -->
+    <div class="col-right">
+      <div class="panel">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('skills')">SKILLS</button>
+          <button class="tab-btn" onclick="switchTab('shadows')">ARMY</button>
+          <button class="tab-btn" onclick="switchTab('shop')">SHOP</button>
+          <button class="tab-btn" onclick="switchTab('gear')">GEAR</button>
+          <button class="tab-btn" onclick="switchTab('achieve')">GLORY</button>
+        </div>
+
+        <!-- SKILLS -->
+        <div class="tab-content active" id="tab-skills">
+          <div class="panel-title">▸ Skill Tome</div>
+          <div id="skills-container"></div>
+        </div>
+
+        <!-- SHADOW ARMY -->
+        <div class="tab-content" id="tab-shadows">
+          <div class="panel-title">▸ Shadow Army</div>
+          <div class="stat-row">
+            <span class="stat-label">Army Strength</span>
+            <span class="stat-val text-purple" id="army-strength">0</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Auto DPS</span>
+            <span class="stat-val text-purple" id="army-dps">0/s</span>
+          </div>
+          <hr class="divider">
+          <div id="shadows-container"></div>
+        </div>
+
+        <!-- SHOP -->
+        <div class="tab-content" id="tab-shop">
+          <div class="panel-title">▸ Item Shop</div>
+          <div id="shop-container"></div>
+        </div>
+
+        <!-- GEAR -->
+        <div class="tab-content" id="tab-gear">
+          <div class="panel-title">▸ Equipment</div>
+          <div class="gear-grid" id="gear-container"></div>
+          <hr class="divider">
+          <div class="panel-title">▸ Inventory</div>
+          <div id="gear-inventory"></div>
+        </div>
+
+        <!-- ACHIEVEMENTS -->
+        <div class="tab-content" id="tab-achieve">
+          <div class="panel-title">▸ Hall of Glory</div>
+          <div id="achieve-container"></div>
+        </div>
+      </div>
+
+      <!-- PRESTIGE -->
+      <div class="prestige-panel" id="prestige-panel" style="display:none">
+        <div class="prestige-title">💀 ARISE 💀</div>
+        <div class="text-sm text-secondary mb-8">Become the Shadow Monarch.<br>Reset your journey with permanent power.</div>
+        <div class="stat-row mb-8"><span class="stat-label">Shadow Tokens</span><span class="stat-val text-gold" id="prestige-tokens">0</span></div>
+        <button class="btn btn-hunt" onclick="prestige()" id="prestige-btn">⚔ ARISE — PRESTIGE</button>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <script>
-    // --- CONFIGURATION ---
-    const API_KEY = "AIzaSyAobAeNVLRhW8VyT1etldKDUMFjnTdbi9o"; 
-    const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=" + API_KEY;
+// ══════════════════════════════════════════════════════════
+// STARS BACKGROUND
+// ══════════════════════════════════════════════════════════
+(function() {
+  const c = document.getElementById('stars');
+  const ctx = c.getContext('2d');
+  let stars = [];
+  function resize() { c.width=innerWidth; c.height=innerHeight; }
+  resize(); window.addEventListener('resize',resize);
+  for(let i=0;i<200;i++) stars.push({x:Math.random()*9999,y:Math.random()*9999,r:Math.random()*1.5,s:Math.random()*0.5+0.1});
+  function draw() {
+    ctx.clearRect(0,0,c.width,c.height);
+    stars.forEach(s=>{
+      ctx.beginPath();
+      ctx.arc(s.x%c.width,s.y%c.height,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${150+Math.random()*50},${100+Math.random()*50},${200+Math.random()*55},${0.3+Math.random()*0.4})`;
+      ctx.fill();
+      s.y-=s.s;
+      if(s.y<0) s.y=c.height;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
 
-    async function sendMessage() {
-        const input = document.getElementById('user-input');
-        const container = document.getElementById('chat-container');
-        const btn = document.getElementById('send-btn');
-        const loading = document.getElementById('loading');
-        
-        if (!input.value.trim()) return;
-        
-        const userText = input.value;
-        
-        // Add user message
-        addMessage(userText, 'user');
-        input.value = '';
-        
-        // UI State
-        btn.disabled = true;
-        loading.style.display = 'block';
-        container.scrollTop = container.scrollHeight;
+// ══════════════════════════════════════════════════════════
+// GAME STATE
+// ══════════════════════════════════════════════════════════
+const G = {
+  level: 1,
+  xp: 0,
+  xpMax: 100,
+  hp: 100,
+  hpMax: 100,
+  mp: 50,
+  mpMax: 50,
+  str: 10, agi: 10, int: 10, end: 10, sen: 10,
+  gold: 0,
+  crystals: 0,
+  manaStones: 0,
+  souls: 0,
+  kills: 0,
+  totalKills: 0,
+  gateIndex: 0,
+  monsterHp: 100,
+  monsterMaxHp: 100,
+  autoHunt: false,
+  autoTimer: null,
+  prestigeCount: 0,
+  prestigeTokens: 0,
+  equippedSkills: [null, null, null],
+  shadows: {},
+  gear: { weapon:null, armor:null, helmet:null, gloves:null, boots:null, ring:null },
+  inventory: [],
+  achievements: {},
+  questProgress: {},
+  notifications: [],
+};
 
-        try {
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: userText }] }]
-                })
-            });
+// ══════════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════════
+const RANKS = ['E','D','C','B','A','S','National Level','SS','Shadow Monarch'];
+const RANK_TITLES = {
+  1:'[ E-RANK HUNTER ]', 5:'[ D-RANK HUNTER ]', 10:'[ C-RANK HUNTER ]',
+  20:'[ B-RANK HUNTER ]', 35:'[ A-RANK HUNTER ]', 50:'[ S-RANK HUNTER ]',
+  70:'[ NATIONAL LEVEL ]', 90:'[ SS-RANK HUNTER ]', 100:'[ SHADOW MONARCH ]'
+};
 
-            const data = await response.json();
-            const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Désolé, j'ai rencontré une erreur.";
-            
-            addMessage(aiText, 'ai');
-        } catch (error) {
-            addMessage("Erreur de connexion : " + error.message, 'ai');
-        } finally {
-            btn.disabled = false;
-            loading.style.display = 'none';
-            container.scrollTop = container.scrollHeight;
-        }
+const GATES = [
+  { rank:'E', name:'Abandoned Ruins', monsters:[
+    {name:'Iron Golem',hp:80,xp:15,gold:[5,15],drop:0.1},
+    {name:'Stone Lizard',hp:60,xp:12,gold:[3,10],drop:0.08},
+    {name:'Swamp Toad',hp:50,xp:10,gold:[2,8],drop:0.07},
+  ]},
+  { rank:'E', name:'Goblin Cavern', monsters:[
+    {name:'Goblin Warrior',hp:120,xp:20,gold:[8,20],drop:0.12},
+    {name:'Goblin Shaman',hp:100,xp:25,gold:[10,25],drop:0.15},
+    {name:'Goblin King',hp:300,xp:60,gold:[30,60],drop:0.3,boss:true},
+  ]},
+  { rank:'D', name:'Underground Dungeon', monsters:[
+    {name:'Skeleton Knight',hp:200,xp:35,gold:[15,35],drop:0.15},
+    {name:'Vampire Bat',hp:150,xp:28,gold:[12,28],drop:0.12},
+    {name:'Shadow Wraith',hp:400,xp:80,gold:[50,90],drop:0.25,boss:true},
+  ]},
+  { rank:'D', name:'Tainted Forest', monsters:[
+    {name:'Poison Treant',hp:280,xp:45,gold:[20,45],drop:0.18},
+    {name:'Forest Banshee',hp:220,xp:38,gold:[18,38],drop:0.16},
+    {name:'Ancient Dryad',hp:600,xp:120,gold:[80,150],drop:0.35,boss:true},
+  ]},
+  { rank:'C', name:'Crimson Ruins', monsters:[
+    {name:'Blood Knight',hp:500,xp:70,gold:[40,80],drop:0.2},
+    {name:'Flame Imp',hp:400,xp:60,gold:[35,70],drop:0.18},
+    {name:'Infernal Drake',hp:1200,xp:200,gold:[150,300],drop:0.4,boss:true},
+  ]},
+  { rank:'C', name:'Sea of Magic', monsters:[
+    {name:'Mana Serpent',hp:700,xp:90,gold:[55,100],drop:0.22},
+    {name:'Arcane Golem',hp:900,xp:110,gold:[70,130],drop:0.25},
+    {name:'Magic Colossus',hp:2000,xp:350,gold:[250,500],drop:0.5,boss:true},
+  ]},
+  { rank:'B', name:'Demon Castle', monsters:[
+    {name:'Demon Soldier',hp:1500,xp:150,gold:[100,200],drop:0.25},
+    {name:'Hell Knight',hp:2000,xp:200,gold:[150,280],drop:0.3},
+    {name:'Demon Lord',hp:5000,xp:600,gold:[500,1000],drop:0.6,boss:true},
+  ]},
+  { rank:'A', name:'Dragon Lair', monsters:[
+    {name:'Wyvern Guard',hp:5000,xp:400,gold:[350,700],drop:0.3},
+    {name:'Dragon Acolyte',hp:7000,xp:500,gold:[450,900],drop:0.35},
+    {name:'Ancient Dragon',hp:20000,xp:2000,gold:[2000,4000],drop:0.7,boss:true},
+  ]},
+  { rank:'S', name:'Abyss Gate', monsters:[
+    {name:'Abyss Soldier',hp:30000,xp:1500,gold:[1500,3000],drop:0.4},
+    {name:'Monarch\'s Guard',hp:50000,xp:2500,gold:[2500,5000],drop:0.5},
+    {name:'Ant King Beru',hp:200000,xp:10000,gold:[10000,20000],drop:0.8,boss:true},
+  ]},
+  { rank:'SS', name:'Ruler\'s Domain', monsters:[
+    {name:'Ruler\'s Army',hp:500000,xp:10000,gold:[10000,30000],drop:0.5},
+    {name:'Antares\' Spawn',hp:1000000,xp:25000,gold:[30000,80000],drop:0.7},
+    {name:'Antares — Dragon King',hp:5000000,xp:100000,gold:[100000,500000],drop:1,boss:true},
+  ]},
+];
+
+const SKILLS = [
+  { id:'s_slash',   name:'Shadow Slash',    icon:'⚡', desc:'Quick strike — 2× DMG', cost:0, mpCost:0,  req:1,  dmgMult:2,    unlocked:true },
+  { id:'s_rend',    name:'Murderous Intent', icon:'🗡', desc:'3× DMG + fear',         cost:500, mpCost:10, req:5,  dmgMult:3,    unlocked:false },
+  { id:'s_domain',  name:'Shadow Domain',   icon:'💜', desc:'5× DMG AoE',             cost:2000, mpCost:25, req:15, dmgMult:5,   unlocked:false },
+  { id:'s_igris',   name:'Igris\' Slash',   icon:'🔱', desc:'8× DMG + lifesteal',     cost:8000, mpCost:40, req:30, dmgMult:8,   unlocked:false },
+  { id:'s_arise',   name:'ARISE',           icon:'💀', desc:'10× DMG + raise shadow', cost:30000, mpCost:60, req:50, dmgMult:10, unlocked:false, shadow:true },
+  { id:'s_monarch', name:'Shadow Monarch',  icon:'👑', desc:'20× DMG, all stats ×2',  cost:100000, mpCost:100, req:80, dmgMult:20, unlocked:false, monarch:true },
+];
+
+const SHADOW_TYPES = [
+  { id:'sh_soldier',  name:'Shadow Soldier',  icon:'💀', cost:{souls:5},   dps:1,  str:5,   maxCount:Infinity },
+  { id:'sh_knight',   name:'Shadow Knight',   icon:'⚔',  cost:{souls:20},  dps:5,  str:20,  maxCount:50, req:10 },
+  { id:'sh_mage',     name:'Shadow Mage',     icon:'🧿', cost:{souls:50},  dps:15, str:10,  maxCount:20, reqLevel:20 },
+  { id:'sh_igris',    name:'Igris the Crimson',icon:'🔱',cost:{souls:200}, dps:100,str:100, maxCount:1,  reqLevel:40 },
+  { id:'sh_beru',     name:'Beru the Ant King',icon:'🐜',cost:{souls:1000},dps:1000,str:500,maxCount:1, reqLevel:70 },
+  { id:'sh_tank',     name:'Shadow Tank',     icon:'🛡', cost:{souls:100}, dps:30, str:200, maxCount:5,  reqLevel:30 },
+];
+
+const SHOP_ITEMS = [
+  { id:'hp_potion',  name:'HP Potion',    icon:'🧪', desc:'Restore 50% HP', cost:{gold:50},  effect:'hp' },
+  { id:'mp_potion',  name:'Mana Crystal', icon:'💎', desc:'Restore 50% MP', cost:{gold:80},  effect:'mp' },
+  { id:'exp_scroll', name:'EXP Scroll',   icon:'📜', desc:'+25% XP for 60s', cost:{gold:200}, effect:'exp_boost' },
+  { id:'gold_pill',  name:'Gold Elixir',  icon:'✨', desc:'+50 Gold instantly',cost:{gold:30},effect:'instant_gold' },
+  { id:'soul_gem',   name:'Soul Gem',     icon:'🧿', desc:'+5 Souls',       cost:{gold:150}, effect:'souls' },
+  { id:'mana_core',  name:'Mana Core',    icon:'🔮', desc:'Perm +5 MP Max', cost:{crystals:1},effect:'mp_max' },
+  { id:'stat_elixir',name:'Stat Elixir',  icon:'⚗', desc:'All stats +2',   cost:{crystals:3},effect:'all_stats' },
+  { id:'shadow_key', name:'Shadow Key',   icon:'🗝', desc:'+20 Souls + skip boss', cost:{gold:1000},effect:'shadow_key' },
+];
+
+const GEAR_SLOTS = ['weapon','armor','helmet','gloves','boots','ring'];
+const GEAR_ICONS = { weapon:'⚔', armor:'🛡', helmet:'🪖', gloves:'🧤', boots:'👢', ring:'💍' };
+
+const GEAR_ITEMS = [
+  { id:'g_iron_sword',   name:'Iron Sword',     slot:'weapon', icon:'⚔', stats:{str:5},       reqLevel:1,  cost:300 },
+  { id:'g_steel_blade',  name:'Steel Blade',    slot:'weapon', icon:'⚔', stats:{str:15},      reqLevel:10, cost:2000 },
+  { id:'g_shadow_dagger',name:'Shadow Dagger',  slot:'weapon', icon:'🗡', stats:{str:30,agi:20},reqLevel:25,cost:8000 },
+  { id:'g_knight_armor', name:'Knight Armor',   slot:'armor',  icon:'🛡', stats:{end:20},      reqLevel:5,  cost:1000 },
+  { id:'g_dark_robe',    name:'Dark Robe',       slot:'armor',  icon:'🛡', stats:{int:25,mp:30},reqLevel:20,cost:6000 },
+  { id:'g_iron_helm',    name:'Iron Helm',       slot:'helmet', icon:'🪖', stats:{end:10},      reqLevel:3,  cost:500 },
+  { id:'g_agility_boots',name:'Swiftness Boots', slot:'boots',  icon:'👢', stats:{agi:20},      reqLevel:15, cost:3000 },
+  { id:'g_power_ring',   name:'Ring of Power',   slot:'ring',   icon:'💍', stats:{str:10,int:10},reqLevel:10,cost:2500 },
+  { id:'g_shadow_ring',  name:'Shadow Ring',     slot:'ring',   icon:'💍', stats:{str:20,sen:15,souls_mult:0.1},reqLevel:40,cost:20000 },
+  { id:'g_monarchs_blade',name:"Monarch's Blade",slot:'weapon', icon:'⚔', stats:{str:100,agi:50},reqLevel:70,cost:100000},
+];
+
+const ACHIEVEMENTS = [
+  { id:'first_blood', name:'First Blood',    icon:'🩸', desc:'Kill your first monster',        check:()=>G.totalKills>=1 },
+  { id:'kill_100',    name:'Century Slayer', icon:'💀', desc:'Kill 100 monsters',              check:()=>G.totalKills>=100 },
+  { id:'kill_1000',   name:'Thousand Blades',icon:'⚔', desc:'Kill 1000 monsters',             check:()=>G.totalKills>=1000 },
+  { id:'lv10',        name:'Awakened',        icon:'⚡', desc:'Reach level 10',                 check:()=>G.level>=10 },
+  { id:'lv50',        name:'S-Rank Hunter',  icon:'🌟', desc:'Reach level 50',                 check:()=>G.level>=50 },
+  { id:'lv100',       name:'Shadow Monarch', icon:'👑', desc:'Reach level 100',                check:()=>G.level>=100 },
+  { id:'first_shadow',name:'First Shadow',   icon:'🔮', desc:'Extract your first shadow',      check:()=>Object.values(G.shadows).some(v=>v>0) },
+  { id:'army_100',    name:'Shadow Legion',  icon:'💜', desc:'Have 100+ shadow soldiers',      check:()=>(G.shadows['sh_soldier']||0)>=100 },
+  { id:'rich',        name:'Gold Hoarder',   icon:'💰', desc:'Accumulate 10000 gold',          check:()=>G.gold>=10000 },
+  { id:'prestige_1',  name:'Arise, Again',   icon:'💀', desc:'Prestige once',                  check:()=>G.prestigeCount>=1 },
+  { id:'abyss_gate',  name:'Abyss Walker',   icon:'🌀', desc:'Unlock the S-Rank Abyss Gate',   check:()=>G.gateIndex>=8 },
+  { id:'igris',       name:'Igris the Loyal',icon:'🔱', desc:'Extract Igris',                  check:()=>(G.shadows['sh_igris']||0)>=1 },
+];
+
+const QUESTS = [
+  { id:'q_kill_10',  name:'Hunter\'s Trial',  desc:'Kill 10 monsters', goal:10, type:'kill',   reward:{gold:200, xp:50}},
+  { id:'q_level5',   name:'Growth',            desc:'Reach Level 5',   goal:5,  type:'level',  reward:{gold:500, crystals:1}},
+  { id:'q_kill_50',  name:'Veteran Hunter',   desc:'Kill 50 monsters', goal:50, type:'kill',   reward:{gold:1000,souls:10}},
+  { id:'q_gate_d',   name:'D-Rank Gate',       desc:'Clear a D-Rank Gate', goal:3, type:'gate_d', reward:{gold:2000,crystals:2}},
+  { id:'q_level20',  name:'Rising Hunter',    desc:'Reach Level 20',  goal:20, type:'level',  reward:{gold:5000,crystals:5}},
+  { id:'q_shadow10', name:'Army Begins',       desc:'Summon 10 shadows',goal:10,type:'shadow', reward:{gold:3000,souls:50}},
+  { id:'q_kill_500', name:'Monster Slayer',   desc:'Kill 500 monsters',goal:500,type:'kill',  reward:{crystals:10,gold:10000}},
+  { id:'q_level50',  name:'S-Rank Ascension', desc:'Reach Level 50',  goal:50, type:'level',  reward:{crystals:20,gold:50000}},
+];
+
+// Runtime state
+let currentMonster = null;
+let autoHuntInterval = null;
+let shadowDpsInterval = null;
+let questKillCount = 0;
+let gateDClears = 0;
+let expBoostTimer = 0;
+let equippedSkillList = [null, null, null];
+
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
+function init() {
+  spawnMonster();
+  renderSkills();
+  renderShadows();
+  renderShop();
+  renderGear();
+  renderAchievements();
+  renderQuests();
+  updateUI();
+  startShadowDps();
+
+  // Auto-save every 30s
+  setInterval(saveGame, 30000);
+  loadGame();
+}
+
+// ══════════════════════════════════════════════════════════
+// MONSTER LOGIC
+// ══════════════════════════════════════════════════════════
+function spawnMonster() {
+  const gate = GATES[G.gateIndex];
+  const mIdx = Math.floor(Math.random() * gate.monsters.length);
+  const template = gate.monsters[mIdx];
+  const lvlScale = 1 + G.level * 0.08 + G.gateIndex * 0.5;
+  currentMonster = {
+    ...template,
+    hp: Math.floor(template.hp * lvlScale),
+    maxHp: Math.floor(template.hp * lvlScale),
+    level: Math.max(1, Math.floor(G.level * 0.8 + G.gateIndex * 3)),
+  };
+  G.monsterHp = currentMonster.hp;
+  G.monsterMaxHp = currentMonster.maxHp;
+  updateMonsterUI();
+}
+
+function updateMonsterUI() {
+  const gate = GATES[G.gateIndex];
+  const pct = Math.max(0, G.monsterHp / G.monsterMaxHp * 100);
+  document.getElementById('monster-hp-bar').style.width = pct + '%';
+  document.getElementById('monster-hp-txt').textContent = fmtNum(G.monsterHp) + ' HP';
+  document.getElementById('monster-lvl-txt').textContent = 'Lv.' + currentMonster.level;
+  document.getElementById('monster-name').textContent = (currentMonster.boss ? '👑 ' : '') + currentMonster.name;
+  document.getElementById('gate-badge').textContent = gate.rank;
+  document.getElementById('gate-badge').className = 'gate-rank-badge ' + gate.rank;
+  document.getElementById('gate-name').textContent = gate.name;
+}
+
+// ══════════════════════════════════════════════════════════
+// COMBAT
+// ══════════════════════════════════════════════════════════
+function calcDmg(mult=1) {
+  const baseDmg = G.str * 1.5 + G.agi * 0.5 + G.level * 2;
+  const gearBonus = getGearStat('str') * 1.5;
+  const presBonus = 1 + G.prestigeCount * 0.15;
+  const isCrit = Math.random() < (0.05 + G.sen * 0.002 + getGearStat('agi') * 0.001);
+  let dmg = Math.floor((baseDmg + gearBonus) * mult * presBonus * (isCrit ? 2.5 : 1));
+  return { dmg, isCrit };
+}
+
+function hunt() {
+  if (!currentMonster) return;
+  if (G.hp <= 0) { heal(); return; }
+
+  const { dmg, isCrit } = calcDmg();
+  G.monsterHp -= dmg;
+
+  // Show floating damage
+  showFloatDmg(dmg, isCrit);
+
+  // Monster counter-attack
+  const monsterAtk = Math.max(1, Math.floor(currentMonster.level * 3 - G.end * 0.8 - getGearStat('end') * 0.5));
+  const dmgTaken = Math.max(0, monsterAtk - G.end);
+  G.hp = Math.max(0, G.hp - Math.floor(dmgTaken * (0.5 + Math.random())));
+
+  addLog(`⚔ ${isCrit?'💥 CRITICAL! ':''}<span class="log-combat">Hit ${currentMonster.name} for ${fmtNum(dmg)} dmg</span>`, 'combat');
+
+  if (G.monsterHp <= 0) {
+    killMonster();
+  } else if (G.hp <= 0) {
+    addLog(`💀 <span class="log-death">You were slain by ${currentMonster.name}! Recovering...</span>`, 'death');
+    G.hp = Math.floor(G.hpMax * 0.3);
+    setTimeout(spawnMonster, 1500);
+  }
+  updateUI();
+}
+
+function castSkill(slot) {
+  const skill = equippedSkillList[slot];
+  if (!skill) return;
+  if (G.mp < skill.mpCost) { addLog('⚠ Not enough MP!', 'system'); return; }
+
+  G.mp = Math.max(0, G.mp - skill.mpCost);
+  const { dmg, isCrit } = calcDmg(skill.dmgMult);
+  G.monsterHp -= dmg;
+
+  addLog(`${skill.icon} <span class="log-combat">${skill.name}! Hit for ${fmtNum(dmg)} DMG${isCrit?' (CRIT!)':''}</span>`, 'combat');
+  showFloatDmg(dmg, isCrit, skill.monarch);
+
+  if (skill.shadow && currentMonster && G.monsterHp <= 0) {
+    G.souls += 3;
+    addLog(`💀 <span class="log-shadow">Shadow extracted!</span>`, 'shadow');
+  }
+  if (skill.monarch) {
+    G.str = Math.floor(G.str * 1.01);
+    G.int = Math.floor(G.int * 1.01);
+    addLog(`👑 <span class="log-level">Shadow Monarch's power surges!</span>`, 'level');
+  }
+
+  if (G.monsterHp <= 0) killMonster();
+  updateUI();
+}
+
+function killMonster() {
+  const m = currentMonster;
+  G.kills++;
+  G.totalKills++;
+  questKillCount++;
+
+  // Loot
+  const goldEarned = Math.floor(m.gold[0] + Math.random()*(m.gold[1]-m.gold[0]));
+  const xpEarned   = Math.floor(m.xp * (1 + expBoostTimer > 0 ? 0.25 : 0) * (1 + G.prestigeCount * 0.1));
+  G.gold += goldEarned;
+
+  const gearRing = G.gear.ring && GEAR_ITEMS.find(g=>g.id===G.gear.ring);
+  const soulMult = gearRing?.stats?.souls_mult || 0;
+
+  if (Math.random() < m.drop) {
+    G.souls += Math.floor(1 + soulMult*10);
+    G.manaStones += 1;
+    if (Math.random() < 0.1) G.crystals += 1;
+    if (m.boss) {
+      G.souls += 5; G.crystals += 1;
+      if(G.gateIndex>=2) gateDClears++;
     }
+  }
 
-    function addMessage(text, side) {
-        const container = document.getElementById('chat-container');
-        const div = document.createElement('div');
-        div.className = `message ${side}`;
-        div.innerText = text;
-        container.appendChild(div);
+  gainXP(xpEarned);
+  addLog(`💰 <span class="log-loot">${m.name} slain! +${fmtNum(goldEarned)}g +${xpEarned}xp</span>`, 'loot');
+
+  checkAchievements();
+  checkQuests();
+  updateQuestProgress();
+
+  // Regen MP slightly
+  G.mp = Math.min(G.mpMax, G.mp + Math.floor(G.int * 0.1) + 1);
+
+  setTimeout(spawnMonster, 400);
+  updateUI();
+}
+
+function gainXP(amount) {
+  G.xp += amount;
+  while (G.xp >= G.xpMax) {
+    G.xp -= G.xpMax;
+    levelUp();
+  }
+}
+
+function levelUp() {
+  G.level++;
+  G.xpMax = Math.floor(100 * Math.pow(1.18, G.level));
+  G.hpMax = Math.floor(100 + G.level * 15 + G.end * 5);
+  G.mpMax = Math.floor(50 + G.level * 5 + G.int * 2);
+  G.hp = G.hpMax;
+  G.mp = G.mpMax;
+
+  // Auto stat gain
+  G.str += 2; G.agi += 1; G.int += 1; G.end += 1; G.sen += 1;
+
+  addLog(`🌟 <span class="log-level">LEVEL UP! Now Level ${G.level}!</span>`, 'level');
+  showPopup(`⚡ LEVEL UP! — LVL ${G.level}`);
+  document.getElementById('gate-panel').classList.add('gate-area-anim');
+  setTimeout(()=>document.getElementById('gate-panel').classList.remove('gate-area-anim'),800);
+
+  // Update rank
+  updateRank();
+  // Show prestige option at lv 100
+  if (G.level >= 100) document.getElementById('prestige-panel').style.display='block';
+  renderSkills();
+  checkAchievements();
+  checkQuests();
+}
+
+// ══════════════════════════════════════════════════════════
+// STATS
+// ══════════════════════════════════════════════════════════
+function statCost(stat) {
+  const base = G[stat] * 12;
+  return Math.floor(base * (1 + G.prestigeCount * 0.2));
+}
+
+function buyStatUp(stat) {
+  const cost = statCost(stat);
+  if (G.gold < cost) return;
+  G.gold -= cost;
+  G[stat] += 1;
+  G.hpMax = Math.floor(100 + G.level*15 + G.end*5);
+  G.mpMax = Math.floor(50 + G.level*5 + G.int*2);
+  updateUI();
+}
+
+// ══════════════════════════════════════════════════════════
+// AUTO HUNT
+// ══════════════════════════════════════════════════════════
+function toggleAuto() {
+  G.autoHunt = !G.autoHunt;
+  const btn = document.getElementById('btn-auto');
+  if (G.autoHunt) {
+    btn.textContent = '⚡ AUTO ON';
+    btn.classList.add('active');
+    autoHuntInterval = setInterval(()=>{ if(G.hp>0 && currentMonster) hunt(); }, Math.max(200, 800-G.agi*5));
+  } else {
+    btn.textContent = '⚡ AUTO OFF';
+    btn.classList.remove('active');
+    clearInterval(autoHuntInterval);
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// SHADOW ARMY DPS
+// ══════════════════════════════════════════════════════════
+function startShadowDps() {
+  shadowDpsInterval = setInterval(()=>{
+    const dps = calcArmyDps();
+    if (dps > 0 && G.monsterHp > 0 && currentMonster) {
+      G.monsterHp = Math.max(0, G.monsterHp - dps);
+      updateMonsterUI();
+      if (G.monsterHp <= 0) killMonster();
     }
+    // MP regen
+    G.mp = Math.min(G.mpMax, G.mp + Math.ceil(G.int*0.02 + 0.5));
+    // HP regen (slow)
+    if(G.hp < G.hpMax) G.hp = Math.min(G.hpMax, G.hp + Math.ceil(G.end*0.01 + 0.2));
+
+    if(expBoostTimer > 0) expBoostTimer--;
+    updateUI();
+  }, 1000);
+}
+
+function calcArmyDps() {
+  let dps = 0;
+  SHADOW_TYPES.forEach(s=>{
+    dps += (G.shadows[s.id]||0) * s.dps;
+  });
+  return Math.floor(dps * (1 + G.prestigeCount * 0.2));
+}
+
+function getArmyStrength() {
+  let str = 0;
+  SHADOW_TYPES.forEach(s=>{ str += (G.shadows[s.id]||0) * s.str; });
+  return str;
+}
+
+// ══════════════════════════════════════════════════════════
+// SHADOW EXTRACTION
+// ══════════════════════════════════════════════════════════
+function extractShadow(shadowId) {
+  const shadow = SHADOW_TYPES.find(s=>s.id===shadowId);
+  if (!shadow) return;
+  if (shadow.reqLevel && G.level < shadow.reqLevel) { showPopup('⚠ Level too low!'); return; }
+  if (shadow.cost.souls && G.souls < shadow.cost.souls) { showPopup('⚠ Not enough Souls!'); return; }
+  const cur = G.shadows[shadowId]||0;
+  if (shadow.maxCount !== Infinity && cur >= shadow.maxCount) { showPopup('⚠ Maximum reached!'); return; }
+
+  G.souls -= shadow.cost.souls||0;
+  G.shadows[shadowId] = cur + 1;
+  addLog(`💀 <span class="log-shadow">Shadow ${shadow.name} extracted! (×${G.shadows[shadowId]})</span>`, 'shadow');
+  showPopup(`💀 ${shadow.name} joins your army!`);
+  checkAchievements();
+  checkQuests();
+  renderShadows();
+  updateUI();
+}
+
+// ══════════════════════════════════════════════════════════
+// SKILL SYSTEM
+// ══════════════════════════════════════════════════════════
+function unlockSkill(skillId) {
+  const skill = SKILLS.find(s=>s.id===skillId);
+  if (!skill) return;
+  if (skill.unlocked) return;
+  if (G.level < skill.req) { showPopup('⚠ Level too low!'); return; }
+  if (G.gold < skill.cost) { showPopup('⚠ Not enough Gold!'); return; }
+  G.gold -= skill.cost;
+  skill.unlocked = true;
+  addLog(`${skill.icon} <span class="log-level">Skill unlocked: ${skill.name}!</span>`, 'level');
+  showPopup(`${skill.icon} ${skill.name} Unlocked!`);
+  renderSkills();
+  updateUI();
+}
+
+function equipSkill(skillId) {
+  const skill = SKILLS.find(s=>s.id===skillId);
+  if (!skill || !skill.unlocked) return;
+  const emptySlot = equippedSkillList.indexOf(null);
+  const alreadyEquipped = equippedSkillList.findIndex(s=>s&&s.id===skillId);
+  if (alreadyEquipped >= 0) {
+    equippedSkillList[alreadyEquipped] = null;
+    addLog(`${skill.icon} ${skill.name} unequipped`, 'system');
+  } else if (emptySlot >= 0) {
+    equippedSkillList[emptySlot] = skill;
+    addLog(`${skill.icon} ${skill.name} equipped to slot ${emptySlot+1}`, 'system');
+  } else {
+    showPopup('⚠ All skill slots full! Unequip one first.'); return;
+  }
+  renderSkills();
+  updateSkillBtns();
+}
+
+function updateSkillBtns() {
+  equippedSkillList.forEach((s,i)=>{
+    const btn = document.getElementById(`skill-btn-${i}`);
+    if(!btn) return;
+    if(s) { btn.textContent = s.icon+' '+s.name.substring(0,8); btn.disabled=false; }
+    else   { btn.textContent='—'; btn.disabled=true; }
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// SHOP
+// ══════════════════════════════════════════════════════════
+function buyShopItem(itemId) {
+  const item = SHOP_ITEMS.find(i=>i.id===itemId);
+  if (!item) return;
+  // Check cost
+  for (const [res, amt] of Object.entries(item.cost)) {
+    const current = res==='gold'?G.gold:res==='crystals'?G.crystals:G.manaStones;
+    if (current < amt) { showPopup(`⚠ Not enough ${res}!`); return; }
+  }
+  // Deduct
+  for (const [res, amt] of Object.entries(item.cost)) {
+    if(res==='gold') G.gold -= amt;
+    else if(res==='crystals') G.crystals -= amt;
+    else G.manaStones -= amt;
+  }
+  // Apply
+  switch(item.effect) {
+    case 'hp': G.hp = Math.min(G.hpMax, G.hp + Math.floor(G.hpMax*0.5)); break;
+    case 'mp': G.mp = Math.min(G.mpMax, G.mp + Math.floor(G.mpMax*0.5)); break;
+    case 'exp_boost': expBoostTimer += 60; showPopup('📜 EXP Boost: 60s!'); break;
+    case 'instant_gold': G.gold += 50; break;
+    case 'souls': G.souls += 5; break;
+    case 'mp_max': G.mpMax += 5; G.mp = Math.min(G.mpMax, G.mp+5); break;
+    case 'all_stats': G.str+=2;G.agi+=2;G.int+=2;G.end+=2;G.sen+=2; break;
+    case 'shadow_key': G.souls+=20; if(currentMonster)G.monsterHp=0; break;
+  }
+  addLog(`🛒 <span class="log-loot">Bought ${item.name}!</span>`, 'loot');
+  updateUI();
+}
+
+// ══════════════════════════════════════════════════════════
+// GEAR
+// ══════════════════════════════════════════════════════════
+function buyGear(gearId) {
+  const gear = GEAR_ITEMS.find(g=>g.id===gearId);
+  if (!gear) return;
+  if (G.level < gear.reqLevel) { showPopup('⚠ Level too low!'); return; }
+  if (G.gold < gear.cost) { showPopup('⚠ Not enough Gold!'); return; }
+  if (G.inventory.includes(gearId)) { showPopup('Already owned!'); return; }
+  G.gold -= gear.cost;
+  G.inventory.push(gearId);
+  addLog(`⚔ <span class="log-loot">Obtained ${gear.name}!</span>`, 'loot');
+  renderGear();
+  updateUI();
+}
+
+function equipGear(gearId) {
+  const gear = GEAR_ITEMS.find(g=>g.id===gearId);
+  if (!gear) return;
+  G.gear[gear.slot] = gearId;
+  addLog(`🛡 Equipped ${gear.name}`, 'system');
+  renderGear();
+  updateUI();
+}
+
+function getGearStat(stat) {
+  let total = 0;
+  Object.values(G.gear).forEach(gId=>{
+    if(!gId) return;
+    const g = GEAR_ITEMS.find(x=>x.id===gId);
+    if(g && g.stats[stat]) total += g.stats[stat];
+  });
+  return total;
+}
+
+// ══════════════════════════════════════════════════════════
+// GATE NAVIGATION
+// ══════════════════════════════════════════════════════════
+function changeGate(dir) {
+  const newIdx = G.gateIndex + dir;
+  if (newIdx < 0 || newIdx >= GATES.length) return;
+  if (dir > 0 && !canUnlockGate(newIdx)) {
+    showPopup('⚠ Requires higher level!'); return;
+  }
+  G.gateIndex = newIdx;
+  spawnMonster();
+  updateUI();
+}
+
+function canUnlockGate(idx) {
+  const minLevels = [1,3,8,15,25,38,55,70,85,95];
+  return G.level >= (minLevels[idx]||1);
+}
+
+// ══════════════════════════════════════════════════════════
+// RANK
+// ══════════════════════════════════════════════════════════
+function updateRank() {
+  let rank = '[ E-RANK HUNTER ]';
+  Object.entries(RANK_TITLES).forEach(([lvl,title])=>{
+    if(G.level >= parseInt(lvl)) rank = title;
+  });
+  document.getElementById('player-rank').textContent = rank;
+}
+
+// ══════════════════════════════════════════════════════════
+// PRESTIGE
+// ══════════════════════════════════════════════════════════
+function prestige() {
+  if (G.level < 100) { showPopup('⚠ Reach Level 100 first!'); return; }
+  G.prestigeCount++;
+  G.prestigeTokens++;
+  const savedShadows = {...G.shadows};
+  const savedGear = {...G.gear};
+  const savedInv = [...G.inventory];
+
+  G.level=1; G.xp=0; G.xpMax=100;
+  G.str=10+G.prestigeCount*3; G.agi=10+G.prestigeCount*2;
+  G.int=10+G.prestigeCount*2; G.end=10+G.prestigeCount*2; G.sen=10+G.prestigeCount*2;
+  G.gold=500; G.kills=0; G.gateIndex=0;
+  G.hp=G.hpMax=100+G.prestigeCount*20;
+  G.mp=G.mpMax=50+G.prestigeCount*10;
+
+  G.shadows = savedShadows;
+  G.gear = savedGear;
+  G.inventory = savedInv;
+
+  SKILLS.forEach(s=>{ if(s.id!=='s_slash') s.unlocked=false; });
+  equippedSkillList = [null,null,null];
+
+  showPopup(`💀 AROSE! Prestige ×${G.prestigeCount}! Power increased!`);
+  addLog(`👑 <span class="log-level">AROSE! The Shadow Monarch has returned! (×${G.prestigeCount})</span>`, 'level');
+  document.getElementById('prestige-panel').style.display='none';
+  spawnMonster();
+  renderSkills();
+  renderShadows();
+  updateUI();
+}
+
+// ══════════════════════════════════════════════════════════
+// QUESTS
+// ══════════════════════════════════════════════════════════
+function checkQuests() {
+  QUESTS.forEach(q=>{
+    if(G.questProgress[q.id]==='done') return;
+    let prog = 0;
+    switch(q.type) {
+      case 'kill':   prog = G.totalKills; break;
+      case 'level':  prog = G.level; break;
+      case 'gate_d': prog = gateDClears; break;
+      case 'shadow': prog = Object.values(G.shadows).reduce((a,b)=>a+b,0); break;
+    }
+    if (prog >= q.goal) {
+      G.questProgress[q.id] = 'done';
+      G.gold += q.reward.gold||0;
+      G.crystals += q.reward.crystals||0;
+      G.souls += q.reward.souls||0;
+      gainXP(q.reward.xp||0);
+      showPopup(`✅ Quest Complete: ${q.name}!`);
+      addLog(`📜 <span class="log-loot">Quest complete: ${q.name}! Rewards claimed.</span>`, 'loot');
+    }
+  });
+}
+
+function updateQuestProgress() {
+  renderQuests();
+}
+
+// ══════════════════════════════════════════════════════════
+// ACHIEVEMENTS
+// ══════════════════════════════════════════════════════════
+function checkAchievements() {
+  ACHIEVEMENTS.forEach(a=>{
+    if(!G.achievements[a.id] && a.check()) {
+      G.achievements[a.id] = true;
+      showPopup(`🏆 Achievement: ${a.name}!`);
+      addLog(`🏆 <span class="log-level">Achievement unlocked: ${a.name}!</span>`, 'level');
+      renderAchievements();
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// HEAL
+// ══════════════════════════════════════════════════════════
+function heal() {
+  const cost = Math.floor(G.hpMax * 0.1);
+  if(G.gold < cost) { showPopup('⚠ Not enough gold to heal!'); return; }
+  G.gold -= cost;
+  G.hp = G.hpMax;
+  addLog('🧪 <span class="log-system">Healed to full HP!</span>','system');
+  updateUI();
+}
+
+// ══════════════════════════════════════════════════════════
+// RENDER FUNCTIONS
+// ══════════════════════════════════════════════════════════
+function renderSkills() {
+  const c = document.getElementById('skills-container');
+  c.innerHTML = '';
+  SKILLS.forEach(skill=>{
+    const isEquipped = equippedSkillList.some(s=>s&&s.id===skill.id);
+    const canUnlock = G.level >= skill.req && G.gold >= skill.cost;
+    const div = document.createElement('div');
+    div.className = `skill-card${skill.unlocked?' unlocked':''}${isEquipped?' equipped':''}`;
+    div.innerHTML = `
+      <div class="skill-name">${skill.icon} ${skill.name} ${isEquipped?'<span class="text-cyan">[EQUIPPED]</span>':''}</div>
+      <div class="skill-desc">${skill.desc} | MP: ${skill.mpCost}</div>
+      <div class="skill-cost">Req Lv${skill.req} | Cost: ${fmtNum(skill.cost)}g</div>
+      ${skill.unlocked 
+        ? `<button class="btn btn-skill btn-small" onclick="equipSkill('${skill.id}')" style="margin-top:4px;">${isEquipped?'UNEQUIP':'EQUIP'}</button>`
+        : `<button class="btn btn-upgrade btn-small" onclick="unlockSkill('${skill.id}')" style="margin-top:4px;" ${canUnlock?'':'disabled'}>UNLOCK</button>`
+      }
+    `;
+    c.appendChild(div);
+  });
+}
+
+function renderShadows() {
+  const c = document.getElementById('shadows-container');
+  c.innerHTML = '';
+  SHADOW_TYPES.forEach(s=>{
+    const count = G.shadows[s.id]||0;
+    const locked = s.reqLevel && G.level < s.reqLevel;
+    const maxed = s.maxCount !== Infinity && count >= s.maxCount;
+    const div = document.createElement('div');
+    div.className='shadow-card';
+    div.innerHTML = `
+      <div class="shadow-icon">${s.icon}</div>
+      <div class="shadow-info">
+        <div class="shadow-name">${s.name}${maxed?' <span class="text-gold">[MAX]</span>':''}</div>
+        <div class="shadow-stats">DPS: ${s.dps} | STR: ${s.str} | Cost: ${s.cost.souls}💀</div>
+        ${locked?`<div class="skill-cost">Req Lv${s.reqLevel}</div>`:''}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <div class="shadow-count">×${count}</div>
+        <button class="btn btn-skill btn-small" onclick="extractShadow('${s.id}')" ${locked||maxed?'disabled':''}>ARISE</button>
+      </div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+function renderShop() {
+  const c = document.getElementById('shop-container');
+  c.innerHTML = '';
+  SHOP_ITEMS.forEach(item=>{
+    const costStr = Object.entries(item.cost).map(([k,v])=>`${v} ${k==='gold'?'💰':k==='crystals'?'💎':'🧿'}`).join(' ');
+    const div = document.createElement('div');
+    div.className='shop-item';
+    div.innerHTML = `
+      <div class="shop-icon">${item.icon}</div>
+      <div class="shop-info">
+        <div class="shop-name">${item.name}</div>
+        <div class="shop-effect">${item.desc}</div>
+        <div class="shop-cost">${costStr}</div>
+      </div>
+      <button class="btn btn-upgrade btn-small" onclick="buyShopItem('${item.id}')">BUY</button>
+    `;
+    c.appendChild(div);
+  });
+}
+
+function renderGear() {
+  // Slots
+  const gc = document.getElementById('gear-container');
+  gc.innerHTML = '';
+  GEAR_SLOTS.forEach(slot=>{
+    const equipped = G.gear[slot];
+    const gearItem = equipped ? GEAR_ITEMS.find(g=>g.id===equipped) : null;
+    const div = document.createElement('div');
+    div.className = 'gear-slot' + (gearItem?' equipped-gear':'');
+    div.innerHTML = `
+      <div class="gear-icon">${gearItem ? gearItem.icon : GEAR_ICONS[slot]}</div>
+      <div class="gear-name">${gearItem ? gearItem.name : slot.toUpperCase()}</div>
+    `;
+    gc.appendChild(div);
+  });
+
+  // Inventory list
+  const inv = document.getElementById('gear-inventory');
+  inv.innerHTML = '';
+  if(G.inventory.length === 0) { inv.innerHTML='<div class="text-sm" style="color:var(--text-dim);text-align:center;padding:8px;">No gear yet. Buy from the Shop!</div>'; return; }
+  G.inventory.forEach(gearId=>{
+    const gear = GEAR_ITEMS.find(g=>g.id===gearId);
+    if(!gear) return;
+    const isEquipped = G.gear[gear.slot]===gearId;
+    const statsStr = Object.entries(gear.stats).map(([k,v])=>`${k.toUpperCase()}+${v}`).filter(s=>!s.includes('souls')).join(' ');
+    const div = document.createElement('div');
+    div.className='shop-item';
+    div.innerHTML = `
+      <div class="shop-icon">${gear.icon}</div>
+      <div class="shop-info">
+        <div class="shop-name">${gear.name} ${isEquipped?'<span class="text-gold">[ON]</span>':''}</div>
+        <div class="shop-effect">${statsStr} | Req Lv${gear.reqLevel}</div>
+      </div>
+      <button class="btn btn-upgrade btn-small" onclick="equipGear('${gearId}')" ${isEquipped?'disabled':''}>${isEquipped?'EQUIPPED':'EQUIP'}</button>
+    `;
+    inv.appendChild(div);
+  });
+
+  // Available to buy
+  GEAR_ITEMS.forEach(gear=>{
+    if(G.inventory.includes(gear.id)) return;
+    const div = document.createElement('div');
+    div.className='shop-item';
+    div.style.opacity = G.level<gear.reqLevel?'0.4':'1';
+    const statsStr = Object.entries(gear.stats).map(([k,v])=>`${k.toUpperCase()}+${v}`).filter(s=>!s.includes('souls')).join(' ');
+    div.innerHTML=`
+      <div class="shop-icon">${gear.icon}</div>
+      <div class="shop-info">
+        <div class="shop-name">${gear.name}</div>
+        <div class="shop-effect">${statsStr} | Lv${gear.reqLevel}</div>
+        <div class="shop-cost">${fmtNum(gear.cost)} 💰</div>
+      </div>
+      <button class="btn btn-upgrade btn-small" onclick="buyGear('${gear.id}')" ${G.level<gear.reqLevel||G.gold<gear.cost?'disabled':''}>BUY</button>
+    `;
+    inv.appendChild(div);
+  });
+}
+
+function renderAchievements() {
+  const c = document.getElementById('achieve-container');
+  c.innerHTML = '';
+  ACHIEVEMENTS.forEach(a=>{
+    const earned = !!G.achievements[a.id];
+    const span = document.createElement('span');
+    span.className = 'ach-badge' + (earned?' earned':'');
+    span.innerHTML = `${a.icon} ${a.name}`;
+    span.title = a.desc;
+    c.appendChild(span);
+  });
+}
+
+function renderQuests() {
+  const c = document.getElementById('quest-container');
+  c.innerHTML = '';
+  QUESTS.forEach(q=>{
+    if(G.questProgress[q.id]==='done') return;
+    let prog = 0, goal = q.goal;
+    switch(q.type) {
+      case 'kill':   prog=G.totalKills; break;
+      case 'level':  prog=G.level; break;
+      case 'gate_d': prog=gateDClears; break;
+      case 'shadow': prog=Object.values(G.shadows).reduce((a,b)=>a+b,0); break;
+    }
+    prog = Math.min(prog, goal);
+    const pct = (prog/goal*100).toFixed(0);
+    const rewardStr = Object.entries(q.reward).map(([k,v])=>`${v} ${k}`).join(', ');
+    const div = document.createElement('div');
+    div.className='quest-item';
+    div.innerHTML=`
+      <div class="quest-name">${q.name}</div>
+      <div class="quest-desc">${q.desc} (${fmtNum(prog)}/${fmtNum(goal)})</div>
+      <div class="quest-desc" style="color:var(--accent-gold)">Reward: ${rewardStr}</div>
+      <div class="quest-prog"><div class="quest-prog-fill" style="width:${pct}%"></div></div>
+    `;
+    c.appendChild(div);
+  });
+  if(c.innerHTML==='') c.innerHTML='<div class="text-sm text-center" style="color:var(--accent-gold);padding:8px;">✅ All quests complete! Prestige for more.</div>';
+}
+
+// ══════════════════════════════════════════════════════════
+// UI UPDATE
+// ══════════════════════════════════════════════════════════
+function updateUI() {
+  // Stats
+  el('stat-str').textContent = fmtNum(G.str);
+  el('stat-agi').textContent = fmtNum(G.agi);
+  el('stat-int').textContent = fmtNum(G.int);
+  el('stat-end').textContent = fmtNum(G.end);
+  el('stat-sen').textContent = fmtNum(G.sen);
+  el('stat-level').textContent = G.level;
+  el('stat-kills').textContent = fmtNum(G.totalKills);
+  el('stat-dmg').textContent = fmtNum(Math.floor(G.str*1.5 + G.agi*0.5 + G.level*2 + getGearStat('str')*1.5));
+
+  // HP/MP/XP bars
+  const hpPct = G.hp/G.hpMax*100;
+  const mpPct = G.mp/G.mpMax*100;
+  const xpPct = G.xp/G.xpMax*100;
+  el('hp-bar').style.width = hpPct+'%';
+  el('mp-bar').style.width = mpPct+'%';
+  el('xp-bar').style.width = xpPct+'%';
+  el('hp-txt').textContent = `${fmtNum(G.hp)}/${fmtNum(G.hpMax)}`;
+  el('mp-txt').textContent = `${fmtNum(G.mp)}/${fmtNum(G.mpMax)}`;
+  el('xp-txt').textContent = `${fmtNum(G.xp)}/${fmtNum(G.xpMax)}`;
+
+  // Resources
+  el('res-gold').textContent = fmtNum(G.gold);
+  el('res-crystals').textContent = fmtNum(G.crystals);
+  el('res-mana').textContent = fmtNum(G.manaStones);
+  el('res-souls').textContent = fmtNum(G.souls);
+
+  // Stat costs
+  ['str','agi','int','end','sen'].forEach(s=>{
+    el(`cost-${s}`).textContent = fmtNum(statCost(s))+'g';
+    el(`btn-${s}`).disabled = G.gold < statCost(s);
+  });
+
+  // Army
+  el('army-strength').textContent = fmtNum(getArmyStrength());
+  el('army-dps').textContent = fmtNum(calcArmyDps())+'/s';
+
+  // Prestige tokens
+  if(el('prestige-tokens')) el('prestige-tokens').textContent = G.prestigeTokens;
+
+  // Monster
+  updateMonsterUI();
+
+  // Auto speed refresh
+  if(G.autoHunt) {
+    clearInterval(autoHuntInterval);
+    autoHuntInterval = setInterval(()=>{ if(G.hp>0&&currentMonster) hunt(); }, Math.max(150, 800-G.agi*5));
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════
+function el(id) { return document.getElementById(id); }
+
+function fmtNum(n) {
+  if(n >= 1e9) return (n/1e9).toFixed(2)+'B';
+  if(n >= 1e6) return (n/1e6).toFixed(2)+'M';
+  if(n >= 1000) return (n/1000).toFixed(1)+'K';
+  return Math.floor(n).toString();
+}
+
+function addLog(msg, type='') {
+  const log = document.getElementById('battle-log');
+  const div = document.createElement('div');
+  div.className = `log-entry log-${type}`;
+  div.innerHTML = msg;
+  log.prepend(div);
+  // Trim log
+  while(log.children.length > 50) log.removeChild(log.lastChild);
+}
+
+function showPopup(msg) {
+  const div = document.createElement('div');
+  div.className='popup';
+  div.textContent = msg;
+  document.getElementById('popup-container').appendChild(div);
+  setTimeout(()=>div.remove(), 3000);
+}
+
+function showFloatDmg(dmg, isCrit, isMonarch=false) {
+  const div = document.createElement('div');
+  div.className = 'dmg-float' + (isCrit?' crit':'') + (isMonarch?' shadow-dmg':'');
+  div.textContent = (isCrit?'💥':isMonarch?'💀':'') + fmtNum(dmg);
+  div.style.left = (200 + Math.random()*200) + 'px';
+  div.style.top  = (250 + Math.random()*80) + 'px';
+  document.body.appendChild(div);
+  setTimeout(()=>div.remove(), 1000);
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════════
+// SAVE / LOAD
+// ══════════════════════════════════════════════════════════
+function saveGame() {
+  const save = {
+    G, equippedSkillList: equippedSkillList.map(s=>s?s.id:null),
+    skills: SKILLS.map(s=>({id:s.id,unlocked:s.unlocked})),
+    gateDClears, expBoostTimer, questKillCount,
+  };
+  localStorage.setItem('shadowMonarchSave', JSON.stringify(save));
+}
+
+function loadGame() {
+  try {
+    const raw = localStorage.getItem('shadowMonarchSave');
+    if(!raw) return;
+    const save = JSON.parse(raw);
+    Object.assign(G, save.G);
+    save.skills?.forEach(ss=>{ const sk=SKILLS.find(s=>s.id===ss.id); if(sk) sk.unlocked=ss.unlocked; });
+    equippedSkillList = save.equippedSkillList?.map(id=>id?SKILLS.find(s=>s.id===id):null)||[null,null,null];
+    gateDClears = save.gateDClears||0;
+    expBoostTimer = save.expBoostTimer||0;
+    questKillCount = save.questKillCount||0;
+
+    updateRank();
+    renderSkills();
+    renderShadows();
+    renderGear();
+    renderAchievements();
+    renderQuests();
+    updateSkillBtns();
+    updateUI();
+
+    if(G.level>=100) document.getElementById('prestige-panel').style.display='block';
+    addLog('💾 <span class="log-system">Game loaded. Welcome back, Hunter.</span>', 'system');
+  } catch(e) { console.log('No save found'); }
+}
+
+// ══════════════════════════════════════════════════════════
+// SYSTEM NOTIFICATIONS ROTATION
+// ══════════════════════════════════════════════════════════
+const SYSTEM_MSGS = [
+  '⬡ SYSTEM: You have been selected as a Player. Your journey begins. ⬡',
+  '⬡ SYSTEM: A new Gate has appeared nearby. Hunters, be alert. ⬡',
+  '⬡ SYSTEM: Warning — an S-Rank Gate has been detected. ⬡',
+  '⬡ SYSTEM: Your shadows hunger for battle. Lead them well. ⬡',
+  '⬡ SYSTEM: The Monarchs stir. Grow stronger, Hunter. ⬡',
+  '⬡ SYSTEM: Arise... the path to Shadow Monarch awaits. ⬡',
+];
+let msgIdx = 0;
+setInterval(()=>{
+  msgIdx = (msgIdx+1)%SYSTEM_MSGS.length;
+  const n = document.getElementById('system-notification');
+  n.style.opacity=0;
+  setTimeout(()=>{ n.textContent=SYSTEM_MSGS[msgIdx]; n.style.opacity=1; n.style.transition='opacity 0.5s'; }, 300);
+}, 6000);
+
+// ══════════════════════════════════════════════════════════
+// START
+// ══════════════════════════════════════════════════════════
+window.onload = init;
 </script>
-
 </body>
 </html>
