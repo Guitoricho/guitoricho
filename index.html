@@ -1,20 +1,164 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Mon Site Dev</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA Chat - guitoricho</title>
     <style>
-        body { font-family: sans-serif; text-align: center; background: #121212; color: white; }
-        .card { border: 1px solid #333; padding: 20px; border-radius: 10px; margin-top: 50px; }
+        :root {
+            --bg: #121212;
+            --card: #1e1e1e;
+            --primary: #007bff;
+            --text: #e0e0e0;
+        }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+        }
+        header {
+            background: var(--card);
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid #333;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        #chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 15px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+        .user {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+        }
+        .ai {
+            align-self: flex-start;
+            background: #333;
+        }
+        .input-area {
+            background: var(--card);
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #333;
+        }
+        input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background: #252525;
+            color: white;
+            outline: none;
+        }
+        button {
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+        #loading {
+            font-size: 0.8rem;
+            color: #888;
+            display: none;
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>🚀 Site de Développeur Actif</h1>
-        <p>Je peux modifier tout le code ici !</p>
-        <button onclick="alerte()">Tester le JS</button>
-    </div>
-    <script>
-        function alerte() { alert("Le code fonctionne !"); }
-    </script>
+
+<header>Mon Assistant IA Personnel</header>
+
+<div id="chat-container">
+    <div class="message ai">Bonjour ! Je suis l'IA de guitoricho. Comment puis-je vous aider aujourd'hui ?</div>
+</div>
+
+<div id="loading">L'IA réfléchit...</div>
+
+<div class="input-area">
+    <input type="text" id="user-input" placeholder="Posez une question..." onkeypress="if(event.key === 'Enter') sendMessage()">
+    <button id="send-btn" onclick="sendMessage()">Envoyer</button>
+</div>
+
+<script>
+    // --- CONFIGURATION ---
+    const API_KEY = "AIzaSyAobAeNVLRhW8VyT1etldKDUMFjnTdbi9o"; 
+    const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=" + API_KEY;
+
+    async function sendMessage() {
+        const input = document.getElementById('user-input');
+        const container = document.getElementById('chat-container');
+        const btn = document.getElementById('send-btn');
+        const loading = document.getElementById('loading');
+        
+        if (!input.value.trim()) return;
+        
+        const userText = input.value;
+        
+        // Add user message
+        addMessage(userText, 'user');
+        input.value = '';
+        
+        // UI State
+        btn.disabled = true;
+        loading.style.display = 'block';
+        container.scrollTop = container.scrollHeight;
+
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: userText }] }]
+                })
+            });
+
+            const data = await response.json();
+            const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Désolé, j'ai rencontré une erreur.";
+            
+            addMessage(aiText, 'ai');
+        } catch (error) {
+            addMessage("Erreur de connexion : " + error.message, 'ai');
+        } finally {
+            btn.disabled = false;
+            loading.style.display = 'none';
+            container.scrollTop = container.scrollHeight;
+        }
+    }
+
+    function addMessage(text, side) {
+        const container = document.getElementById('chat-container');
+        const div = document.createElement('div');
+        div.className = `message ${side}`;
+        div.innerText = text;
+        container.appendChild(div);
+    }
+</script>
+
 </body>
 </html>
