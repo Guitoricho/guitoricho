@@ -3,62 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexCord | Dashboard</title>
+    <title>NexCord Online</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, push, onChildAdded, set, onValue } 
+        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // --- 1. REMPLACE AVEC TA CONFIG FIREBASE ICI ---
+        const firebaseConfig = {
+            apiKey: "TON_API_KEY",
+            authDomain: "TON_PROJET.firebaseapp.com",
+            databaseURL: "https://TON_PROJET.firebaseio.com",
+            projectId: "TON_PROJET",
+            storageBucket: "TON_PROJET.appspot.com",
+            messagingSenderId: "12345",
+            appId: "1:12345:web:abcde"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const messagesRef = ref(db, 'chat_messages');
+        const usersRef = ref(db, 'online_users');
+
+        // --- 2. LOGIQUE DE CONNEXION ---
+        window.login = function() {
+            const name = document.getElementById('login-input').value.trim();
+            if(name.length < 2) return;
+
+            const userData = { name: name, status: 'online', lastSeen: Date.now() };
+            localStorage.setItem('nc_user', JSON.stringify(userData));
+            
+            // Ajouter à la liste des utilisateurs en ligne
+            set(ref(db, 'online_users/' + name), userData);
+            
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('user-display').innerText = name;
+        };
+
+        // --- 3. ENVOYER UN MESSAGE ---
+        document.getElementById('msg-input').addEventListener('keypress', (e) => {
+            if(e.key === 'Enter' && e.target.value.trim() !== "") {
+                const user = JSON.parse(localStorage.getItem('nc_user'));
+                push(messagesRef, {
+                    author: user.name,
+                    content: e.target.value,
+                    timestamp: Date.now()
+                });
+                e.target.value = "";
+            }
+        });
+
+        // --- 4. RÉCEPTION EN TEMPS RÉEL ---
+        onChildAdded(messagesRef, (data) => {
+            const msg = data.val();
+            const chatBox = document.getElementById('chat-box');
+            const time = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            chatBox.innerHTML += `
+                <div class="flex gap-4 mb-4 animate-in fade-in">
+                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center font-bold">${msg.author[0]}</div>
+                    <div>
+                        <p class="text-sm"><span class="font-bold text-blue-400">${msg.author}</span> <span class="text-[10px] text-gray-500">${time}</span></p>
+                        <p class="text-gray-300 text-sm">${msg.content}</p>
+                    </div>
+                </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        // --- 5. LISTE D'UTILISATEURS EN LIGNE ---
+        onValue(usersRef, (snapshot) => {
+            const users = snapshot.val();
+            const list = document.getElementById('friend-list');
+            list.innerHTML = "";
+            for(let id in users) {
+                list.innerHTML += `<div class="p-2 text-sm text-gray-400">🟢 ${users[id].name}</div>`;
+            }
+        });
+    </script>
+
     <style>
-        .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        body { background-color: #1a1a1a; color: white; }
+        body { background-color: #101010; color: white; font-family: sans-serif; }
+        .glass { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
 
-    <nav class="w-20 bg-[#121212] flex flex-col items-center py-4 gap-4 border-r border-white/10">
-        <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center font-bold cursor-pointer hover:rounded-xl transition-all">N</div>
-        <hr class="w-8 border-white/10">
-        <div class="w-12 h-12 glass rounded-3xl flex items-center justify-center cursor-pointer hover:rounded-xl transition-all hover:bg-blue-500">+</div>
-    </nav>
-
-    <aside class="w-64 bg-[#181818] flex flex-col">
-        <div class="p-4 shadow-md font-bold border-b border-white/10">NexCord</div>
-        <div class="flex-1 p-2 space-y-1 overflow-y-auto" id="friend-list">
-            <p class="text-xs font-semibold text-gray-500 uppercase px-2 py-2">Amis en ligne</p>
-            <div class="flex items-center gap-3 p-2 hover:bg-white/5 rounded cursor-pointer group">
-                <div class="relative">
-                    <div class="w-8 h-8 bg-gray-600 rounded-full"></div>
-                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-[#181818] rounded-full"></div>
-                </div>
-                <span class="text-gray-300 group-hover:text-white">Ami_Alpha</span>
-            </div>
+    <div id="login-screen" class="fixed inset-0 bg-black z-50 flex items-center justify-center">
+        <div class="glass p-8 rounded-xl w-80">
+            <h2 class="text-xl font-bold mb-4">NexCord Online</h2>
+            <input id="login-input" type="text" placeholder="Ton pseudo" class="w-full p-2 bg-gray-800 rounded mb-4 outline-none border border-white/10">
+            <button onclick="login()" class="w-full bg-blue-600 py-2 rounded font-bold">Rejoindre le Chat</button>
         </div>
-        
-        <div class="p-3 bg-[#131313] flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-blue-500 rounded-full" id="user-avatar"></div>
-                <div>
-                    <p class="text-xs font-bold" id="username-display">Utilisateur</p>
-                    <p class="text-[10px] text-gray-400">#0001</p>
-                </div>
+    </div>
+
+    <aside class="w-64 bg-[#151515] flex flex-col border-r border-white/5">
+        <div class="p-4 font-bold border-b border-white/5">NexCord</div>
+        <div class="flex-1 p-4" id="friend-list">
             </div>
-            <button onclick="openSettings()" class="text-gray-400 hover:text-white">⚙️</button>
+        <div class="p-4 bg-[#0a0a0a] flex items-center gap-2">
+            <div class="w-8 h-8 bg-blue-500 rounded-full"></div>
+            <span id="user-display" class="text-sm font-bold">---</span>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col bg-[#202020]">
-        <header class="h-12 border-b border-white/10 flex items-center px-4 shadow-sm">
-            <span class="text-gray-400 mr-2">#</span> 
-            <span class="font-bold">général</span>
-        </header>
-        
-        <div class="flex-1 overflow-y-auto p-4 space-y-4" id="chat-messages">
-            </div>
-
+    <main class="flex-1 flex flex-col">
+        <div id="chat-box" class="flex-1 overflow-y-auto p-6 bg-[#1a1a1a]"></div>
         <div class="p-4">
-            <input type="text" id="chat-input" placeholder="Envoyer un message dans #général" 
-                   class="w-full bg-[#2b2b2b] p-3 rounded-lg outline-none focus:ring-1 ring-blue-500 transition-all">
+            <input id="msg-input" type="text" placeholder="Envoyer un message..." class="w-full p-3 bg-[#252525] rounded-lg outline-none focus:ring-1 ring-blue-500">
         </div>
     </main>
 
