@@ -3,69 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexCord | Online</title>
+    <title>NexCord | Live Chat</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body { background-color: #0f0f0f; color: #e5e7eb; font-family: 'Inter', sans-serif; overflow: hidden; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .msg-anim { animation: fadeIn 0.3s ease-out forwards; }
     </style>
 </head>
 <body class="flex h-screen">
 
     <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0a0a]">
-        <div class="glass p-8 rounded-2xl w-96 text-center shadow-2xl">
-            <h1 class="text-3xl font-bold mb-2 text-blue-500">NexCord</h1>
-            <p class="text-gray-400 text-sm mb-6">Connectez-vous au réseau</p>
-            <input type="text" id="login-input" placeholder="Votre pseudo..." 
-                   class="w-full bg-[#151515] p-3 rounded-lg border border-white/10 mb-4 outline-none focus:ring-2 ring-blue-500 transition-all">
-            <button id="btn-login" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-lg transition-all shadow-lg shadow-blue-900/20">
-                Rejoindre
+        <div class="glass p-10 rounded-3xl w-[400px] text-center shadow-2xl">
+            <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-600/30">
+                <span class="text-3xl font-bold text-white">N</span>
+            </div>
+            <h1 class="text-3xl font-bold mb-2 text-white tracking-tight">Bienvenue</h1>
+            <p class="text-gray-400 text-sm mb-8">Entrez un pseudo pour rejoindre le live.</p>
+            <input type="text" id="login-input" placeholder="Ton pseudo..." 
+                   class="w-full bg-[#151515] p-4 rounded-xl border border-white/10 mb-4 outline-none focus:ring-2 ring-blue-500 transition-all text-center">
+            <button id="btn-login" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:scale-[1.02] active:scale-95">
+                Rejoindre NexCord
             </button>
         </div>
     </div>
 
-    <aside class="w-64 bg-[#111111] flex flex-col border-r border-white/5">
-        <div class="p-4 h-12 border-b border-white/5 flex items-center font-bold text-sm tracking-tight">
-            <span class="text-blue-500 mr-2">●</span> NexCord Home
+    <aside class="w-72 bg-[#111111] flex flex-col border-r border-white/5">
+        <div class="p-6 h-16 border-b border-white/5 flex items-center font-bold text-sm uppercase tracking-widest text-gray-400">
+            <span class="w-2 h-2 bg-blue-500 rounded-full mr-3 animate-pulse"></span> NexCord Home
         </div>
         
-        <div class="flex-1 overflow-y-auto custom-scrollbar p-3" id="user-list-container">
-            <p class="text-[10px] font-bold text-gray-500 uppercase px-2 mb-3 tracking-widest">Utilisateurs Online</p>
-            <div id="online-users" class="space-y-1">
+        <div class="flex-1 overflow-y-auto custom-scrollbar p-4">
+            <p class="text-[10px] font-bold text-gray-500 uppercase px-2 mb-4 tracking-widest">Membres en ligne</p>
+            <div id="online-users" class="space-y-2">
                 </div>
         </div>
 
-        <div class="p-3 bg-[#0d0d0d] flex items-center justify-between border-t border-white/5">
+        <div class="p-4 bg-[#0d0d0d] flex items-center justify-between border-t border-white/5">
             <div class="flex items-center gap-3">
-                <div id="my-avatar" class="w-9 h-9 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-full flex items-center justify-center font-bold text-white shadow-inner">?</div>
+                <div id="my-avatar" class="w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-full flex items-center justify-center font-bold text-white shadow-lg">?</div>
                 <div>
-                    <p id="my-username" class="text-xs font-bold leading-none mb-1 text-white">Pseudo</p>
-                    <p class="text-[10px] text-green-500 flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> en ligne
-                    </p>
+                    <p id="my-username" class="text-sm font-bold text-white leading-none mb-1">Pseudo</p>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                        <span class="text-[10px] text-gray-400 font-medium">Connecté</span>
+                    </div>
                 </div>
             </div>
-            <button onclick="location.reload()" class="text-gray-500 hover:text-white transition-colors text-xs">Déconnexion</button>
+            <button onclick="location.reload()" class="p-2 hover:bg-white/5 rounded-lg transition-colors" title="Se déconnecter">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+            </button>
         </div>
     </aside>
 
     <main class="flex-1 flex flex-col bg-[#161616]">
-        <header class="h-12 border-b border-white/5 flex items-center px-6 bg-[#161616]/80 backdrop-blur-md sticky top-0 z-10">
-            <span class="text-gray-500 font-light text-xl mr-2">#</span>
-            <span class="font-semibold text-sm">salon-général</span>
+        <header class="h-16 border-b border-white/5 flex items-center px-8 bg-[#161616]/90 backdrop-blur-md">
+            <div class="flex items-center gap-3">
+                <span class="text-gray-500 font-light text-2xl">#</span>
+                <span class="font-bold text-base">salon-général</span>
+            </div>
         </header>
 
-        <div id="chat-box" class="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+        <div id="chat-box" class="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar">
             </div>
 
-        <div class="px-6 pb-6">
-            <div class="glass rounded-xl flex items-center px-4 shadow-2xl border border-white/5 focus-within:border-blue-500/50 transition-all">
-                <input type="text" id="msg-input" placeholder="Écrire dans #salon-général..." 
-                       class="w-full bg-transparent py-4 outline-none text-sm text-gray-200">
+        <div class="px-8 pb-8">
+            <div class="glass rounded-2xl flex items-center px-6 shadow-2xl border border-white/5 focus-within:ring-1 ring-blue-500/50 transition-all">
+                <input type="text" id="msg-input" placeholder="Envoyer un message dans #salon-général..." 
+                       class="w-full bg-transparent py-5 outline-none text-sm text-gray-200 placeholder:text-gray-600">
             </div>
         </div>
     </main>
@@ -75,7 +86,7 @@
         import { getDatabase, ref, push, set, onChildAdded, onValue, serverTimestamp, onDisconnect } 
         from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // TA CONFIGURATION FIREBASE
+        // CONFIGURATION FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyDZUfpKI7Cby-H0Qy2046Ez3VP7MjS6qOE",
             authDomain: "jaster-8fdd4.firebaseapp.com",
@@ -83,41 +94,38 @@
             storageBucket: "jaster-8fdd4.firebasestorage.app",
             messagingSenderId: "1074590705898",
             appId: "1:1074590705898:web:df5c533cdd011d074c8f93",
-            measurementId: "G-HHVXCKFP3Q",
-            databaseURL: "https://jaster-8fdd4-default-rtdb.firebaseio.com" // Ajouté pour la Realtime DB
+            databaseURL: "https://jaster-8fdd4-default-rtdb.firebaseio.com"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let user = null;
+        let currentUser = null;
 
-        // --- GESTION DE LA CONNEXION ---
+        // --- CONNEXION ---
         document.getElementById('btn-login').onclick = () => {
             const name = document.getElementById('login-input').value.trim();
-            if (name.length < 2) return alert("Choisis un pseudo plus long !");
+            if (name.length < 2) return alert("Choisis un pseudo de plus de 2 caractères !");
             
-            user = { name: name, id: "u_" + Date.now() };
+            currentUser = { name: name, id: "u_" + Date.now() };
             setupApp();
         };
 
         function setupApp() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('my-username').innerText = user.name;
-            document.getElementById('my-avatar').innerText = user.name[0].toUpperCase();
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('my-username').innerText = currentUser.name;
+            document.getElementById('my-avatar').innerText = currentUser.name[0].toUpperCase();
 
-            // S'enregistrer sur la Database
-            const userRef = ref(db, 'online_users/' + user.id);
-            set(userRef, { name: user.name, status: "online" });
-
-            // Se supprimer automatiquement à la fermeture de l'onglet
+            // Gestion de la présence
+            const userRef = ref(db, 'online_users/' + currentUser.id);
+            set(userRef, { name: currentUser.name, status: "online" });
             onDisconnect(userRef).remove();
 
             initChat();
             initUserList();
         }
 
-        // --- GESTION DU CHAT ---
+        // --- CHAT LOGIC ---
         function initChat() {
             const msgInput = document.getElementById('msg-input');
             const chatBox = document.getElementById('chat-box');
@@ -125,7 +133,7 @@
             msgInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' && msgInput.value.trim() !== "") {
                     push(ref(db, 'messages'), {
-                        author: user.name,
+                        author: currentUser.name,
                         text: msgInput.value,
                         timestamp: serverTimestamp()
                     });
@@ -135,19 +143,19 @@
 
             onChildAdded(ref(db, 'messages'), (snap) => {
                 const data = snap.val();
-                const time = data.timestamp ? new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+                const time = data.timestamp ? new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '...';
                 
                 chatBox.innerHTML += `
-                    <div class="flex gap-4 msg-anim">
-                        <div class="w-10 h-10 bg-gray-800 border border-white/5 rounded-xl flex items-center justify-center font-bold text-blue-400">
+                    <div class="flex gap-5 msg-anim">
+                        <div class="w-12 h-12 bg-[#202020] border border-white/5 rounded-2xl flex items-center justify-center font-bold text-blue-500 shadow-md">
                             ${data.author[0].toUpperCase()}
                         </div>
-                        <div>
-                            <div class="flex items-center gap-2 mb-0.5">
-                                <span class="text-blue-400 font-semibold text-sm cursor-pointer hover:underline">${data.author}</span>
-                                <span class="text-[10px] text-gray-500 font-medium">${time}</span>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-1">
+                                <span class="text-blue-400 font-bold text-sm hover:underline cursor-pointer">${data.author}</span>
+                                <span class="text-[10px] text-gray-600 font-bold uppercase tracking-tighter">${time}</span>
                             </div>
-                            <p class="text-gray-300 text-sm leading-relaxed">${data.text}</p>
+                            <p class="text-[#d1d1d1] text-[15px] leading-relaxed">${data.text}</p>
                         </div>
                     </div>
                 `;
@@ -155,20 +163,22 @@
             });
         }
 
-        // --- LISTE DES UTILISATEURS ---
+        // --- USER LIST LOGIC ---
         function initUserList() {
             onValue(ref(db, 'online_users'), (snap) => {
                 const users = snap.val();
                 const container = document.getElementById('online-users');
                 container.innerHTML = "";
+                if (!users) return;
+
                 for (let id in users) {
                     container.innerHTML += `
-                        <div class="flex items-center gap-3 p-2 hover:bg-white/5 rounded-lg transition-all group">
-                            <div class="relative w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center text-[10px] font-bold border border-white/5">
+                        <div class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl transition-all cursor-default group">
+                            <div class="relative w-9 h-9 bg-[#1a1a1a] rounded-full flex items-center justify-center text-xs font-bold border border-white/5 text-gray-300">
                                 ${users[id].name[0].toUpperCase()}
-                                <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#111111] rounded-full"></div>
+                                <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-[#111111] rounded-full"></div>
                             </div>
-                            <span class="text-sm text-gray-400 group-hover:text-white transition-colors">${users[id].name}</span>
+                            <span class="text-sm font-semibold text-gray-400 group-hover:text-white transition-colors">${users[id].name}</span>
                         </div>
                     `;
                 }
