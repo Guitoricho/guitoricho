@@ -1,0 +1,46 @@
+// Système de gestion de données simple
+const AppData = {
+    user: JSON.parse(localStorage.getItem('user')) || { username: "Invité", status: "Online" },
+    messages: [],
+    
+    save() {
+        localStorage.setItem('user', JSON.stringify(this.user));
+    },
+
+    sendMessage(text) {
+        const msg = {
+            author: this.user.username,
+            content: text,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        this.renderMessage(msg);
+    },
+
+    renderMessage(msg) {
+        const container = document.getElementById('chat-messages');
+        const html = `
+            <div class="flex gap-4 group">
+                <div class="w-10 h-10 bg-blue-500 rounded-full mt-1"></div>
+                <div>
+                    <p class="flex items-center gap-2">
+                        <span class="font-bold text-blue-400 cursor-pointer hover:underline">${msg.author}</span>
+                        <span class="text-[10px] text-gray-500">${msg.time}</span>
+                    </p>
+                    <p class="text-gray-300">${msg.content}</p>
+                </div>
+            </div>
+        `;
+        container.innerHTML += html;
+        container.scrollTop = container.scrollHeight;
+    }
+};
+
+// Initialisation
+document.getElementById('username-display').innerText = AppData.user.username;
+
+document.getElementById('chat-input').addEventListener('keypress', (e) => {
+    if(e.key === 'Enter' && e.target.value.trim() !== "") {
+        AppData.sendMessage(e.target.value);
+        e.target.value = "";
+    }
+});
