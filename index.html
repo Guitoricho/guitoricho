@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexCord | v2.1 Fixed</title>
+    <title>NexCord | NexGen Chat</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -11,48 +11,65 @@
         .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
         .custom-scrollbar::-webkit-scrollbar { width: 3px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .fade-in { animation: fadeIn 0.5s ease-in-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-msg { animation: fadeIn 0.4s cubic-bezier(0, 0, 0.2, 1) forwards; }
     </style>
 </head>
 <body class="flex h-screen">
 
-    <div id="auth-screen" class="fixed inset-0 z-[100] flex items-center justify-center bg-black">
+    <div id="auth-screen" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#050505]">
         <div class="glass p-12 rounded-[3rem] w-[400px] text-center border-white/10 shadow-2xl">
-            <div id="auth-logo" class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-blue-600/20 text-2xl font-black">N</div>
+            <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-blue-600/30 text-2xl font-black italic">N</div>
             <h1 class="text-3xl font-black mb-2 tracking-tighter">NexCord</h1>
-            <p id="auth-msg" class="text-gray-500 mb-10 text-sm font-medium italic">Vérification de la session...</p>
+            <p id="auth-msg" class="text-gray-500 mb-10 text-sm font-medium">Initialisation du système...</p>
             
-            <button id="btn-google" class="hidden w-full bg-white text-black font-bold py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-200 transition-all active:scale-95">
+            <button id="btn-google" class="hidden w-full bg-white text-black font-bold py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-200 transition-all active:scale-95 shadow-lg">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" class="w-5">
                 Continuer avec Google
             </button>
-            <div id="loader" class="flex justify-center"><div class="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div></div>
+
+            <div id="loader" class="flex justify-center">
+                <div class="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
         </div>
     </div>
 
-    <div id="main-ui" class="hidden flex h-screen w-full fade-in">
+    <div id="main-ui" class="hidden flex h-screen w-full">
         <aside class="w-72 bg-[#080808] border-r border-white/5 flex flex-col">
-            <div class="p-6 h-16 border-b border-white/5 flex items-center font-black text-blue-500 italic tracking-tighter">NEXCORD</div>
-            <div id="users-list" class="flex-1 overflow-y-auto p-4 space-y-2 text-sm custom-scrollbar"></div>
+            <div class="p-6 h-16 border-b border-white/5 flex items-center justify-between">
+                <span class="font-black text-blue-500 italic tracking-tighter text-lg">NEXCORD</span>
+            </div>
+            
+            <div class="p-4 text-[10px] font-bold text-gray-600 uppercase tracking-[0.2em]">Membres en ligne</div>
+            <div id="users-list" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar"></div>
+
             <div class="p-4 bg-black/40 border-t border-white/5 flex items-center gap-3">
-                <img id="my-pfp" class="w-10 h-10 rounded-full object-cover bg-gray-800">
+                <img id="my-pfp" class="w-10 h-10 rounded-full object-cover border border-white/10">
                 <div class="flex-1 truncate">
-                    <p id="my-name" class="text-xs font-bold truncate">Pseudo</p>
-                    <span class="text-[8px] text-green-500 font-bold uppercase tracking-widest">Connecté</span>
+                    <p id="my-name" class="text-xs font-bold truncate text-gray-200">Pseudo</p>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                        <span class="text-[8px] text-gray-500 font-bold uppercase tracking-widest">Connecté</span>
+                    </div>
                 </div>
             </div>
         </aside>
 
         <main class="flex-1 flex flex-col bg-[#0a0a0a]">
             <header class="h-16 border-b border-white/5 flex items-center px-8 bg-black/10 backdrop-blur-md">
-                <span class="text-blue-500 font-bold mr-2">#</span><span class="font-bold text-sm uppercase tracking-widest text-gray-400">Salon-Global</span>
+                <div class="flex items-center gap-2">
+                    <span class="text-blue-500 font-bold text-xl">#</span>
+                    <span class="font-bold text-sm tracking-widest uppercase text-gray-400">Salon-Global</span>
+                </div>
             </header>
+
             <div id="chat-box" class="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar"></div>
+
             <div class="px-8 pb-8">
+                <div id="typing-indicator" class="text-[10px] text-gray-600 h-4 mb-2 ml-4 italic"></div>
                 <div class="glass rounded-2xl flex items-center p-2 border-white/10 focus-within:border-blue-500/50 transition-all shadow-2xl">
-                    <input type="text" id="chat-input" placeholder="Écris quelque chose..." class="flex-1 bg-transparent py-4 px-4 outline-none text-sm text-gray-200">
-                    <button id="btn-send" class="bg-blue-600 px-6 py-3 rounded-xl hover:bg-blue-500 transition-all text-xs font-bold uppercase">Envoyer</button>
+                    <input type="text" id="chat-input" autocomplete="off" placeholder="Envoyer un message sur NexCord..." class="flex-1 bg-transparent py-4 px-4 outline-none text-sm text-gray-200">
+                    <button id="btn-send" class="bg-blue-600 px-8 py-3 rounded-xl hover:bg-blue-500 transition-all text-xs font-bold uppercase tracking-widest active:scale-95">Envoyer</button>
                 </div>
             </div>
         </main>
@@ -61,16 +78,18 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, push, set, onChildAdded, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, push, set, onChildAdded, onValue, serverTimestamp, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+        // CONFIGURATION CORRIGÉE
         const firebaseConfig = {
             apiKey: "AIzaSyDZUfpKI7Cby-H0Qy2046Ez3VP7MjS6qOE",
             authDomain: "jaster-8fdd4.firebaseapp.com",
+            databaseURL: "https://jaster-8fdd4-default-rtdb.firebaseio.com",
             projectId: "jaster-8fdd4",
             storageBucket: "jaster-8fdd4.firebasestorage.app",
             messagingSenderId: "1074590705898",
             appId: "1:1074590705898:web:df5c533cdd011d074c8f93",
-            databaseURL: "https://jaster-8fdd4-default-rtdb.firebaseio.com"
+            measurementId: "G-HHVXCKFP3Q"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -78,100 +97,115 @@
         const db = getDatabase(app);
         const provider = new GoogleAuthProvider();
 
-        // 1. GÉRER LE RETOUR DE REDIRECTION IMMÉDIATEMENT
-        getRedirectResult(auth)
-            .then((result) => {
-                if (result) {
-                    console.log("Connecté via redirection !");
-                }
-            })
-            .catch((error) => {
-                console.error("Erreur de redirection : ", error);
-                document.getElementById('auth-msg').innerText = "Erreur. Veuillez réessayer.";
-            });
+        // --- GESTION DE LA REDIRECTION (FIX) ---
+        getRedirectResult(auth).then((result) => {
+            if (result) console.log("Login Redirect Success");
+        }).catch((error) => {
+            console.error("Redirect Error", error);
+            document.getElementById('auth-msg').innerText = "Erreur de connexion. Réessayez.";
+        });
 
-        // 2. ÉCOUTER L'ÉTAT DE L'UTILISATEUR
+        // --- ÉCOUTE DE L'ÉTAT AUTH ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('main-ui').classList.remove('hidden');
-                initApp(user);
+                startApp(user);
             } else {
-                // Si pas de session, on montre le bouton
                 document.getElementById('loader').classList.add('hidden');
                 document.getElementById('btn-google').classList.remove('hidden');
-                document.getElementById('auth-msg').innerText = "Connectez-vous pour continuer";
+                document.getElementById('auth-msg').innerText = "Veuillez vous connecter";
             }
         });
 
-        // 3. ACTION DU BOUTON (Tentative Redirect -> Fallback Popup)
+        // --- BOUTON LOGIN ---
         document.getElementById('btn-google').onclick = () => {
             document.getElementById('btn-google').classList.add('hidden');
             document.getElementById('loader').classList.remove('hidden');
-            document.getElementById('auth-msg').innerText = "Redirection vers Google...";
-            
-            // Si on est sur un fichier local (file://), Popup est parfois plus stable
+            document.getElementById('auth-msg').innerText = "Ouverture de Google...";
+
+            // Mode intelligent : Popup pour local, Redirect pour web
             if (window.location.protocol === 'file:') {
-                signInWithPopup(auth, provider).catch(e => {
-                    console.log("Popup bloqué, tentative redirection...");
-                    signInWithRedirect(auth, provider);
-                });
+                signInWithPopup(auth, provider).catch(() => signInWithRedirect(auth, provider));
             } else {
                 signInWithRedirect(auth, provider);
             }
         };
 
-        // 4. LOGIQUE DE L'APPLICATION
-        function initApp(user) {
+        // --- LOGIQUE CORE ---
+        function startApp(user) {
             document.getElementById('my-name').innerText = user.displayName;
             document.getElementById('my-pfp').src = user.photoURL;
 
-            // Presence
-            set(ref(db, `online_users/${user.uid}`), {
-                name: user.displayName,
-                pfp: user.photoURL
-            });
+            // Presence en ligne
+            const myPresenceRef = ref(db, `online_users/${user.uid}`);
+            set(myPresenceRef, { name: user.displayName, pfp: user.photoURL });
+            onDisconnect(myPresenceRef).remove();
 
-            // Chat Read
+            // Lire les messages
             onChildAdded(ref(db, 'messages'), (snap) => {
                 const m = snap.val();
+                const time = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '--:--';
+                
                 document.getElementById('chat-box').innerHTML += `
                     <div class="flex gap-4 animate-msg">
-                        <img src="${m.pfp}" class="w-10 h-10 rounded-xl object-cover border border-white/10">
-                        <div>
-                            <p class="text-blue-500 font-bold text-[10px] uppercase mb-1">${m.author}</p>
-                            <p class="text-gray-300 text-sm">${m.text}</p>
+                        <img src="${m.pfp}" class="w-10 h-10 rounded-xl object-cover border border-white/10 shadow-lg">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-blue-500 font-bold text-[10px] uppercase tracking-tighter">${m.author}</span>
+                                <span class="text-[9px] text-gray-700 font-bold">${time}</span>
+                            </div>
+                            <p class="text-gray-300 text-sm leading-relaxed">${m.text}</p>
                         </div>
                     </div>`;
                 document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
             });
 
-            // Chat Write
+            // Envoyer un message
             const send = () => {
-                const el = document.getElementById('chat-input');
-                if(el.value.trim()){
+                const input = document.getElementById('chat-input');
+                if (input.value.trim() !== "") {
                     push(ref(db, 'messages'), {
                         author: user.displayName,
                         pfp: user.photoURL,
-                        text: el.value,
+                        text: input.value,
                         timestamp: serverTimestamp()
                     });
-                    el.value = "";
+                    input.value = "";
+                    remove(ref(db, `typing/${user.uid}`));
                 }
             };
+
             document.getElementById('btn-send').onclick = send;
             document.getElementById('chat-input').onkeypress = (e) => { if(e.key === 'Enter') send(); };
 
-            // Users List
+            // Indicateur de frappe
+            document.getElementById('chat-input').oninput = () => {
+                set(ref(db, `typing/${user.uid}`), user.displayName);
+                setTimeout(() => remove(ref(db, `typing/${user.uid}`)), 3000);
+            };
+
+            onValue(ref(db, 'typing'), (snap) => {
+                const typers = snap.val();
+                const el = document.getElementById('typing-indicator');
+                if (!typers) return el.innerText = "";
+                const names = Object.values(typers).filter(n => n !== user.displayName);
+                el.innerText = names.length > 0 ? names.join(', ') + " écrit..." : "";
+            });
+
+            // Liste des membres
             onValue(ref(db, 'online_users'), (snap) => {
                 const users = snap.val();
                 const container = document.getElementById('users-list');
                 container.innerHTML = "";
-                for(let id in users){
+                for (let id in users) {
                     container.innerHTML += `
                         <div class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-all">
-                            <img src="${users[id].pfp}" class="w-8 h-8 rounded-lg object-cover">
-                            <span class="font-bold text-xs text-gray-300">${users[id].name}</span>
+                            <div class="relative">
+                                <img src="${users[id].pfp}" class="w-8 h-8 rounded-lg object-cover">
+                                <div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-green-500 border-2 border-[#080808] rounded-full"></div>
+                            </div>
+                            <span class="text-xs font-bold text-gray-300">${users[id].name}</span>
                         </div>`;
                 }
             });
