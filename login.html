@@ -2,36 +2,93 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>NexCord | S'inscrire</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexCord | Bienvenue</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #111214; background-image: url('https://discord.com/assets/ee7c382d92576551b5d3.svg'); background-size: cover; font-family: 'Plus Jakarta Sans', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .card { background: #313338; padding: 32px; border-radius: 8px; width: 100%; max-width: 480px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
-        input { background: #1e1f22 !important; border: none !important; color: #dbdee1 !important; margin-bottom: 15px; }
+        :root { --d-blue: #5865f2; --d-black: #111214; --d-gray: #313338; }
+        body {
+            background-image: url('https://discord.com/assets/ee7c382d92576551b5d3.svg');
+            background-size: cover;
+            background-position: center;
+            background-color: var(--d-black);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .auth-card {
+            background: #313338;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 480px;
+            transition: all 0.3s ease;
+        }
+        input {
+            background-color: #1e1f22 !important;
+            border: none !important;
+            color: #dbdee1 !important;
+            transition: all 0.2s;
+        }
+        input:focus { box-shadow: 0 0 0 2px var(--d-blue) !important; }
+        .btn-primary { background-color: var(--d-blue); transition: background-color 0.2s; }
+        .btn-primary:hover { background-color: #4752c4; }
+        .hidden-form { display: none; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1 class="text-white text-2xl font-black text-center mb-2">Créer un compte</h1>
-        <form id="f-register" class="mt-6">
-            <label class="block text-[11px] font-bold text-[#949ba4] uppercase mb-2">E-mail</label>
-            <input type="email" id="re-email" required class="w-full p-3 rounded outline-none text-sm">
-            
-            <label class="block text-[11px] font-bold text-[#949ba4] uppercase mb-2">Nom d'utilisateur (Pseudo)</label>
-            <input type="text" id="re-pseudo" required class="w-full p-3 rounded outline-none text-sm">
-            
-            <label class="block text-[11px] font-bold text-[#949ba4] uppercase mb-2">Mot de passe</label>
-            <input type="password" id="re-pass" required class="w-full p-3 rounded outline-none text-sm">
-            
-            <button type="submit" class="w-full bg-[#5865f2] py-3 rounded text-white font-bold text-sm hover:bg-[#4752c4] transition-all">Continuer</button>
-            <p class="text-[13px] text-[#00a8fc] mt-4 cursor-pointer hover:underline" onclick="window.location.href='login.html'">Tu as déjà un compte ?</p>
+
+    <div class="auth-card">
+        <div class="text-center mb-8">
+            <h1 class="text-white text-3xl font-black italic tracking-tighter">NexCord</h1>
+            <p id="auth-subtitle" class="text-[#b5bac1] text-sm mt-2">Ravi de vous revoir !</p>
+        </div>
+
+        <form id="login-form" class="space-y-4">
+            <div>
+                <label class="block text-[11px] font-bold text-[#949ba4] uppercase mb-2">E-mail</label>
+                <input type="email" id="login-email" required class="w-full p-3 rounded-md outline-none text-sm">
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-[#949ba4] uppercase mb-2">Mot de passe</label>
+                <input type="password" id="login-pass" required class="w-full p-3 rounded-md outline-none text-sm">
+            </div>
+            <button type="submit" class="w-full btn-primary py-3 rounded-md text-white font-bold text-sm mt-2">Se connecter</button>
+            <p class="text-sm text-[#949ba4]">
+                Besoin d'un compte ? 
+                <button type="button" onclick="toggleAuth('register')" class="text-[#00a8fc] hover:underline">S'inscrire</button>
+            </p>
+        </form>
+
+        <form id="register-form" class="space-y-4 hidden-form">
+            <div>
+                <label class="block text-[11px] font-bold text-[#949ba4] uppercase mb-2">E-mail</label>
+                <input type="email" id="reg-email" required class="w-full p-3 rounded-md outline-none text-sm">
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-[#949ba4] uppercase mb-2">Nom d'utilisateur</label>
+                <input type="text" id="reg-pseudo" required class="w-full p-3 rounded-md outline-none text-sm">
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-[#949ba4] uppercase mb-2">Mot de passe</label>
+                <input type="password" id="reg-pass" required class="w-full p-3 rounded-md outline-none text-sm">
+            </div>
+            <button type="submit" class="w-full btn-primary py-3 rounded-md text-white font-bold text-sm mt-2">Créer mon compte</button>
+            <p class="text-sm text-[#949ba4]">
+                Déjà un compte ? 
+                <button type="button" onclick="toggleAuth('login')" class="text-[#00a8fc] hover:underline">Se connecter</button>
+            </p>
         </form>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
@@ -48,26 +105,55 @@
         const auth = getAuth(app);
         const db = getDatabase(app);
 
-        document.getElementById('f-register').onsubmit = async (e) => {
+        // Basculer entre Connexion et Inscription
+        window.toggleAuth = (mode) => {
+            const loginForm = document.getElementById('login-form');
+            const regForm = document.getElementById('register-form');
+            const subtitle = document.getElementById('auth-subtitle');
+
+            if (mode === 'register') {
+                loginForm.classList.add('hidden-form');
+                regForm.classList.remove('hidden-form');
+                subtitle.innerText = "Créez votre profil en quelques secondes.";
+            } else {
+                regForm.classList.add('hidden-form');
+                loginForm.classList.remove('hidden-form');
+                subtitle.innerText = "Ravi de vous revoir !";
+            }
+        };
+
+        // Redirection si déjà connecté
+        onAuthStateChanged(auth, (user) => {
+            if (user) window.location.href = 'index.html';
+        });
+
+        // LOGIQUE CONNEXION
+        document.getElementById('login-form').onsubmit = async (e) => {
             e.preventDefault();
-            const email = document.getElementById('re-email').value;
-            const pseudo = document.getElementById('re-pseudo').value;
-            const pass = document.getElementById('re-pass').value;
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (err) { alert("Erreur : Compte introuvable ou mot de passe incorrect."); }
+        };
+
+        // LOGIQUE INSCRIPTION
+        document.getElementById('register-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('reg-email').value;
+            const pseudo = document.getElementById('reg-pseudo').value;
+            const pass = document.getElementById('reg-pass').value;
 
             try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-                const user = userCredential.user;
-                
-                // Créer le profil dans la DB
-                await set(ref(db, 'users_data/' + user.uid), {
+                const res = await createUserWithEmailAndPassword(auth, email, pass);
+                // Création immédiate du profil dans la base de données
+                await set(ref(db, `users_data/${res.user.uid}`), {
                     pseudo: pseudo,
-                    pfp: "https://ui-avatars.com/api/?name=" + pseudo + "&background=random",
-                    bio: "Nouveau sur NexCord !",
-                    email: email
+                    email: email,
+                    pfp: `https://ui-avatars.com/api/?name=${pseudo}&background=random`,
+                    bio: "Nouveau membre NexCord !"
                 });
-
-                window.location.href = 'index.html';
-            } catch (err) { alert(err.message); }
+            } catch (err) { alert("Erreur lors de l'inscription : " + err.message); }
         };
     </script>
 </body>
