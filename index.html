@@ -3,113 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexCord | Professional</title>
+    <title>NexCord | v7.0 Full Desktop</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #050505; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid #060606; position: absolute; bottom: 0; right: 0; }
+        :root { --discord-gray: #313338; --discord-dark: #1e1f22; --discord-black: #111214; --discord-blue: #5865f2; }
+        body { background-color: var(--discord-black); color: #dbdee1; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; }
+        .sidebar-bg { background-color: #2b2d31; }
+        .main-bg { background-color: var(--discord-gray); }
+        .glass-panel { background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+        
+        .status-dot { width: 12px; height: 12px; border-radius: 50%; border: 3px solid #232428; position: absolute; bottom: -2px; right: -2px; }
         .online { background: #23a55a; }
         .offline { background: #80848e; }
         
-        /* Transition Paramètres */
-        #settings-overlay { transition: transform 0.2s ease-out, opacity 0.2s; }
-        .settings-sidebar-item { @apply flex items-center px-3 py-1.5 rounded-md text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-gray-200 cursor-pointer mb-0.5; }
-        .settings-active { @apply bg-white/10 text-white !important; }
+        .nav-btn { @apply px-3 py-1 rounded-md text-sm font-medium transition-all; }
+        .nav-btn-active { @apply bg-[#404249] text-white; }
+        .nav-btn-inactive { @apply text-[#b5bac1] hover:bg-[#35373c] hover:text-[#dbdee1]; }
+        
+        .settings-item { @apply flex items-center px-2 py-1.5 rounded text-[#b5bac1] hover:bg-[#3f4147] hover:text-[#dbdee1] cursor-pointer mb-[2px] transition-all; }
+        .settings-active { @apply bg-[#4f545c]/40 text-white !important; }
+
+        svg { fill: currentColor; }
     </style>
 </head>
 <body class="flex h-screen w-screen select-none">
 
-    <nav class="w-[72px] bg-[#020202] flex flex-col items-center py-4 gap-3 border-r border-white/5">
-        <div class="w-12 h-12 bg-blue-600 rounded-[15px] flex items-center justify-center font-black italic shadow-lg shadow-blue-600/20">N</div>
+    <nav class="w-[72px] bg-black flex flex-col items-center py-3 gap-2 border-r border-white/5">
+        <div onclick="showView('home')" class="w-12 h-12 bg-blue-600 rounded-[15px] flex items-center justify-center text-white cursor-pointer hover:rounded-[12px] transition-all shadow-lg">
+            <svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg>
+        </div>
     </nav>
 
-    <aside class="w-60 bg-[#080808] border-r border-white/5 flex flex-col">
-        <div class="h-12 flex items-center px-3 border-b border-white/5 text-gray-400 font-bold text-xs uppercase tracking-widest">Messages Privés</div>
-        <div class="flex-1 p-2 overflow-y-auto space-y-1" id="friends-list-sidebar">
+    <aside class="w-60 sidebar-bg flex flex-col">
+        <div class="h-12 flex items-center px-3 border-b border-black/20">
+            <button class="w-full bg-[#1e1f22] text-[11px] text-[#949ba4] text-left px-2 py-1.5 rounded font-medium">Rechercher ou démarrer...</button>
+        </div>
+        <div class="flex-1 p-2 space-y-1" id="friends-list-sidebar">
             </div>
 
-        <div class="p-1.5 bg-[#060606] border-t border-white/5 flex items-center gap-1">
-            <div onclick="openMyProfile()" class="flex items-center gap-2 p-1.5 hover:bg-white/5 rounded-md cursor-pointer flex-1 min-w-0 transition-all">
+        <div class="p-1.5 bg-[#232428] flex items-center gap-1">
+            <div onclick="showSettings('profile')" class="flex items-center gap-2 p-1.5 hover:bg-[#35373c] rounded-md cursor-pointer flex-1 min-w-0 transition-all">
                 <div class="relative min-w-[32px]">
                     <img id="my-pfp" class="w-8 h-8 rounded-full object-cover bg-gray-800">
-                    <div id="my-status-dot" class="status-dot online"></div>
+                    <div class="status-dot online"></div>
                 </div>
                 <div class="truncate">
-                    <p id="my-name" class="text-[11px] font-bold truncate">...</p>
-                    <p class="text-[9px] text-gray-500 font-bold uppercase tracking-tight">#0001</p>
+                    <p id="my-name" class="text-[11px] font-bold text-white truncate">...</p>
+                    <p class="text-[9px] text-[#b5bac1] font-bold uppercase tracking-tighter">En ligne</p>
                 </div>
             </div>
-            <div class="flex items-center">
-                <button title="Micro" class="p-2 text-gray-400 hover:bg-white/5 rounded-md transition-all">🎙️</button>
-                <button onclick="openSettings()" title="Paramètres" class="p-2 text-gray-400 hover:bg-white/5 rounded-md transition-all">⚙️</button>
+            <div class="flex items-center text-[#b5bac1]">
+                <button class="p-2 hover:bg-[#35373c] rounded-md"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></button>
+                <button onclick="showSettings('account')" class="p-2 hover:bg-[#35373c] rounded-md"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
             </div>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col bg-[#0a0a0a]">
-        <header class="h-12 border-b border-white/5 flex items-center px-4 bg-black/10 gap-4">
-            <span class="text-gray-500 font-bold">@</span>
-            <span id="chat-target-name" class="font-bold text-sm">Amis</span>
+    <main class="flex-1 flex flex-col main-bg">
+        <header class="h-12 border-b border-black/20 flex items-center px-4 bg-[#313338] shadow-sm justify-between">
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 pr-4 border-r border-white/5 text-[#949ba4]">
+                    <svg width="24" height="24" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    <span class="font-bold text-white text-sm">Amis</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="updateView('online')" id="btn-online" class="nav-btn nav-btn-active">En ligne</button>
+                    <button onclick="updateView('all')" id="btn-all" class="nav-btn nav-btn-inactive">Tous</button>
+                    <button onclick="updateView('pending')" id="btn-pending" class="nav-btn nav-btn-inactive relative">
+                        En attente <span id="wait-count" class="hidden absolute -top-1 -right-2 bg-[#f23f42] text-white text-[10px] px-1 rounded-full border-2 border-[#313338]">0</span>
+                    </button>
+                    <button onclick="updateView('add')" id="btn-add" class="nav-btn bg-[#248046] text-white hover:bg-[#1a6334]">Ajouter un ami</button>
+                </div>
+            </div>
         </header>
-        <div id="view-container" class="flex-1 p-6 flex flex-col items-center justify-center">
-            <img src="https://discord.com/assets/d01073df26888200f40d.svg" class="w-48 opacity-10 mb-4">
-            <p class="text-gray-600 text-sm italic font-medium text-center">Sélectionne un ami pour discuter ou va dans les paramètres pour pimper ton profil.</p>
-        </div>
+
+        <div id="central-view" class="flex-1 p-6 overflow-y-auto">
+            </div>
     </main>
 
-    <div id="settings-overlay" class="fixed inset-0 z-[500] bg-[#0a0a0a] hidden opacity-0 flex">
-        <div class="w-[35%] bg-[#080808] flex justify-end pr-6 pt-16 border-r border-white/5">
+    <div id="settings-layer" class="fixed inset-0 z-[1000] bg-[#313338] hidden flex animate-pop">
+        <aside class="w-[35%] bg-[#2b2d31] flex justify-end pr-6 pt-16">
             <div class="w-52">
-                <p class="text-[10px] font-black text-gray-500 uppercase px-3 mb-2 tracking-widest">Paramètres utilisateur</p>
-                <div class="settings-sidebar-item settings-active">Mon compte</div>
-                <div onclick="switchSettingsTab('profile')" class="settings-sidebar-item">Profil</div>
-                <div class="settings-sidebar-item">Apparence</div>
-                <div class="h-[1px] bg-white/5 my-2 mx-3"></div>
-                <div onclick="logout()" class="settings-sidebar-item text-red-400 hover:text-red-300">Déconnexion</div>
+                <p class="text-[11px] font-black text-[#949ba4] uppercase px-2 mb-2 tracking-widest">Paramètres utilisateur</p>
+                <div onclick="tabSettings('account')" id="set-account" class="settings-item settings-active">Mon compte</div>
+                <div onclick="tabSettings('profile')" id="set-profile" class="settings-item">Profil de l'utilisateur</div>
+                <div class="settings-item">Apparence</div>
+                <div class="h-[1px] bg-white/5 my-2 mx-2"></div>
+                <div onclick="window.location.reload()" class="settings-item text-[#f23f42] hover:bg-[#f23f42]/10">Déconnexion</div>
             </div>
-        </div>
-        <div class="flex-1 bg-[#0a0a0a] pt-16 px-12 relative overflow-y-auto">
-            <div class="max-w-3xl">
-                <h2 class="text-xl font-bold mb-6">Mon compte</h2>
-                <div class="bg-[#111] rounded-xl overflow-hidden border border-white/5 mb-8">
-                    <div class="h-24 bg-blue-600"></div>
-                    <div class="px-6 pb-6 flex items-start justify-between">
-                        <div class="flex gap-4">
-                            <div class="relative -mt-10 group cursor-pointer" onclick="document.getElementById('input-pfp-edit').click()">
-                                <img id="edit-pfp-preview" class="w-20 h-20 rounded-2xl border-8 border-[#111] bg-gray-800 object-cover">
-                                <div class="absolute inset-0 bg-black/40 rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold">CHANGER</div>
-                                <input type="file" id="input-pfp-edit" class="hidden" accept="image/*">
-                            </div>
-                            <div class="mt-2">
-                                <p id="edit-name-display" class="text-xl font-black italic">Ahmed</p>
-                                <p class="text-gray-500 text-xs">#0001</p>
-                            </div>
-                        </div>
-                        <button onclick="saveProfileChanges()" class="mt-4 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-xs font-bold uppercase transition-all">Enregistrer</button>
-                    </div>
-                    <div class="px-6 pb-6 space-y-4">
-                        <div class="bg-black/20 p-4 rounded-lg">
-                            <p class="text-[10px] font-black text-gray-500 uppercase mb-2 tracking-widest">Biographie</p>
-                            <textarea id="edit-bio" class="w-full bg-transparent outline-none border-none text-sm text-gray-300 resize-none h-20" placeholder="Décris-toi..."></textarea>
-                        </div>
-                    </div>
+        </aside>
+
+        <main class="flex-1 bg-[#313338] pt-16 px-12 relative overflow-y-auto">
+            <div id="settings-content" class="max-w-2xl">
                 </div>
+            <div onclick="closeSettings()" class="fixed top-14 right-20 flex flex-col items-center gap-1 cursor-pointer group">
+                <div class="w-9 h-9 border-2 border-[#b5bac1] rounded-full flex items-center justify-center group-hover:bg-[#41434a] transition-all">
+                    <span class="text-[#b5bac1] group-hover:text-white">✕</span>
+                </div>
+                <span class="text-[11px] font-bold text-[#b5bac1] uppercase group-hover:text-white">ESC</span>
             </div>
-            <button onclick="closeSettings()" class="fixed top-16 right-20 flex flex-col items-center gap-1 group">
-                <div class="w-9 h-9 border-2 border-gray-500 rounded-full flex items-center justify-center group-hover:border-white group-hover:bg-white/5 transition-all">
-                    <span class="text-gray-400 group-hover:text-white">✕</span>
-                </div>
-                <span class="text-[10px] font-bold text-gray-500 uppercase group-hover:text-white">ESC</span>
-            </button>
-        </div>
+        </main>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, set, onValue, update, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, onValue, set, update, push, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDZUfpKI7Cby-H0Qy2046Ez3VP7MjS6qOE",
@@ -126,101 +126,160 @@
         const db = getDatabase(app);
 
         let userSession = null;
-        let pfpBase64 = null;
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 onValue(ref(db, `users_data/${user.uid}`), (snap) => {
                     userSession = snap.val() || {};
+                    userSession.uid = user.uid;
+                    if (user.email === 'ahmedbro210@gmail.com') userSession.isAdmin = true;
                     updateUI();
-                    listenToFriends();
+                    listenPending();
                 });
-                
-                // Presence
-                const presenceRef = ref(db, `online_users/${user.uid}`);
-                set(presenceRef, true);
-                onDisconnect(presenceRef).remove();
-            } else {
-                window.location.href = "login.html";
+                updateView('online');
             }
         });
 
         function updateUI() {
-            document.getElementById('my-name').innerText = userSession.pseudo || "Anonyme";
+            document.getElementById('my-name').innerText = userSession.pseudo || "Utilisateur";
             document.getElementById('my-pfp').src = userSession.pfp || "https://ui-avatars.com/api/?background=random";
-            document.getElementById('edit-pfp-preview').src = userSession.pfp || "https://ui-avatars.com/api/?background=random";
-            document.getElementById('edit-bio').value = userSession.bio || "";
-            document.getElementById('edit-name-display').innerText = userSession.pseudo;
         }
 
-        // --- GESTION DES AMIS (PERSISTANTS) ---
-        function listenToFriends() {
-            onValue(ref(db, `friends/${auth.currentUser.uid}`), (friendsSnap) => {
-                const friends = friendsSnap.val() || {};
-                onValue(ref(db, 'online_users'), (onlineSnap) => {
-                    const onlineUsers = onlineSnap.val() || {};
-                    const container = document.getElementById('friends-list-sidebar');
-                    container.innerHTML = "";
-                    
-                    Object.keys(friends).forEach(id => {
-                        const isOnline = onlineUsers[id] ? true : false;
-                        const f = friends[id];
-                        container.innerHTML += `
-                            <div class="flex items-center gap-3 p-2 rounded-md hover:bg-white/5 cursor-pointer group transition-all">
-                                <div class="relative">
-                                    <img src="${f.pfp}" class="w-8 h-8 rounded-full object-cover bg-gray-800 ${!isOnline ? 'grayscale opacity-50' : ''}">
-                                    <div class="status-dot ${isOnline ? 'online' : 'offline'}"></div>
-                                </div>
-                                <div class="truncate flex-1">
-                                    <p class="text-xs font-bold ${isOnline ? 'text-gray-200' : 'text-gray-500'} group-hover:text-white transition-colors">${f.name}</p>
-                                    <p class="text-[9px] text-gray-600 font-bold uppercase tracking-tight">${isOnline ? 'En ligne' : 'Hors ligne'}</p>
-                                </div>
-                            </div>`;
-                    });
-                });
+        // --- NAVIGATION HEADER ---
+        window.updateView = (view) => {
+            const container = document.getElementById('central-view');
+            // Reset boutons
+            ['online', 'all', 'pending', 'add'].forEach(v => {
+                const btn = document.getElementById(`btn-${v}`);
+                btn.className = v === view ? "nav-btn nav-btn-active" : (v === 'add' ? "nav-btn bg-[#248046] text-white" : "nav-btn nav-btn-inactive");
+            });
+
+            if (view === 'add') {
+                container.innerHTML = `
+                    <div class="max-w-md">
+                        <h2 class="text-white font-bold uppercase text-xs mb-2">Ajouter un ami</h2>
+                        <p class="text-[#b5bac1] text-[13px] mb-4">Tu peux ajouter des amis grâce à leur nom d'utilisateur NexCord.</p>
+                        <div class="bg-[#1e1f22] p-2 rounded-lg border border-black/40 flex items-center gap-2 focus-within:border-blue-500 transition-all">
+                            <input id="add-input" type="text" placeholder="Entrez un nom d'utilisateur" class="flex-1 bg-transparent outline-none text-sm px-2">
+                            <button onclick="sendRequest()" class="bg-[#5865f2] px-6 py-2 rounded text-xs font-bold text-white hover:bg-[#4752c4]">Envoyer</button>
+                        </div>
+                    </div>`;
+            } else if (view === 'pending') {
+                renderPending();
+            } else {
+                container.innerHTML = `<div class="flex flex-col items-center justify-center h-full opacity-30 italic text-sm"><p>Rien à voir ici pour l'instant...</p></div>`;
+            }
+        };
+
+        // --- GESTION DES PARAMÈTRES ---
+        window.showSettings = (tab) => {
+            document.getElementById('settings-layer').classList.remove('hidden');
+            tabSettings(tab);
+        };
+
+        window.closeSettings = () => document.getElementById('settings-layer').classList.add('hidden');
+
+        window.tabSettings = (tab) => {
+            const content = document.getElementById('settings-content');
+            document.querySelectorAll('.settings-item').forEach(el => el.classList.remove('settings-active'));
+            document.getElementById(`set-${tab === 'account' ? 'account' : 'profile'}`).classList.add('settings-active');
+
+            if (tab === 'account') {
+                content.innerHTML = `
+                    <h1 class="text-xl font-bold text-white mb-6 tracking-tight">Mon compte</h1>
+                    <div class="bg-[#1e1f22] rounded-xl p-4 border border-black/20 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <img src="${userSession.pfp}" class="w-16 h-16 rounded-full object-cover">
+                            <div>
+                                <p class="text-white font-bold">${userSession.pseudo} <span class="text-[#b5bac1]">#0001</span></p>
+                                <p class="text-[#b5bac1] text-xs">${auth.currentUser.email}</p>
+                            </div>
+                        </div>
+                        <button onclick="showSettings('profile')" class="bg-[#5865f2] px-4 py-2 rounded text-xs font-bold text-white">Modifier le profil</button>
+                    </div>`;
+            } else if (tab === 'profile') {
+                content.innerHTML = `
+                    <h1 class="text-xl font-bold text-white mb-6">Profil de l'utilisateur</h1>
+                    <div class="space-y-6">
+                        <div class="bg-[#1e1f22] rounded-xl p-6 border border-black/20">
+                            <label class="text-[11px] font-black text-[#949ba4] uppercase block mb-2">Avatar</label>
+                            <input type="file" id="pfp-up" class="hidden" accept="image/*">
+                            <button onclick="document.getElementById('pfp-up').click()" class="bg-[#5865f2] px-4 py-2 rounded text-xs font-bold text-white mb-6">Changer l'avatar</button>
+                            
+                            <label class="text-[11px] font-black text-[#949ba4] uppercase block mb-2">Biographie</label>
+                            <textarea id="bio-val" class="w-full bg-[#111214] border-none rounded-lg p-3 text-sm outline-none h-24 mb-4">${userSession.bio || ""}</textarea>
+                            
+                            <button onclick="saveProfile()" class="bg-[#248046] px-8 py-3 rounded text-xs font-bold text-white uppercase tracking-widest">Enregistrer les modifications</button>
+                        </div>
+                    </div>`;
+                
+                document.getElementById('pfp-up').onchange = (e) => {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => userSession.tempPfp = ev.target.result;
+                    reader.readAsDataURL(e.target.files[0]);
+                };
+            }
+        };
+
+        window.saveProfile = async () => {
+            const updates = { bio: document.getElementById('bio-val').value };
+            if (userSession.tempPfp) updates.pfp = userSession.tempPfp;
+            await update(ref(db, `users_data/${userSession.uid}`), updates);
+            alert("Profil mis à jour !");
+        };
+
+        // --- LOGIQUE AMIS ---
+        window.sendRequest = () => {
+            const target = document.getElementById('add-input').value.trim();
+            if (!target) return;
+            push(ref(db, `pending_requests/${target}`), {
+                from: userSession.pseudo,
+                fromPfp: userSession.pfp,
+                fromUid: userSession.uid
+            });
+            alert("Demande envoyée !");
+        };
+
+        function listenPending() {
+            onValue(ref(db, `pending_requests/${userSession.pseudo}`), (snap) => {
+                const count = snap.val() ? Object.keys(snap.val()).length : 0;
+                const badge = document.getElementById('wait-count');
+                badge.innerText = count;
+                count > 0 ? badge.classList.remove('hidden') : badge.classList.add('hidden');
             });
         }
 
-        // --- PARAMÈTRES & PROFIL ---
-        window.openSettings = () => {
-            const el = document.getElementById('settings-overlay');
-            el.classList.remove('hidden');
-            setTimeout(() => { el.style.opacity = "1"; el.style.transform = "scale(1)"; }, 10);
+        function renderPending() {
+            const container = document.getElementById('central-view');
+            onValue(ref(db, `pending_requests/${userSession.pseudo}`), (snap) => {
+                const reqs = snap.val();
+                if (!reqs) { container.innerHTML = `<p class="text-center text-gray-600 mt-10">Aucune demande.</p>`; return; }
+                container.innerHTML = `<h2 class="text-[#b5bac1] text-xs font-bold uppercase mb-4 tracking-widest">En attente — ${Object.keys(reqs).length}</h2>`;
+                for (let id in reqs) {
+                    const r = reqs[id];
+                    container.innerHTML += `
+                        <div class="flex items-center justify-between p-3 border-t border-white/5 hover:bg-white/5 rounded-lg transition-all">
+                            <div class="flex items-center gap-3">
+                                <img src="${r.fromPfp}" class="w-10 h-10 rounded-full object-cover">
+                                <div><p class="text-white font-bold text-sm">${r.from}</p><p class="text-[#b5bac1] text-xs font-medium">Demande entrante</p></div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="actionReq('${id}','accept','${r.fromUid}','${r.from}','${r.fromPfp}')" class="bg-[#248046] p-2 rounded-full text-white">✓</button>
+                                <button onclick="actionReq('${id}','reject')" class="bg-[#f23f42] p-2 rounded-full text-white">✕</button>
+                            </div>
+                        </div>`;
+                }
+            });
+        }
+
+        window.actionReq = async (id, action, tUid, tName, tPfp) => {
+            if (action === 'accept') {
+                await update(ref(db, `friends/${userSession.uid}/${tUid}`), { name: tName, pfp: tPfp });
+                await update(ref(db, `friends/${tUid}/${userSession.uid}`), { name: userSession.pseudo, pfp: userSession.pfp });
+            }
+            await remove(ref(db, `pending_requests/${userSession.pseudo}/${id}`));
         };
 
-        window.closeSettings = () => {
-            const el = document.getElementById('settings-overlay');
-            el.style.opacity = "0"; el.style.transform = "scale(1.1)";
-            setTimeout(() => el.classList.add('hidden'), 200);
-        };
-
-        window.saveProfileChanges = async () => {
-            const newBio = document.getElementById('edit-bio').value;
-            const updates = { bio: newBio };
-            if (pfpBase64) updates.pfp = pfpBase64;
-            
-            await update(ref(db, `users_data/${auth.currentUser.uid}`), updates);
-            alert("Profil mis à jour ! 🔥");
-        };
-
-        // Upload PFP
-        document.getElementById('input-pfp-edit').onchange = (e) => {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                pfpBase64 = reader.result;
-                document.getElementById('edit-pfp-preview').src = pfpBase64;
-            };
-            if (file) reader.readAsDataURL(file);
-        };
-
-        window.logout = () => signOut(auth).then(() => window.location.reload());
-
-        window.openMyProfile = () => {
-            // Dans Discord, cliquer sur l'avatar ouvre souvent un mini-profil ou les paramètres. 
-            // Ici on redirige vers l'onglet Profil des paramètres.
-            openSettings();
-        };
     </script>
 </body>
 </html>
