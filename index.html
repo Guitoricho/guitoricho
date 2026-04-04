@@ -3,68 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexCord | Professional Dashboard</title>
+    <title>NexCord | Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --d-gray: #313338; --d-black: #111214; --d-sidebar: #2b2d31; --d-user: #232428; --d-blue: #5865f2; --d-green: #248046; --d-red: #f23f42; }
+        :root { --d-gray: #313338; --d-black: #111214; --d-sidebar: #2b2d31; --d-user: #232428; --d-blue: #5865f2; }
         body { background-color: var(--d-black); color: #dbdee1; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; margin: 0; }
         
-        /* Tooltips */
-        .tooltip { position: relative; }
-        .tooltip::after {
-            content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%);
-            padding: 6px 12px; background: #000; border: 1px solid #333; color: white; font-size: 11px;
-            border-radius: 5px; white-space: nowrap; opacity: 0; pointer-events: none; transition: 0.15s ease; font-weight: 700;
-        }
-        .tooltip:hover::after { opacity: 1; }
-
-        .status-dot { width: 14px; height: 14px; border-radius: 50%; border: 3px solid var(--d-user); position: absolute; bottom: -2px; right: -2px; transition: 0.3s; }
+        .status-dot { width: 14px; height: 14px; border-radius: 50%; border: 3px solid var(--d-user); position: absolute; bottom: -2px; right: -2px; }
         .online { background: #23a55a; }
         .offline { background: #80848e; }
         
-        .nav-btn { @apply px-4 py-1.5 rounded-md text-sm font-semibold transition-all duration-200 cursor-pointer; }
+        .nav-btn { @apply px-4 py-1.5 rounded-md text-sm font-semibold transition-all cursor-pointer; }
         .nav-active { @apply bg-[#404249] text-white; }
         .nav-inactive { @apply text-[#b5bac1] hover:bg-[#35373c] hover:text-[#dbdee1]; }
 
         .settings-item { @apply flex items-center justify-between px-3 py-2 rounded-md text-[#b5bac1] hover:bg-[#3f4147] hover:text-[#dbdee1] cursor-pointer mb-1 transition-all; }
         .settings-active { @apply bg-[#4f545c]/40 text-white !important; }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #1a1b1e; border-radius: 10px; }
-
-        /* Animations */
-        @keyframes pop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .animate-pop { animation: pop 0.2s ease-out forwards; }
+        @keyframes pop { from { transform: scale(0.98); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .animate-pop { animation: pop 0.15s ease-out forwards; }
     </style>
 </head>
 <body class="flex h-screen w-screen select-none">
 
-    <nav class="w-[72px] bg-black flex flex-col items-center py-3 gap-2 border-r border-white/5 z-10">
-        <div onclick="updateMainView('home')" class="group relative w-12 h-12 bg-blue-600 rounded-[15px] flex items-center justify-center text-white cursor-pointer hover:rounded-[12px] transition-all duration-300">
+    <nav class="w-[72px] bg-black flex flex-col items-center py-3 gap-2 border-r border-white/5">
+        <div onclick="location.reload()" class="w-12 h-12 bg-blue-600 rounded-[15px] flex items-center justify-center text-white cursor-pointer hover:rounded-[12px] transition-all shadow-lg">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg>
-            <div class="absolute left-0 w-1 h-8 bg-white rounded-r-full scale-y-0 group-hover:scale-y-100 transition-transform"></div>
         </div>
-        <div class="w-8 h-[2px] bg-white/10 rounded-full my-1"></div>
-        <div class="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center font-black italic text-zinc-500 hover:bg-blue-600 hover:text-white hover:rounded-xl cursor-pointer transition-all">N</div>
     </nav>
 
     <aside class="w-60 bg-[#2b2d31] flex flex-col">
         <div class="h-12 flex items-center px-3 border-b border-black/20 shadow-sm">
-            <div class="w-full bg-[#1e1f22] text-[11px] text-[#949ba4] px-2 py-1.5 rounded font-medium cursor-pointer">Rechercher ou démarrer...</div>
+            <div class="w-full bg-[#1e1f22] text-[11px] text-[#949ba4] px-2 py-1.5 rounded font-medium">Rechercher...</div>
         </div>
         
         <div class="flex-1 p-2 space-y-1 overflow-y-auto" id="friends-list-sidebar">
             <p class="text-[10px] font-black text-[#949ba4] uppercase px-2 mt-4 mb-2 tracking-widest">Messages privés</p>
-            </div>
+        </div>
 
         <div class="p-1.5 bg-[#232428] flex items-center gap-1">
             <div onclick="openSettings('profile')" class="flex items-center gap-2 p-1.5 hover:bg-[#35373c] rounded-md cursor-pointer flex-1 min-w-0 transition-all">
                 <div class="relative min-w-[32px]">
-                    <img id="my-pfp" class="w-8 h-8 rounded-full object-cover bg-zinc-800 border border-white/5">
-                    <div id="my-status-dot" class="status-dot online"></div>
+                    <img id="my-pfp" class="w-8 h-8 rounded-full object-cover bg-zinc-800">
+                    <div class="status-dot online"></div>
                 </div>
                 <div class="truncate">
                     <p id="my-name" class="text-[11px] font-bold text-white truncate">Chargement...</p>
@@ -72,12 +54,8 @@
                 </div>
             </div>
             <div class="flex items-center text-[#b5bac1]">
-                <button class="p-2 hover:bg-[#35373c] rounded-md transition-colors">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
-                </button>
-                <button onclick="openSettings('account')" class="p-2 hover:bg-[#35373c] rounded-md transition-colors">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-                </button>
+                <button class="p-2 hover:bg-[#35373c] rounded-md"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></button>
+                <button onclick="openSettings('account')" class="p-2 hover:bg-[#35373c] rounded-md"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
             </div>
         </div>
     </aside>
@@ -86,47 +64,34 @@
         <header class="h-12 border-b border-black/20 flex items-center px-4 bg-[#313338] shadow-sm justify-between">
             <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2 pr-4 border-r border-white/5 text-[#949ba4]">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                     <span class="font-bold text-white text-sm">Amis</span>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="updateMainView('online')" id="btn-online" class="nav-btn nav-active">En ligne</button>
-                    <button onclick="updateMainView('all')" id="btn-all" class="nav-btn nav-inactive">Tous</button>
-                    <button onclick="updateMainView('pending')" id="btn-pending" class="nav-btn nav-inactive relative">
-                        En attente <span id="badge-pending" class="hidden absolute -top-1 -right-2 bg-red-500 text-white text-[10px] px-1 rounded-full border-2 border-[#313338]">0</span>
-                    </button>
-                    <button onclick="updateMainView('add')" id="btn-add" class="nav-btn bg-[#248046] text-white hover:bg-[#1a6334]">Ajouter un ami</button>
+                    <button onclick="changeTab('online')" id="tab-online" class="nav-btn nav-active">En ligne</button>
+                    <button onclick="changeTab('pending')" id="tab-pending" class="nav-btn nav-inactive relative">En attente <span id="badge-p" class="hidden absolute -top-1 -right-2 bg-red-500 text-[10px] px-1 rounded-full border-2 border-[#313338]">0</span></button>
+                    <button onclick="changeTab('add')" id="tab-add" class="nav-btn bg-[#248046] text-white hover:bg-[#1a6334]">Ajouter</button>
                 </div>
             </div>
         </header>
-
-        <div id="main-view" class="flex-1 p-6 overflow-y-auto">
-            </div>
+        <div id="view-content" class="flex-1 p-6 overflow-y-auto"></div>
     </main>
 
-    <div id="settings-overlay" class="fixed inset-0 z-[100] bg-[#313338] hidden flex animate-pop">
+    <div id="settings-layer" class="fixed inset-0 z-[100] bg-[#313338] hidden flex animate-pop">
         <aside class="w-[35%] bg-[#2b2d31] flex justify-end pr-8 pt-16">
             <div class="w-48">
-                <p class="text-[11px] font-black text-[#949ba4] uppercase px-3 mb-2 tracking-widest">Paramètres utilisateur</p>
-                <div onclick="switchSettings('account')" id="set-tab-account" class="settings-item settings-active"><span>Mon compte</span></div>
-                <div onclick="switchSettings('profile')" id="set-tab-profile" class="settings-item"><span>Profil</span></div>
-                <div class="settings-item"><span>Apparence</span></div>
+                <p class="text-[11px] font-black text-[#949ba4] uppercase px-3 mb-2 tracking-widest">Paramètres</p>
+                <div onclick="tabSet('account')" id="t-account" class="settings-item settings-active"><span>Mon compte</span></div>
+                <div onclick="tabSet('profile')" id="t-profile" class="settings-item"><span>Profil</span></div>
                 <div class="h-[1px] bg-white/5 my-2 mx-3"></div>
-                <div onclick="handleLogout()" class="settings-item text-red-500 hover:bg-red-500/10">
-                    <span>Déconnexion</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 2v2H5v16h5v2H3V2h7zm9 11H9v-2h10V7l5 5-5 5v-4z"/></svg>
-                </div>
+                <div onclick="logoutUser()" class="settings-item text-red-500 hover:bg-red-500/10"><span>Déconnexion</span></div>
             </div>
         </aside>
-
-        <main class="flex-1 bg-[#313338] pt-16 px-12 relative overflow-y-auto">
-            <div id="settings-view" class="max-w-2xl">
-                </div>
-            <div onclick="closeSettings()" class="fixed top-14 right-20 flex flex-col items-center gap-1 cursor-pointer group">
-                <div class="w-9 h-9 border-2 border-[#b5bac1] rounded-full flex items-center justify-center group-hover:bg-white/5 transition-all">
-                    <span class="text-[#b5bac1] group-hover:text-white">✕</span>
-                </div>
-                <span class="text-[11px] font-bold text-[#b5bac1] uppercase group-hover:text-white">ESC</span>
+        <main class="flex-1 pt-16 px-12 relative overflow-y-auto">
+            <div id="set-content" class="max-w-2xl"></div>
+            <div onclick="closeSettings()" class="fixed top-14 right-20 flex flex-col items-center gap-1 cursor-pointer">
+                <div class="w-9 h-9 border-2 border-[#b5bac1] rounded-full flex items-center justify-center text-[#b5bac1] hover:text-white hover:border-white">✕</div>
+                <span class="text-[10px] font-bold text-[#b5bac1]">ESC</span>
             </div>
         </main>
     </div>
@@ -136,7 +101,6 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, onValue, set, update, push, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyDZUfpKI7Cby-H0Qy2046Ez3VP7MjS6qOE",
             authDomain: "jaster-8fdd4.firebaseapp.com",
@@ -151,219 +115,128 @@
         const auth = getAuth(app);
         const db = getDatabase(app);
 
-        let userSession = null;
-        const myBadges = {
-            STAFF: `<svg class="w-4 h-4 text-blue-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>`,
-            BOOST: `<svg class="w-4 h-4 text-pink-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>`,
-            DEV: `<svg class="w-4 h-4 text-green-400" viewBox="0 0 24 24" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>`,
-            VERIFIED: `<svg class="w-4 h-4 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`
-        };
+        let myData = null;
 
-        // --- AUTH & SESSION ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 onValue(ref(db, `users_data/${user.uid}`), (snap) => {
-                    userSession = snap.val() || {};
-                    userSession.uid = user.uid;
-                    userSession.email = user.email;
-                    // Ahmed Admin Level
-                    if (user.email === 'ahmedbro210@gmail.com') {
-                        userSession.badges = ["STAFF", "BOOST", "DEV", "VERIFIED"];
-                    }
-                    syncUI();
-                    listenToUpdates();
+                    myData = snap.val() || {};
+                    myData.uid = user.uid;
+                    document.getElementById('my-name').innerText = myData.pseudo || "Utilisateur";
+                    document.getElementById('my-pfp').src = myData.pfp || "https://ui-avatars.com/api/?background=random";
+                    syncFriends();
                 });
-                // Presence
-                const pRef = ref(db, `online_users/${user.uid}`);
-                set(pRef, true);
-                onDisconnect(pRef).remove();
-                updateMainView('online');
+                set(ref(db, `online_users/${user.uid}`), true);
+                onDisconnect(ref(db, `online_users/${user.uid}`)).remove();
+                changeTab('online');
             } else {
-                // Éviter le 404 GitHub en redirigeant vers index.html
-                if (window.location.pathname !== '/' && !window.location.pathname.endsWith('index.html')) {
-                    window.location.href = 'index.html';
-                }
+                window.location.href = 'login.html';
             }
         });
 
-        function syncUI() {
-            document.getElementById('my-name').innerText = userSession.pseudo || "Anonyme";
-            document.getElementById('my-pfp').src = userSession.pfp || "https://ui-avatars.com/api/?background=random";
-        }
-
-        // --- NAVIGATION MAIN ---
-        window.updateMainView = (view) => {
-            const container = document.getElementById('main-view');
-            // UI Toggle
-            ['online', 'all', 'pending', 'add'].forEach(v => {
-                const btn = document.getElementById(`btn-${v}`);
-                if (btn) btn.className = v === view ? "nav-btn nav-active" : (v === 'add' ? "nav-btn bg-[#248046] text-white" : "nav-btn nav-inactive");
+        window.changeTab = (tab) => {
+            const v = document.getElementById('view-content');
+            ['online', 'pending', 'add'].forEach(t => {
+                document.getElementById(`tab-${t}`).className = t === tab ? "nav-btn nav-active" : (t==='add' ? "nav-btn bg-[#248046] text-white" : "nav-btn nav-inactive");
             });
 
-            if (view === 'add') {
-                container.innerHTML = `
-                <div class="max-w-md animate-pop">
+            if (tab === 'add') {
+                v.innerHTML = `<div class="max-w-md animate-pop">
                     <h2 class="text-white font-bold uppercase text-xs mb-2">Ajouter un ami</h2>
-                    <p class="text-[#b5bac1] text-[13px] mb-4">Utilise le nom d'utilisateur NexCord pour envoyer une demande.</p>
-                    <div class="bg-[#1e1f22] p-1.5 rounded-lg border border-black/40 flex items-center gap-2 focus-within:border-blue-500">
-                        <input id="inp-target" type="text" placeholder="Entre un nom d'utilisateur" class="flex-1 bg-transparent outline-none text-sm px-2 text-white">
-                        <button onclick="sendFriendReq()" class="bg-[#5865f2] px-5 py-2 rounded text-xs font-bold text-white hover:bg-[#4752c4] transition-all">Envoyer</button>
+                    <div class="bg-[#1e1f22] p-2 rounded-lg flex items-center gap-2 border border-black/40">
+                        <input id="in-target" type="text" placeholder="Nom d'utilisateur" class="flex-1 bg-transparent outline-none text-sm px-2 text-white">
+                        <button onclick="sendReq()" class="bg-[#5865f2] px-5 py-2 rounded text-xs font-bold text-white">Envoyer</button>
                     </div>
                 </div>`;
-            } else if (view === 'pending') {
-                renderPendingList();
+            } else if (tab === 'pending') {
+                renderPending();
             } else {
-                container.innerHTML = `<div class="flex flex-col items-center justify-center h-full opacity-10 grayscale"><img src="https://discord.com/assets/d01073df26888200f40d.svg" class="w-64"><p class="mt-4 font-bold">Rien à voir ici...</p></div>`;
+                v.innerHTML = `<p class="text-center text-zinc-600 mt-20 italic">Aucun ami en ligne pour le moment.</p>`;
             }
         };
 
-        // --- AMIS & DEMANDES ---
-        window.sendFriendReq = () => {
-            const target = document.getElementById('inp-target').value.trim();
-            if (!target || target === userSession.pseudo) return;
-            push(ref(db, `pending_requests/${target}`), {
-                from: userSession.pseudo,
-                pfp: userSession.pfp,
-                uid: userSession.uid
-            });
+        window.sendReq = () => {
+            const target = document.getElementById('in-target').value.trim();
+            if(!target) return;
+            push(ref(db, `pending_requests/${target}`), { from: myData.pseudo, pfp: myData.pfp, uid: myData.uid });
             alert("Demande envoyée !");
-            document.getElementById('inp-target').value = "";
         };
 
-        function listenToUpdates() {
-            // Demandes en attente
-            onValue(ref(db, `pending_requests/${userSession.pseudo}`), (snap) => {
-                const count = snap.val() ? Object.keys(snap.val()).length : 0;
-                const b = document.getElementById('badge-pending');
-                b.innerText = count;
-                count > 0 ? b.classList.remove('hidden') : b.classList.add('hidden');
+        function renderPending() {
+            onValue(ref(db, `pending_requests/${myData.pseudo}`), (snap) => {
+                const reqs = snap.val();
+                const v = document.getElementById('view-content');
+                v.innerHTML = `<h2 class="text-[#b5bac1] text-xs font-bold uppercase mb-4">En attente</h2>`;
+                if(!reqs) { v.innerHTML += `<p class="text-zinc-600 text-sm italic">Rien ici.</p>`; return; }
+                for(let key in reqs) {
+                    const r = reqs[key];
+                    v.innerHTML += `<div class="flex items-center justify-between p-3 hover:bg-white/5 rounded-lg">
+                        <div class="flex items-center gap-3"><img src="${r.pfp}" class="w-10 h-10 rounded-full object-cover"><div><p class="text-white font-bold">${r.from}</p></div></div>
+                        <div class="flex gap-2"><button onclick="accept('${key}','${r.uid}','${r.from}','${r.pfp}')" class="bg-[#248046] p-2 rounded-full">✓</button></div>
+                    </div>`;
+                }
             });
-            // Liste Sidebar Amis
-            onValue(ref(db, `friends/${userSession.uid}`), (fSnap) => {
+        }
+
+        window.accept = async (key, uid, name, pfp) => {
+            await update(ref(db, `friends/${myData.uid}/${uid}`), { name, pfp });
+            await update(ref(db, `friends/${uid}/${myData.uid}`), { name: myData.pseudo, pfp: myData.pfp });
+            await remove(ref(db, `pending_requests/${myData.pseudo}/${key}`));
+        };
+
+        function syncFriends() {
+            onValue(ref(db, `friends/${myData.uid}`), (fSnap) => {
                 const friends = fSnap.val() || {};
                 onValue(ref(db, 'online_users'), (oSnap) => {
                     const online = oSnap.val() || {};
-                    const sidebar = document.getElementById('friends-list-sidebar');
-                    sidebar.innerHTML = `<p class="text-[10px] font-black text-[#949ba4] uppercase px-2 mt-4 mb-2 tracking-widest">Messages privés</p>`;
+                    const side = document.getElementById('friends-list-sidebar');
+                    side.innerHTML = `<p class="text-[10px] font-black text-[#949ba4] uppercase px-2 mt-4 mb-2 tracking-widest">Messages privés</p>`;
                     Object.keys(friends).forEach(id => {
-                        const f = friends[id];
-                        const isOnline = online[id] ? true : false;
-                        sidebar.innerHTML += `
-                        <div class="flex items-center gap-3 p-2 rounded-md hover:bg-[#35373c] cursor-pointer group transition-all">
-                            <div class="relative">
-                                <img src="${f.pfp}" class="w-8 h-8 rounded-full object-cover ${!isOnline ? 'grayscale opacity-50' : ''}">
-                                <div class="status-dot ${isOnline ? 'online' : 'offline'}"></div>
-                            </div>
-                            <div class="truncate flex-1">
-                                <p class="text-sm font-bold ${isOnline ? 'text-gray-200' : 'text-zinc-500'}">${f.name}</p>
-                                <p class="text-[9px] font-black uppercase text-zinc-600">${isOnline ? 'En ligne' : 'Hors ligne'}</p>
-                            </div>
+                        const isOnline = online[id];
+                        side.innerHTML += `<div class="flex items-center gap-3 p-2 rounded-md hover:bg-[#35373c] cursor-pointer group transition-all">
+                            <div class="relative"><img src="${friends[id].pfp}" class="w-8 h-8 rounded-full object-cover ${!isOnline?'grayscale opacity-50':''}">
+                            <div class="status-dot ${isOnline?'online':'offline'}"></div></div>
+                            <p class="text-sm font-bold ${isOnline?'text-white':'text-zinc-500'}">${friends[id].name}</p>
                         </div>`;
                     });
                 });
             });
         }
 
-        function renderPendingList() {
-            const container = document.getElementById('main-view');
-            onValue(ref(db, `pending_requests/${userSession.pseudo}`), (snap) => {
-                const reqs = snap.val();
-                if (!reqs) { container.innerHTML = `<p class="text-zinc-600 text-center mt-10 italic">Aucune demande en attente.</p>`; return; }
-                container.innerHTML = `<h2 class="text-[#b5bac1] text-xs font-bold uppercase mb-4 tracking-widest">En attente — ${Object.keys(reqs).length}</h2>`;
-                for (let key in reqs) {
-                    const r = reqs[key];
-                    container.innerHTML += `
-                    <div class="flex items-center justify-between p-3 border-b border-white/5 hover:bg-white/5 rounded-lg transition-all">
-                        <div class="flex items-center gap-3">
-                            <img src="${r.pfp}" class="w-10 h-10 rounded-full object-cover">
-                            <div><p class="text-white font-bold text-sm">${r.from}</p><p class="text-[#b5bac1] text-xs">Demande entrante</p></div>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="handleRequest('${key}', 'accept', '${r.uid}', '${r.from}', '${r.pfp}')" class="w-8 h-8 flex items-center justify-center bg-[#248046] rounded-full text-white hover:scale-110 transition-transform">✓</button>
-                            <button onclick="handleRequest('${key}', 'reject')" class="w-8 h-8 flex items-center justify-center bg-[#f23f42] rounded-full text-white hover:scale-110 transition-transform">✕</button>
-                        </div>
-                    </div>`;
-                }
-            });
-        }
-
-        window.handleRequest = async (key, action, targetUid, name, pfp) => {
-            if (action === 'accept') {
-                await update(ref(db, `friends/${userSession.uid}/${targetUid}`), { name, pfp });
-                await update(ref(db, `friends/${targetUid}/${userSession.uid}`), { name: userSession.pseudo, pfp: userSession.pfp });
-            }
-            await remove(ref(db, `pending_requests/${userSession.pseudo}/${key}`));
-        };
-
-        // --- SETTINGS LOGIC ---
-        window.openSettings = (tab) => {
-            document.getElementById('settings-overlay').classList.remove('hidden');
-            switchSettings(tab);
-        };
-
-        window.closeSettings = () => document.getElementById('settings-overlay').classList.add('hidden');
-
-        window.switchSettings = (tab) => {
-            const v = document.getElementById('settings-view');
-            document.querySelectorAll('.settings-item').forEach(i => i.classList.remove('settings-active'));
-            document.getElementById(`set-tab-${tab}`).classList.add('settings-active');
-
-            if (tab === 'account') {
-                v.innerHTML = `
-                <h1 class="text-xl font-bold text-white mb-6">Mon compte</h1>
-                <div class="bg-[#1e1f22] rounded-xl p-6 border border-black/20 flex items-center justify-between">
-                    <div class="flex items-center gap-5">
-                        <div class="relative">
-                            <img src="${userSession.pfp}" class="w-20 h-20 rounded-full object-cover shadow-2xl">
-                            <div class="absolute inset-0 rounded-full border-4 border-blue-500 opacity-20"></div>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-2">
-                                <h2 class="text-xl font-black italic text-white">${userSession.pseudo}</h2>
-                                <div class="flex gap-1">${(userSession.badges || []).map(b => `<div class="tooltip" data-tip="${b}">${myBadges[b]}</div>`).join('')}</div>
-                            </div>
-                            <p class="text-[#b5bac1] text-sm">${userSession.email}</p>
-                        </div>
-                    </div>
+        window.openSettings = (t) => { document.getElementById('settings-layer').classList.remove('hidden'); tabSet(t); };
+        window.closeSettings = () => document.getElementById('settings-layer').classList.add('hidden');
+        
+        window.tabSet = (tab) => {
+            const v = document.getElementById('set-content');
+            if(tab === 'profile') {
+                v.innerHTML = `<h1 class="text-xl font-bold text-white mb-6">Profil</h1>
+                <div class="bg-[#1e1f22] p-6 rounded-xl space-y-4">
+                    <input type="file" id="up-p" class="hidden" onchange="window.handleP(this)">
+                    <button onclick="document.getElementById('up-p').click()" class="bg-[#5865f2] px-4 py-2 rounded text-xs font-bold text-white">Changer l'image</button>
+                    <textarea id="up-b" class="w-full bg-[#111214] rounded-lg p-3 text-sm h-24 outline-none">${myData.bio||''}</textarea>
+                    <button onclick="saveP()" class="w-full bg-[#248046] py-2 rounded font-bold text-sm text-white">ENREGISTRER</button>
                 </div>`;
-            } else if (tab === 'profile') {
-                v.innerHTML = `
-                <h1 class="text-xl font-bold text-white mb-6">Profil utilisateur</h1>
-                <div class="bg-[#1e1f22] rounded-xl p-8 space-y-6">
-                    <div>
-                        <p class="text-[11px] font-black text-[#949ba4] uppercase mb-3">Avatar</p>
-                        <input type="file" id="new-pfp" class="hidden" accept="image/*">
-                        <button onclick="document.getElementById('new-pfp').click()" class="bg-[#5865f2] px-6 py-2 rounded text-xs font-bold text-white hover:bg-[#4752c4]">Changer l'avatar</button>
-                    </div>
-                    <div>
-                        <p class="text-[11px] font-black text-[#949ba4] uppercase mb-3">Bio</p>
-                        <textarea id="new-bio" class="w-full bg-[#111214] border-none rounded-lg p-4 text-sm outline-none text-white h-32 focus:ring-2 ring-blue-500/30 transition-all" placeholder="Parle-nous de toi...">${userSession.bio || ""}</textarea>
-                    </div>
-                    <button onclick="saveGlobalProfile()" class="w-full bg-[#248046] py-3 rounded-lg text-sm font-bold text-white uppercase tracking-widest hover:bg-[#1a6334] transition-all">Enregistrer</button>
+            } else {
+                v.innerHTML = `<h1 class="text-xl font-bold text-white mb-6">Mon compte</h1>
+                <div class="bg-[#1e1f22] p-6 rounded-xl flex items-center gap-4">
+                    <img src="${myData.pfp}" class="w-16 h-16 rounded-full object-cover">
+                    <div><p class="font-bold text-lg">${myData.pseudo}</p><p class="text-zinc-500 text-sm">${auth.currentUser.email}</p></div>
                 </div>`;
-
-                document.getElementById('new-pfp').onchange = (e) => {
-                    const reader = new FileReader();
-                    reader.onload = (ev) => userSession.tempPfp = ev.target.result;
-                    reader.readAsDataURL(e.target.files[0]);
-                };
             }
         };
 
-        window.saveGlobalProfile = async () => {
-            const bio = document.getElementById('new-bio').value;
-            const updates = { bio };
-            if (userSession.tempPfp) updates.pfp = userSession.tempPfp;
-            await update(ref(db, `users_data/${userSession.uid}`), updates);
-            alert("Profil mis à jour !");
+        window.handleP = (el) => {
+            const r = new FileReader(); r.onload = (e) => myData.temp = e.target.result; r.readAsDataURL(el.files[0]);
         };
 
-        window.handleLogout = () => {
-            signOut(auth).then(() => {
-                window.location.href = 'index.html';
-            });
+        window.saveP = async () => {
+            const up = { bio: document.getElementById('up-b').value };
+            if(myData.temp) up.pfp = myData.temp;
+            await update(ref(db, `users_data/${myData.uid}`), up);
+            alert("Sauvegardé !");
         };
 
+        window.logoutUser = () => signOut(auth).then(() => window.location.href = 'login.html');
     </script>
 </body>
 </html>
