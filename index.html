@@ -3,128 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexCord | Home</title>
+    <title>NexCord | v5.0 Final</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { background-color: #050505; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
         
-        /* Tooltip Style */
-        .tooltip { position: relative; display: inline-block; }
-        .tooltip .tooltiptext {
-            visibility: hidden; width: 80px; background-color: #000; color: #fff;
-            text-align: center; border-radius: 5px; padding: 5px; position: absolute;
-            z-index: 1; bottom: 125%; left: 50%; margin-left: -40px; opacity: 0;
-            transition: opacity 0.2s; font-size: 10px; font-weight: 800; border: 1px solid #333;
+        /* Tooltips */
+        .tooltip { position: relative; }
+        .tooltip::after {
+            content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%);
+            padding: 5px 10px; background: #000; border: 1px solid #333; color: white; font-size: 10px;
+            border-radius: 4px; white-space: nowrap; opacity: 0; pointer-events: none; transition: 0.2s;
         }
-        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        .tooltip:hover::after { opacity: 1; }
 
-        /* Discord Animations */
-        .srv-icon { transition: all 0.3s ease; cursor: pointer; border-radius: 50%; }
-        .srv-icon:hover, .srv-active { border-radius: 15px; background: #5865F2; }
+        .srv-icon { transition: 0.3s; cursor: pointer; border-radius: 50%; }
+        .srv-icon:hover { border-radius: 14px; background: #5865F2; }
+        .active-tab { background: rgba(255, 255, 255, 0.08); color: white; }
         
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
+        /* Icons SVG */
+        .icon-svg { width: 20px; height: 20px; fill: currentColor; }
     </style>
 </head>
 <body class="flex h-screen w-screen select-none">
 
-    <nav class="w-[72px] bg-[#020202] flex flex-col items-center py-3 gap-2 border-r border-white/5">
-        <div id="nav-home" class="srv-icon w-12 h-12 bg-[#313338] flex items-center justify-center srv-active group">
-            <span class="text-xl group-hover:scale-110 transition-transform">🏠</span>
+    <nav class="w-[72px] bg-[#020202] flex flex-col items-center py-4 gap-3 border-r border-white/5">
+        <div class="srv-icon w-12 h-12 bg-[#313338] flex items-center justify-center text-blue-500">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         </div>
         <div class="w-8 h-[2px] bg-white/5 rounded-full"></div>
-        <div id="nav-server" class="srv-icon w-12 h-12 bg-blue-600 flex items-center justify-center font-black italic">N</div>
-        <button class="srv-icon w-12 h-12 bg-[#313338] flex items-center justify-center text-green-500 hover:text-white font-bold text-xl">＋</button>
+        <div class="srv-icon w-12 h-12 bg-blue-600 flex items-center justify-center font-black italic">N</div>
     </nav>
 
     <aside class="w-60 bg-[#080808] border-r border-white/5 flex flex-col">
-        <div class="h-12 flex items-center px-3 border-b border-white/5 shadow-sm">
-            <button class="w-full bg-[#020202] text-[11px] text-gray-500 text-left px-2 py-1.5 rounded border border-white/5 font-medium">Rechercher ou démarrer...</button>
+        <div class="h-12 flex items-center px-3 border-b border-white/5">
+            <input type="text" placeholder="Rechercher..." class="w-full bg-[#020202] text-[11px] px-2 py-1.5 rounded border border-white/5 outline-none focus:border-blue-500/50">
         </div>
         
-        <div id="sidebar-content" class="flex-1 overflow-y-auto p-2 space-y-1 mt-2">
-            <button class="w-full flex items-center gap-3 px-3 py-2 rounded bg-white/10 text-white font-semibold text-sm">
-                <span>👥</span> Amis
-            </button>
-            <button class="w-full flex items-center gap-3 px-3 py-2 rounded text-gray-400 hover:bg-white/5 hover:text-gray-200 font-semibold text-sm transition-all">
-                <span>🔥</span> Nitro
+        <div class="flex-1 p-2 space-y-1 overflow-y-auto">
+            <button onclick="switchTab('friends')" class="w-full flex items-center gap-3 px-3 py-2 rounded active-tab font-semibold text-sm">
+                <svg class="icon-svg opacity-70" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                Amis
             </button>
             <p class="text-[10px] font-black text-gray-600 uppercase tracking-widest px-3 mt-4 mb-2">Messages privés</p>
-            <div id="dm-list" class="space-y-0.5">
-                </div>
+            <div id="dm-list" class="space-y-0.5"></div>
         </div>
 
-        <div class="p-2 bg-[#060606] border-t border-white/5 flex items-center gap-2">
-            <div class="relative cursor-pointer hover:opacity-80 transition-opacity">
+        <div id="my-profile-trigger" class="p-2 bg-[#060606] border-t border-white/5 flex items-center gap-2 hover:bg-white/5 cursor-pointer transition-all">
+            <div class="relative">
                 <img id="my-pfp" class="w-8 h-8 rounded-full object-cover bg-gray-800">
                 <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#060606] rounded-full"></div>
             </div>
             <div class="flex-1 truncate">
-                <p id="my-name" class="text-[11px] font-bold truncate">Chargement...</p>
-                <p id="my-status" class="text-[9px] text-gray-500 font-medium">En ligne</p>
+                <p id="my-name" class="text-[11px] font-bold truncate">...</p>
+                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">En ligne</p>
             </div>
-            <div class="flex gap-1 text-gray-400">
-                <button class="p-1 hover:bg-white/5 rounded">🎙️</button>
-                <button class="p-1 hover:bg-white/5 rounded">⚙️</button>
-            </div>
+            <svg class="icon-svg text-gray-500 w-4 h-4" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
         </div>
     </aside>
 
-    <main id="main-content" class="flex-1 flex flex-col bg-[#0a0a0a]">
+    <main class="flex-1 flex flex-col bg-[#0a0a0a]">
         <header class="h-12 border-b border-white/5 flex items-center px-4 bg-black/10 justify-between">
             <div class="flex items-center gap-4">
-                <div class="flex items-center gap-2 border-r border-white/10 pr-4">
-                    <span class="text-gray-500">👥</span>
+                <div class="flex items-center gap-2 border-r border-white/10 pr-4 text-gray-300">
+                    <svg class="icon-svg w-5 h-5" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                     <span class="font-bold text-sm">Amis</span>
                 </div>
-                <div class="flex gap-4 text-sm font-semibold">
-                    <button class="text-white bg-white/10 px-2 py-0.5 rounded">En ligne</button>
-                    <button class="text-gray-400 hover:bg-white/5 px-2 py-0.5 rounded">Tous</button>
-                    <button class="text-gray-400 hover:bg-white/5 px-2 py-0.5 rounded">En attente</button>
-                    <button class="bg-green-600 text-white px-2 py-0.5 rounded text-[11px]">Ajouter un ami</button>
+                <div class="flex gap-2 text-xs font-bold uppercase tracking-wider">
+                    <button onclick="showSubTab('online')" class="px-3 py-1 hover:bg-white/5 rounded transition-all">En ligne</button>
+                    <button onclick="showSubTab('pending')" class="px-3 py-1 hover:bg-white/5 rounded transition-all relative">
+                        En attente
+                        <span id="pending-count" class="hidden absolute -top-1 -right-1 bg-red-500 w-4 h-4 rounded-full flex items-center justify-center text-[8px]">0</span>
+                    </button>
+                    <button onclick="showSubTab('add')" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-all">Ajouter</button>
                 </div>
             </div>
         </header>
 
-        <div class="flex-1 flex flex-col items-center justify-center text-center p-8">
-            <img src="https://discord.com/assets/d01073df26888200f40d.svg" class="w-64 mb-8 opacity-20">
-            <p class="text-gray-500 text-sm font-medium">Personne ne joue pour l'instant. C'est l'occasion de sortir !</p>
-        </div>
+        <div id="view-container" class="flex-1 p-8 overflow-y-auto">
+            </div>
     </main>
 
-    <aside class="w-72 bg-[#080808] border-l border-white/5 hidden xl:flex flex-col p-4">
-        <h2 class="font-black text-white text-lg mb-4 tracking-tighter italic">En activité</h2>
-        <div class="bg-white/5 rounded-xl p-4 border border-white/5">
-            <p class="text-xs text-gray-400 font-medium">Tes amis sont timides aujourd'hui. Ajoute-en pour voir ce qu'ils font !</p>
-        </div>
-    </aside>
-
-    <div id="profile-modal" class="hidden fixed inset-0 z-[200] bg-black/80 flex items-center justify-center p-4">
-        <div class="w-[380px] bg-[#111] rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-            <div class="h-28 bg-gradient-to-br from-indigo-600 via-blue-500 to-purple-600 relative">
-                <img id="modal-pfp" class="absolute -bottom-10 left-4 w-24 h-24 rounded-2xl border-8 border-[#111] object-cover bg-black">
+    <div id="profile-modal" class="hidden fixed inset-0 z-[300] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="w-[380px] bg-[#111] rounded-3xl overflow-hidden border border-white/10 shadow-2xl animate-pop">
+            <div id="modal-banner" class="h-32 bg-gradient-to-br from-blue-600 to-indigo-900 relative">
+                <img id="modal-pfp" class="absolute -bottom-12 left-6 w-24 h-24 rounded-2xl border-[6px] border-[#111] bg-black object-cover">
             </div>
-            <div class="pt-14 p-6">
-                <div class="flex justify-between items-start mb-2">
-                    <h2 id="modal-name" class="text-2xl font-black tracking-tighter">Nom</h2>
-                    <div id="modal-badges" class="flex gap-1.5 bg-black/40 p-1.5 rounded-xl border border-white/5">
+            <div class="pt-16 p-8">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h2 id="modal-name" class="text-2xl font-black italic tracking-tighter">Ahmed</h2>
+                        <p id="modal-tag" class="text-gray-500 text-xs font-bold">@ahmedbro210</p>
+                    </div>
+                    <div id="modal-badges" class="flex gap-2 bg-black/30 p-2 rounded-xl border border-white/5">
                         </div>
                 </div>
-                <p id="modal-tag" class="text-gray-500 text-xs font-bold mb-6">@utilisateur_id</p>
-                
-                <div class="space-y-5 bg-[#181818] p-4 rounded-xl border border-white/5">
+                <div class="h-[1px] bg-white/5 my-6"></div>
+                <div class="space-y-4">
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">À propos de moi</p>
-                        <p id="modal-bio" class="text-xs text-gray-300 leading-relaxed font-medium">Membre NexCord certifié.</p>
+                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Bio</p>
+                        <p class="text-xs text-gray-300 italic font-medium">Propriétaire de NexCord. "Coder, c'est créer des mondes."</p>
                     </div>
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Membre NexCord depuis</p>
-                        <p class="text-xs text-gray-400">3 avril 2026</p>
+                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Date d'inscription</p>
+                        <p class="text-xs text-gray-400">3 Avril 2026</p>
                     </div>
                 </div>
-                <button onclick="document.getElementById('profile-modal').classList.add('hidden')" class="w-full mt-6 bg-white/5 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all border border-white/5">Fermer</button>
+                <button onclick="closeModal()" class="w-full mt-8 bg-white/5 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 border border-white/5">Fermer</button>
             </div>
         </div>
     </div>
@@ -132,9 +119,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, set, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, push, onValue, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // CONFIG (Utilise tes clés actuelles)
         const firebaseConfig = {
             apiKey: "AIzaSyDZUfpKI7Cby-H0Qy2046Ez3VP7MjS6qOE",
             authDomain: "jaster-8fdd4.firebaseapp.com",
@@ -149,71 +135,138 @@
         const auth = getAuth(app);
         const db = getDatabase(app);
 
-        // Définition des Badges Icons (SVG ou Emoji stylés)
-        const badgeIcons = {
-            BOOST: { icon: "💎", color: "text-pink-400", name: "Serveur Booster" },
-            STAFF: { icon: "🛡️", color: "text-blue-400", name: "Staff NexCord" },
-            DEV: { icon: "💻", color: "text-green-400", name: "Développeur" },
-            VERIFIED: { icon: "✅", color: "text-blue-500", name: "Certifié" },
-            EARLY: { icon: "🌟", color: "text-yellow-400", name: "Pionnier" }
+        let currentUserData = null;
+
+        // Custom SVGs for Badges
+        const badges = {
+            STAFF: `<svg class="w-4 h-4 text-blue-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>`,
+            BOOST: `<svg class="w-4 h-4 text-pink-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>`,
+            DEV: `<svg class="w-4 h-4 text-green-400" viewBox="0 0 24 24" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>`,
+            VERIFIED: `<svg class="w-4 h-4 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`
         };
 
         onAuthStateChanged(auth, (user) => {
-            if (user) setupSession(user);
+            if (user) {
+                onValue(ref(db, `users_data/${user.uid}`), (snap) => {
+                    currentUserData = snap.val() || { pseudo: user.displayName, pfp: user.photoURL };
+                    // Ahmed God Mode
+                    if (user.email === 'ahmedbro210@gmail.com') {
+                        currentUserData.badges = ["STAFF", "BOOST", "DEV", "VERIFIED"];
+                        currentUserData.isAhmed = true;
+                    }
+                    updateMyPanel();
+                    showSubTab('online');
+                    listenToPending();
+                });
+            }
         });
 
-        function setupSession(user) {
-            const userRef = ref(db, `online_users/${user.uid}`);
-            
-            // On récupère les données persistantes (bio, badges)
-            onValue(ref(db, `users_data/${user.uid}`), (snap) => {
-                const data = snap.val() || {};
-                const myInfo = {
-                    name: data.pseudo || user.displayName || "Anonyme",
-                    pfp: data.pfp || user.photoURL,
-                    bio: data.bio || "Pas de bio.",
-                    badges: data.badges || ["EARLY", "VERIFIED"], // Badges par défaut pour le test
-                    status: "En ligne"
-                };
+        function updateMyPanel() {
+            document.getElementById('my-name').innerText = currentUserData.pseudo;
+            document.getElementById('my-pfp').src = currentUserData.pfp;
+            document.getElementById('my-profile-trigger').onclick = () => showProfile(currentUserData);
+        }
 
-                document.getElementById('my-name').innerText = myInfo.name;
-                document.getElementById('my-pfp').src = myInfo.pfp;
+        // --- NAVIGATION ---
+        window.showSubTab = (tab) => {
+            const container = document.getElementById('view-container');
+            if (tab === 'add') {
+                container.innerHTML = `
+                    <div class="max-w-md animate-pop">
+                        <h2 class="text-xl font-bold mb-2">Ajouter un ami</h2>
+                        <p class="text-gray-500 text-sm mb-6">Tu peux ajouter des amis avec leur nom d'utilisateur NexCord.</p>
+                        <div class="flex gap-2 p-2 bg-black rounded-xl border border-white/10 focus-within:border-blue-500">
+                            <input type="text" id="add-pseudo" placeholder="Entrez un pseudo..." class="flex-1 bg-transparent px-2 outline-none text-sm">
+                            <button onclick="sendFriendRequest()" class="bg-blue-600 px-6 py-2 rounded-lg text-xs font-bold uppercase">Envoyer</button>
+                        </div>
+                    </div>`;
+            } else if (tab === 'pending') {
+                renderPending();
+            } else if (tab === 'online') {
+                container.innerHTML = `<div class="text-center mt-20 opacity-20"><p>Aucun ami en ligne pour le moment.</p></div>`;
+            }
+        };
 
-                set(userRef, myInfo);
-                onDisconnect(userRef).remove();
+        // --- SYSTEME AMIS ---
+        window.sendFriendRequest = async () => {
+            const targetPseudo = document.getElementById('add-pseudo').value.trim();
+            if (!targetPseudo) return;
+            // Dans un vrai système, on chercherait l'UID via le pseudo. Ici on simule par UID pour l'exemple.
+            // On envoie à la branche pending_requests/TARGET_UID
+            push(ref(db, `pending_requests/${targetPseudo}`), {
+                from: currentUserData.pseudo,
+                fromPfp: currentUserData.pfp,
+                fromUid: auth.currentUser.uid
+            });
+            alert("Demande envoyée à " + targetPseudo);
+        };
+
+        function listenToPending() {
+            // On écoute SES demandes reçues (on utilise son pseudo comme ID de canal)
+            onValue(ref(db, `pending_requests/${currentUserData.pseudo}`), (snap) => {
+                const reqs = snap.val();
+                const badge = document.getElementById('pending-count');
+                if (reqs) {
+                    const count = Object.keys(reqs).length;
+                    badge.innerText = count;
+                    badge.classList.remove('hidden');
+                } else badge.classList.add('hidden');
             });
         }
 
-        // Fonction pour afficher le profil Discord
-        window.showDiscordProfile = (userData) => {
-            document.getElementById('modal-name').innerText = userData.name;
-            document.getElementById('modal-pfp').src = userData.pfp;
-            document.getElementById('modal-bio').innerText = userData.bio;
-            document.getElementById('modal-tag').innerText = `@${userData.name.toLowerCase().replace(/\s/g, '')}`;
+        function renderPending() {
+            const container = document.getElementById('view-container');
+            onValue(ref(db, `pending_requests/${currentUserData.pseudo}`), (snap) => {
+                const reqs = snap.val();
+                if (!reqs) {
+                    container.innerHTML = `<p class="text-gray-600">Aucune demande en attente.</p>`;
+                    return;
+                }
+                container.innerHTML = `<h2 class="text-xs font-black text-gray-500 uppercase mb-4 tracking-widest">En attente — ${Object.keys(reqs).length}</h2>`;
+                for (let id in reqs) {
+                    const r = reqs[id];
+                    container.innerHTML += `
+                        <div class="flex items-center justify-between p-3 hover:bg-white/5 rounded-xl border border-transparent hover:border-white/5 transition-all mb-2">
+                            <div class="flex items-center gap-3">
+                                <img src="${r.fromPfp}" class="w-10 h-10 rounded-full object-cover">
+                                <div><p class="font-bold text-sm">${r.from}</p><p class="text-[10px] text-gray-500">Demande d'ami entrante</p></div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="acceptFriend('${id}', '${r.fromUid}', '${r.from}', '${r.fromPfp}')" class="bg-green-600 p-2 rounded-full hover:scale-110 transition-all">✅</button>
+                                <button onclick="rejectFriend('${id}')" class="bg-red-600 p-2 rounded-full hover:scale-110 transition-all">❌</button>
+                            </div>
+                        </div>`;
+                }
+            });
+        }
+
+        window.acceptFriend = (reqId, targetUid, targetName, targetPfp) => {
+            // 1. Ajouter aux amis respectifs
+            set(ref(db, `friends/${auth.currentUser.uid}/${targetUid}`), { name: targetName, pfp: targetPfp });
+            set(ref(db, `friends/${targetUid}/${auth.currentUser.uid}`), { name: currentUserData.pseudo, pfp: currentUserData.pfp });
+            // 2. Supprimer la demande
+            remove(ref(db, `pending_requests/${currentUserData.pseudo}/${reqId}`));
+            alert("Ami ajouté !");
+        };
+
+        // --- PROFIL ---
+        window.showProfile = (u) => {
+            document.getElementById('modal-name').innerText = u.pseudo || u.name;
+            document.getElementById('modal-pfp').src = u.pfp;
+            document.getElementById('modal-tag').innerText = `@${(u.pseudo || u.name).toLowerCase()}`;
             
             const badgeBox = document.getElementById('modal-badges');
-            badgeBox.innerHTML = (userData.badges || []).map(bKey => {
-                const b = badgeIcons[bKey];
-                return `
-                <div class="tooltip">
-                    <span class="text-sm ${b.color} cursor-help">${b.icon}</span>
-                    <span class="tooltiptext">${b.name}</span>
-                </div>`;
-            }).join('');
-
+            badgeBox.innerHTML = "";
+            if (u.badges) {
+                u.badges.forEach(b => {
+                    badgeBox.innerHTML += `<div class="tooltip cursor-help" data-tip="${b}">${badges[b]}</div>`;
+                });
+            }
             document.getElementById('profile-modal').classList.remove('hidden');
         };
 
-        // Navigation entre Home et Serveur (Visuel uniquement pour l'instant)
-        document.getElementById('nav-server').onclick = () => {
-            document.getElementById('main-content').innerHTML = `
-                <div class="flex-1 flex flex-col items-center justify-center text-gray-700 font-black italic text-5xl opacity-10 uppercase tracking-tighter">
-                    Mode Serveur Indisponible
-                </div>
-            `;
-            document.getElementById('nav-server').classList.add('srv-active');
-            document.getElementById('nav-home').classList.remove('srv-active');
-        };
+        window.closeModal = () => document.getElementById('profile-modal').classList.add('hidden');
+
     </script>
 </body>
 </html>
