@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexCord | Local System</title>
+    <title>NexCord | Secure Auth</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -11,65 +11,68 @@
         .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
         .custom-scrollbar::-webkit-scrollbar { width: 3px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-msg { animation: fadeIn 0.3s ease-out forwards; }
+        input { transition: all 0.3s ease; }
+        .btn-glow:hover { box-shadow: 0 0 20px rgba(37, 99, 235, 0.4); }
     </style>
 </head>
 <body class="flex h-screen">
 
     <div id="auth-screen" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#050505]">
-        <div class="glass p-10 rounded-[2.5rem] w-[420px] text-center border-white/10 shadow-2xl">
-            <h1 class="text-4xl font-black mb-2 tracking-tighter italic text-blue-500">NexCord</h1>
-            <p class="text-gray-500 mb-8 text-sm font-medium italic">Créez votre identité locale</p>
+        <div class="glass p-10 rounded-[3rem] w-[450px] border-white/10 shadow-2xl">
+            <h1 class="text-4xl font-black mb-2 tracking-tighter italic text-blue-500 text-center">NexCord</h1>
+            <p id="auth-title" class="text-gray-500 mb-8 text-sm font-medium text-center italic">Heureux de vous revoir !</p>
             
-            <div class="space-y-4">
-                <div class="relative group">
-                    <img id="preview-pfp" src="https://ui-avatars.com/api/?name=?&background=0D8ABC&color=fff" class="w-20 h-20 mx-auto rounded-2xl object-cover mb-4 border-2 border-white/5 group-hover:border-blue-500 transition-all cursor-pointer">
-                    <input type="file" id="input-pfp" class="hidden" accept="image/*">
-                    <p class="text-[10px] text-gray-600 uppercase font-bold mb-4">Cliquez pour changer la photo</p>
+            <div id="auth-form" class="space-y-4">
+                <div id="reg-fields" class="hidden space-y-4">
+                    <div class="flex justify-center mb-4">
+                        <div class="relative group cursor-pointer">
+                            <img id="preview-pfp" src="https://ui-avatars.com/api/?name=?&background=333&color=fff" class="w-20 h-20 rounded-2xl object-cover border-2 border-white/10 group-hover:border-blue-500">
+                            <input type="file" id="input-pfp" class="hidden" accept="image/*">
+                        </div>
+                    </div>
+                    <input type="text" id="user-pseudo" placeholder="Votre Pseudo" class="w-full bg-white/5 p-4 rounded-xl outline-none border border-white/5 focus:border-blue-500/50 text-sm">
                 </div>
+
+                <input type="email" id="user-email" placeholder="Email" class="w-full bg-white/5 p-4 rounded-xl outline-none border border-white/5 focus:border-blue-500/50 text-sm">
+                <input type="password" id="user-pass" placeholder="Mot de passe" class="w-full bg-white/5 p-4 rounded-xl outline-none border border-white/5 focus:border-blue-500/50 text-sm">
                 
-                <input type="text" id="reg-name" placeholder="Nom complet" class="w-full bg-white/5 p-4 rounded-xl outline-none border border-white/5 focus:border-blue-500/50 transition-all text-sm">
-                <input type="text" id="reg-user" placeholder="Nom d'utilisateur" class="w-full bg-white/5 p-4 rounded-xl outline-none border border-white/5 focus:border-blue-500/50 transition-all text-sm">
-                
-                <button id="btn-enter" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl mt-4 shadow-xl shadow-blue-600/20 transition-all active:scale-95 uppercase tracking-widest text-xs">
-                    Rejoindre le salon
+                <button id="auth-main-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl mt-4 btn-glow transition-all active:scale-95 uppercase tracking-widest text-xs">
+                    Se connecter
                 </button>
+
+                <p class="text-center text-[11px] text-gray-500 mt-6">
+                    <span id="toggle-text">Pas encore de compte ?</span>
+                    <button id="toggle-auth" class="text-blue-500 font-bold ml-1 hover:underline">S'inscrire</button>
+                </p>
             </div>
         </div>
     </div>
 
     <div id="main-ui" class="hidden flex h-screen w-full">
         <aside class="w-72 bg-[#080808] border-r border-white/5 flex flex-col">
-            <div class="p-6 h-16 border-b border-white/5 flex items-center font-black text-blue-500 italic tracking-tighter">NEXCORD</div>
-            
-            <div class="p-4 text-[10px] font-bold text-gray-600 uppercase tracking-widest">En ligne</div>
-            <div id="users-list" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar"></div>
-
+            <div class="p-6 h-16 border-b border-white/5 flex items-center justify-between font-black text-blue-500 italic tracking-tighter">
+                <span>NEXCORD</span>
+                <button id="btn-logout" class="text-[10px] text-gray-600 hover:text-red-500 uppercase">Quitter</button>
+            </div>
+            <div id="users-list" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar text-xs"></div>
             <div class="p-4 bg-black/40 border-t border-white/5 flex items-center gap-3">
-                <img id="my-pfp" class="w-10 h-10 rounded-full object-cover bg-gray-800">
+                <img id="my-pfp" class="w-10 h-10 rounded-full object-cover">
                 <div class="flex-1 truncate">
                     <p id="my-name" class="text-xs font-bold truncate">Pseudo</p>
-                    <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span><span class="text-[8px] text-gray-500 font-bold uppercase tracking-widest italic">Actif</span></div>
+                    <span class="text-[8px] text-green-500 font-bold uppercase">En ligne</span>
                 </div>
-                <select id="status-select" class="bg-transparent text-[10px] text-gray-500 outline-none cursor-pointer">
-                    <option value="Libre" class="bg-black text-green-500">Libre</option>
-                    <option value="Occupé" class="bg-black text-red-500">Occupé</option>
-                    <option value="En appel" class="bg-black text-purple-500">En appel</option>
-                </select>
             </div>
         </aside>
 
         <main class="flex-1 flex flex-col bg-[#0a0a0a]">
-            <header class="h-16 border-b border-white/5 flex items-center px-8 bg-black/10 backdrop-blur-md">
+            <header class="h-16 border-b border-white/5 flex items-center px-8 bg-black/10">
                 <span class="text-blue-500 font-bold mr-2 text-xl italic">#</span><span class="font-bold text-xs uppercase tracking-widest text-gray-400">Salon-Global</span>
             </header>
             <div id="chat-box" class="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar"></div>
             <div class="px-8 pb-8">
-                <div id="typing-indicator" class="text-[10px] text-gray-600 h-4 mb-2 ml-4 italic"></div>
-                <div class="glass rounded-2xl flex items-center p-2 border-white/10 focus-within:border-blue-500/50 transition-all shadow-2xl">
-                    <input type="text" id="chat-input" placeholder="Envoyer un message..." class="flex-1 bg-transparent py-4 px-4 outline-none text-sm text-gray-200">
-                    <button id="btn-send" class="bg-blue-600 px-8 py-3 rounded-xl hover:bg-blue-500 transition-all text-xs font-bold uppercase">Envoyer</button>
+                <div class="glass rounded-2xl flex items-center p-2 border-white/10">
+                    <input type="text" id="chat-input" placeholder="Écris ici..." class="flex-1 bg-transparent py-4 px-4 outline-none text-sm">
+                    <button id="btn-send" class="bg-blue-600 px-8 py-3 rounded-xl hover:bg-blue-500 text-xs font-bold uppercase">Envoyer</button>
                 </div>
             </div>
         </main>
@@ -77,6 +80,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, push, set, onChildAdded, onValue, serverTimestamp, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
@@ -90,64 +94,85 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getDatabase(app);
-        let currentUser = null;
-        let base64Pfp = "https://ui-avatars.com/api/?name=User&background=random";
 
-        // --- GESTION PHOTO DE PROFIL ---
+        let isLoginMode = true;
+        let base64Pfp = "https://ui-avatars.com/api/?background=333&color=fff";
+
+        // --- BASKULE LOGIN / REGISTER ---
+        document.getElementById('toggle-auth').onclick = () => {
+            isLoginMode = !isLoginMode;
+            document.getElementById('reg-fields').classList.toggle('hidden');
+            document.getElementById('auth-title').innerText = isLoginMode ? "Heureux de vous revoir !" : "Créez votre profil unique";
+            document.getElementById('auth-main-btn').innerText = isLoginMode ? "Se connecter" : "Créer mon compte";
+            document.getElementById('toggle-text').innerText = isLoginMode ? "Pas encore de compte ?" : "Déjà membre ?";
+            document.getElementById('toggle-auth').innerText = isLoginMode ? "S'inscrire" : "Se connecter";
+        };
+
+        // --- PHOTO PREVIEW ---
         document.getElementById('preview-pfp').onclick = () => document.getElementById('input-pfp').click();
         document.getElementById('input-pfp').onchange = (e) => {
             const file = e.target.files[0];
             const reader = new FileReader();
-            reader.onloadend = () => {
-                base64Pfp = reader.result;
-                document.getElementById('preview-pfp').src = base64Pfp;
-            };
+            reader.onloadend = () => { base64Pfp = reader.result; document.getElementById('preview-pfp').src = base64Pfp; };
             if (file) reader.readAsDataURL(file);
         };
 
-        // --- CONNEXION ---
-        document.getElementById('btn-enter').onclick = async () => {
-            const name = document.getElementById('reg-name').value.trim();
-            const username = document.getElementById('reg-user').value.trim().toLowerCase();
+        // --- ACTIONS AUTH ---
+        document.getElementById('auth-main-btn').onclick = async () => {
+            const email = document.getElementById('user-email').value;
+            const pass = document.getElementById('user-pass').value;
+            const pseudo = document.getElementById('user-pseudo').value;
 
-            if (!name || !username) return alert("Veuillez remplir les champs !");
-
-            currentUser = { name, username, pfp: base64Pfp, status: "Libre" };
-            
-            // UI Update
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('main-ui').classList.remove('hidden');
-            document.getElementById('my-name').innerText = name;
-            document.getElementById('my-pfp').src = base64Pfp;
-
-            startApp();
+            try {
+                if (isLoginMode) {
+                    await signInWithEmailAndPassword(auth, email, pass);
+                } else {
+                    const res = await createUserWithEmailAndPassword(auth, email, pass);
+                    // Sauvegarde du pseudo et de la photo dans le profil Firebase + Database
+                    await updateProfile(res.user, { displayName: pseudo, photoURL: base64Pfp });
+                    await set(ref(db, `users_data/${res.user.uid}`), { pseudo, pfp: base64Pfp });
+                }
+            } catch (err) { alert(err.message); }
         };
 
-        function startApp() {
+        document.getElementById('btn-logout').onclick = () => signOut(auth);
+
+        // --- ÉTAT DE CONNEXION ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('main-ui').classList.remove('hidden');
+                
+                // Récupération des infos depuis la DB pour être sûr
+                onValue(ref(db, `users_data/${user.uid}`), (snap) => {
+                    const data = snap.val();
+                    document.getElementById('my-name').innerText = data?.pseudo || user.displayName;
+                    document.getElementById('my-pfp').src = data?.pfp || user.photoURL;
+                    startChat(user, data?.pseudo || user.displayName, data?.pfp || user.photoURL);
+                });
+            } else {
+                document.getElementById('auth-screen').classList.remove('hidden');
+                document.getElementById('main-ui').classList.add('hidden');
+            }
+        });
+
+        function startChat(user, pseudo, pfp) {
             // Présence
-            const presenceRef = ref(db, `online_users/${currentUser.username}`);
-            set(presenceRef, currentUser);
-            onDisconnect(presenceRef).remove();
+            const pRef = ref(db, `online_users/${user.uid}`);
+            set(pRef, { pseudo, pfp });
+            onDisconnect(pRef).remove();
 
-            // Status
-            document.getElementById('status-select').onchange = (e) => {
-                set(ref(db, `online_users/${currentUser.username}/status`), e.target.value);
-            };
-
-            // Messages
+            // Affichage Messages
             onChildAdded(ref(db, 'messages'), (snap) => {
                 const m = snap.val();
-                const time = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
                 document.getElementById('chat-box').innerHTML += `
                     <div class="flex gap-4 animate-msg">
                         <img src="${m.pfp}" class="w-10 h-10 rounded-xl object-cover border border-white/5 shadow-lg">
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="text-blue-500 font-extrabold text-[10px] uppercase tracking-tighter">${m.author}</span>
-                                <span class="text-[9px] text-gray-700 font-bold">${time}</span>
-                            </div>
-                            <p class="text-gray-300 text-sm leading-relaxed">${m.text}</p>
+                        <div>
+                            <p class="text-blue-500 font-bold text-[10px] uppercase mb-1">${m.author}</p>
+                            <p class="text-gray-300 text-sm">${m.text}</p>
                         </div>
                     </div>`;
                 document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
@@ -157,55 +182,11 @@
             const send = () => {
                 const input = document.getElementById('chat-input');
                 if (input.value.trim()) {
-                    push(ref(db, 'messages'), {
-                        author: currentUser.name,
-                        pfp: currentUser.pfp,
-                        text: input.value,
-                        timestamp: serverTimestamp()
-                    });
+                    push(ref(db, 'messages'), { author: pseudo, pfp: pfp, text: input.value, timestamp: serverTimestamp() });
                     input.value = "";
-                    remove(ref(db, `typing/${currentUser.username}`));
                 }
             };
             document.getElementById('btn-send').onclick = send;
-            document.getElementById('chat-input').onkeypress = (e) => { if(e.key === 'Enter') send(); };
-
-            // Typing
-            document.getElementById('chat-input').oninput = () => {
-                set(ref(db, `typing/${currentUser.username}`), currentUser.name);
-                setTimeout(() => remove(ref(db, `typing/${currentUser.username}`)), 3000);
-            };
-
-            onValue(ref(db, 'typing'), (snap) => {
-                const typers = snap.val();
-                const el = document.getElementById('typing-indicator');
-                if (!typers) return el.innerText = "";
-                const names = Object.values(typers).filter(n => n !== currentUser.name);
-                el.innerText = names.length > 0 ? names.join(', ') + " est en train d'écrire..." : "";
-            });
-
-            // Membres
-            onValue(ref(db, 'online_users'), (snap) => {
-                const users = snap.val();
-                const container = document.getElementById('users-list');
-                container.innerHTML = "";
-                for (let id in users) {
-                    const u = users[id];
-                    const s = u.status || "Libre";
-                    const dotColor = s === "Libre" ? "bg-green-500" : (s === "Occupé" ? "bg-red-500" : "bg-purple-500");
-                    container.innerHTML += `
-                        <div class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-all">
-                            <div class="relative">
-                                <img src="${u.pfp}" class="w-9 h-9 rounded-lg object-cover">
-                                <div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 ${dotColor} border-2 border-[#080808] rounded-full"></div>
-                            </div>
-                            <div class="truncate">
-                                <p class="text-[11px] font-bold text-gray-200">${u.name}</p>
-                                <p class="text-[8px] text-gray-600 uppercase font-black">${s}</p>
-                            </div>
-                        </div>`;
-                }
-            });
         }
     </script>
 </body>
