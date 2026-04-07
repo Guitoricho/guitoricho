@@ -1,39 +1,141 @@
-<div class="profile-container">
-    <img id="roblox-pfp" src="" alt="Roblox Profile">
-    <p id="username">Chargement...</p>
-</div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@mido_jastry | NEXT-GEN ROBLOX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030303;
+            --accent: #ff3e3e;
+            --text: #ffffff;
+            --gray: #1a1a1a;
+        }
 
-<div class="carousel-container">
-    <div class="row row-1">
-        <div class="row-inner">
-            <img src="URL_IMAGE_1" alt="img">
-            <img src="URL_IMAGE_2" alt="img">
-            <img src="URL_IMAGE_3" alt="img">
-            <img src="URL_IMAGE_1" alt="img">
-            <img src="URL_IMAGE_2" alt="img">
-            <img src="URL_IMAGE_3" alt="img">
-        </div>
-    </div>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background-color: var(--bg); 
+            color: var(--text); 
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+        }
 
-    <div class="row row-2">
-        <div class="row-inner">
-            <img src="URL_IMAGE_4" alt="img">
-            <img src="URL_IMAGE_5" alt="img">
-            <img src="URL_IMAGE_6" alt="img">
-            <img src="URL_IMAGE_4" alt="img">
-            <img src="URL_IMAGE_5" alt="img">
-            <img src="URL_IMAGE_6" alt="img">
-        </div>
-    </div>
+        /* --- HERO --- */
+        header {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-bottom: 1px solid var(--gray);
+        }
 
-    <div class="row row-3">
-        <div class="row-inner">
-            <img src="URL_IMAGE_7" alt="img">
-            <img src="URL_IMAGE_8" alt="img">
-            <img src="URL_IMAGE_9" alt="img">
-            <img src="URL_IMAGE_7" alt="img">
-            <img src="URL_IMAGE_8" alt="img">
-            <img src="URL_IMAGE_9" alt="img">
+        h1 {
+            font-size: clamp(3rem, 15vw, 9rem);
+            font-weight: 700;
+            letter-spacing: -4px;
+            text-transform: uppercase;
+            background: linear-gradient(to bottom, #fff, #444);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline { font-size: 0.9rem; letter-spacing: 5px; color: var(--accent); margin-bottom: 20px; text-transform: uppercase; }
+
+        /* --- MARQUEE SYSTEM (ROTATION + INFINI) --- */
+        .marquee-section {
+            padding: 100px 0;
+            background: #000;
+            transform: skewY(-3deg); /* Inclinaison du site */
+            margin: 50px 0;
+        }
+
+        .marquee-container {
+            display: flex;
+            overflow: hidden;
+            gap: 20px;
+            padding: 40px 0;
+        }
+
+        .marquee-track {
+            display: flex;
+            gap: 25px;
+            animation: scroll 60s linear infinite; /* Vitesse réglable ici */
+        }
+
+        .card {
+            flex-shrink: 0;
+            width: 450px;
+            height: 280px;
+            background: var(--gray);
+            border-radius: 4px;
+            overflow: hidden;
+            transform: skewY(3deg); /* Redresse l'image par rapport au site */
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .card:hover {
+            transform: skewY(3deg) scale(1.05) translateY(-20px);
+            border-color: var(--accent);
+            z-index: 100;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(40%);
+            transition: 0.5s;
+        }
+
+        .card:hover img { filter: grayscale(0%); }
+
+        @keyframes scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        footer { padding: 100px 5%; text-align: center; opacity: 0.4; font-size: 0.8rem; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="tagline">Lead Developer • UI Designer</div>
+        <h1>GUITORICHO</h1>
+        <p style="opacity: 0.5; margin-top: 10px;">Scrollez pour voir les projets</p>
+    </header>
+
+    <section class="marquee-section">
+        <div class="marquee-container">
+            <div class="marquee-track">
+                <div class="card"><img src="https://cdn.discordapp.com/attachments/1266794070722875415/1413912044905693184/SPOILER_Screenshot_83.png?ex=69d67734&is=69d525b4&hm=b0601360578bde45c492b15cfbbbe2856f4dc27015a63c6a7284be88fae608d9&"></div>
+                <div class="card"><img src="https://cdn.discordapp.com/attachments/1266794070722875415/1413314730658893935/SPOILER_Screenshot_77.png?ex=69d64529&is=69d4f3a9&hm=cf50096f48b7fd878541b55acd935a6f674621ce30861dec26f63ca82b6395a0&"></div>
+                <div class="card"><img src="https://cdn.discordapp.com/attachments/1266794070722875415/1413314731103621170/SPOILER_Screenshot_73.png?ex=69d6452a&is=69d4f3aa&hm=3c4cf89a8e92f7b464407b4d57878aa7a59e8face25236f325d04846d419570a&"></div>
+                <div class="card"><img src="https://cdn.discordapp.com/attachments/1266794070722875415/1408550388772245505/a2b6fae9aee48145c7a8600a199c3b87.jpg?ex=69d61386&is=69d4c206&hm=9a16a7c732a9baf7c2c7126e773fd39f7e442591102392606ff2cde77867ceb5&"></div>
+                <div class="card"><img src="https://cdn.discordapp.com/attachments/1266794070722875415/1403582808210800790/Screenshot_162.png?ex=69d6761a&is=69d5249a&hm=5f10dad00fe5b8135688cf59120809d627f40bce9cb53144eb02ac6b4dc28611&"></div>
+                <div class="card"><img src="https://cdn.discordapp.com/attachments/1266794070722875415/1312450582182760489/Screenshot_118.webp?ex=69d67dda&is=69d52c5a&hm=d87e1d4087ea645294765c05cdb26ae9be4c0c4824d6573d0769aaddf1e8e09c&"></div>
+                <div class="card"><img src="https://cdn.discordapp.com/attachments/1266794070722875415/1309695727739605122/Screenshot_75.jpg?ex=69d65b72&is=69d509f2&hm=aec276d73210716fb2c9a173374667ce86be306faee39e7f18c3b2a806ca6077&"></div>
+                <div class="card"><img src="https://cdn.discordapp.com/attachments/1266794070722875415/1271277399539060757/2800433639_18866613485_1723166400956.png?ex=69d65697&is=69d50517&hm=30a3c5149b2aed528073680c21e852dd1f0d524ac400d6fae9e0e0ce5434a97c&"></div>
+                
+                <div class="card"><img src="https://cdn.discordapp.com/attachments/1266794070722875415/1413912044905693184/SPOILER_Screenshot_83.png?ex=69d67734&is=69d525b4&hm=b0601360578bde45c492b15cfbbbe2856f4dc27015a63c6a7284be88fae608d9&"></div>
+                <div class="card"><img src="https://cdn.discordapp.com/attachments/1266794070722875415/1413314730658893935/SPOILER_Screenshot_77.png?ex=69d64529&is=69d4f3a9&hm=cf50096f48b7fd878541b55acd935a6f674621ce30861dec26f63ca82b6395a0&"></div>
+                <div class="card"><img src="https://cdn.discordapp.com/attachments/1266794070722875415/1413314731103621170/SPOILER_Screenshot_73.png?ex=69d6452a&is=69d4f3aa&hm=3c4cf89a8e92f7b464407b4d57878aa7a59e8face25236f325d04846d419570a&"></div>
+                <div class="card"><img src="https://cdn.discordapp.com/attachments/1266794070722875415/1408550388772245505/a2b6fae9aee48145c7a8600a199c3b87.jpg?ex=69d61386&is=69d4c206&hm=9a16a7c732a9baf7c2c7126e773fd39f7e442591102392606ff2cde77867ceb5&"></div>
+                <div class="card"><img src="https://cdn.discordapp.com/attachments/1266794070722875415/1403582808210800790/Screenshot_162.png?ex=69d6761a&is=69d5249a&hm=5f10dad00fe5b8135688cf59120809d627f40bce9cb53144eb02ac6b4dc28611&"></div>
+                <div class="card"><img src="https://cdn.discordapp.com/attachments/1266794070722875415/1312450582182760489/Screenshot_118.webp?ex=69d67dda&is=69d52c5a&hm=d87e1d4087ea645294765c05cdb26ae9be4c0c4824d6573d0769aaddf1e8e09c&"></div>
+                <div class="card"><img src="https://cdn.discordapp.com/attachments/1266794070722875415/1309695727739605122/Screenshot_75.jpg?ex=69d65b72&is=69d509f2&hm=aec276d73210716fb2c9a173374667ce86be306faee39e7f18c3b2a806ca6077&"></div>
+                <div class="card"><img src="https://cdn.discordapp.com/attachments/1266794070722875415/1271277399539060757/2800433639_18866613485_1723166400956.png?ex=69d65697&is=69d50517&hm=30a3c5149b2aed528073680c21e852dd1f0d524ac400d6fae9e0e0ce5434a97c&"></div>
+            </div>
         </div>
-    </div>
-</div>
+    </section>
+
+    <footer>
+        &copy; 2026 GUITORICHO • CREATED WITH PASSION
+    </footer>
+
+</body>
+</html>
