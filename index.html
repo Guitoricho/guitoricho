@@ -9,33 +9,51 @@
 <body>
 
     <nav>
-        <h1>RL Trade Hub</h1>
+        <div class="logo">RL Trade Hub</div>
         <button id="newPostBtn">New Post</button>
     </nav>
 
-    <main id="tradeFeed">
-        <div class="post-card">
-            <p>Example: Trading Titanium White Octane</p>
-            <span class="rank-tag">GC</span>
+    <div class="container">
+        <div id="tradeFeed">
+            <div class="post-card">
+                <div class="post-info">
+                    <h3>Trading Titanium White Octane</h3>
+                    <p>Created: 2026</p>
+                </div>
+                <div class="post-rank">
+                    <img src="https://static.wikia.nocookie.net/rocketleague/images/d/d2/Grand_champion1_rank_icon.png" alt="GC">
+                    <span>Grand Champion</span>
+                </div>
+            </div>
         </div>
-    </main>
+    </div>
 
     <div id="postModal" class="modal">
         <div class="modal-content">
-            <h2>Create New Trade</h2>
+            <h2>New Trade Post</h2>
             <form id="tradeForm">
-                <label>Year of Creation:</label>
-                <input type="number" id="year" min="2015" max="2026" value="2026">
+                <label>Trade Title</label>
+                <input type="text" id="title" placeholder="H: Credits W: Fennec" required>
 
-                <label>Your Rank:</label>
-                <div class="rank-selector">
-                    <label><input type="radio" name="rank" value="Bronze" required> <img src="https://path-to-icons/bronze.png" alt="Bronze"> Bronze</label>
-                    <label><input type="radio" name="rank" value="Champion"> <img src="https://path-to-icons/champ.png" alt="C"> Champion</label>
-                    <label><input type="radio" name="rank" value="Grand Champion"> <img src="https://path-to-icons/gc.png" alt="GC"> GC</label>
+                <label>Year of Account Creation</label>
+                <input type="number" id="year" value="2026" min="2015" max="2026">
+
+                <label>Your Rank</label>
+                <select id="rankSelect">
+                    <option value="Bronze" data-icon="https://static.wikia.nocookie.net/rocketleague/images/0/00/Bronze1_rank_icon.png">Bronze</option>
+                    <option value="Silver" data-icon="https://static.wikia.nocookie.net/rocketleague/images/d/d3/Silver1_rank_icon.png">Silver</option>
+                    <option value="Gold" data-icon="https://static.wikia.nocookie.net/rocketleague/images/9/90/Gold1_rank_icon.png">Gold</option>
+                    <option value="Platinum" data-icon="https://static.wikia.nocookie.net/rocketleague/images/d/d4/Platinum1_rank_icon.png">Platinum</option>
+                    <option value="Diamond" data-icon="https://static.wikia.nocookie.net/rocketleague/images/0/0d/Diamond1_rank_icon.png">Diamond</option>
+                    <option value="Champion" data-icon="https://static.wikia.nocookie.net/rocketleague/images/c/c5/Champion1_rank_icon.png">Champion</option>
+                    <option value="Grand Champion" data-icon="https://static.wikia.nocookie.net/rocketleague/images/d/d2/Grand_champion1_rank_icon.png">Grand Champion</option>
+                    <option value="SSL" data-icon="https://static.wikia.nocookie.net/rocketleague/images/3/30/Supersonic_Legend_rank_icon.png">SSL</option>
+                </select>
+
+                <div class="modal-footer">
+                    <button type="submit" class="submit-btn">Publish</button>
+                    <button type="button" id="closeBtn" class="cancel-btn">Cancel</button>
                 </div>
-
-                <button type="submit">Publish</button>
-                <button type="button" id="closeBtn">Cancel</button>
             </form>
         </div>
     </div>
