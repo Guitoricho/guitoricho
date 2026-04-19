@@ -1,59 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RL Trade Hub</title>
+    <title>RL Trade Pro | Marché d'échange</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <nav>
-        <div class="logo">RL Trade Hub</div>
-        <button id="newPostBtn">New Post</button>
-    </nav>
-
-    <div class="container">
-        <div id="tradeFeed">
-            <div class="post-card">
-                <div class="post-info">
-                    <h3>Trading Titanium White Octane</h3>
-                    <p>Created: 2026</p>
-                </div>
-                <div class="post-rank">
-                    <img src="https://static.wikia.nocookie.net/rocketleague/images/d/d2/Grand_champion1_rank_icon.png" alt="GC">
-                    <span>Grand Champion</span>
-                </div>
-            </div>
+    <header>
+        <div class="nav-container">
+            <div class="logo">RL<span>TRADE</span></div>
+            <button id="newPostBtn" class="main-btn">+ NOUVELLE OFFRE</button>
         </div>
-    </div>
+    </header>
+
+    <main class="container">
+        <h2 class="section-title">Offres Récentes</h2>
+        <div id="tradeFeed">
+            </div>
+    </main>
 
     <div id="postModal" class="modal">
         <div class="modal-content">
-            <h2>New Trade Post</h2>
+            <div class="modal-header">
+                <h2>Créer une offre</h2>
+                <span id="closeBtn" class="close">&times;</span>
+            </div>
             <form id="tradeForm">
-                <label>Trade Title</label>
-                <input type="text" id="title" placeholder="H: Credits W: Fennec" required>
+                <label>Titre de l'échange</label>
+                <input type="text" id="title" placeholder="Ex: [H] Fennec [W] 500 Credits" required>
 
-                <label>Year of Account Creation</label>
-                <input type="number" id="year" value="2026" min="2015" max="2026">
-
-                <label>Your Rank</label>
-                <select id="rankSelect">
-                    <option value="Bronze" data-icon="https://static.wikia.nocookie.net/rocketleague/images/0/00/Bronze1_rank_icon.png">Bronze</option>
-                    <option value="Silver" data-icon="https://static.wikia.nocookie.net/rocketleague/images/d/d3/Silver1_rank_icon.png">Silver</option>
-                    <option value="Gold" data-icon="https://static.wikia.nocookie.net/rocketleague/images/9/90/Gold1_rank_icon.png">Gold</option>
-                    <option value="Platinum" data-icon="https://static.wikia.nocookie.net/rocketleague/images/d/d4/Platinum1_rank_icon.png">Platinum</option>
-                    <option value="Diamond" data-icon="https://static.wikia.nocookie.net/rocketleague/images/0/0d/Diamond1_rank_icon.png">Diamond</option>
-                    <option value="Champion" data-icon="https://static.wikia.nocookie.net/rocketleague/images/c/c5/Champion1_rank_icon.png">Champion</option>
-                    <option value="Grand Champion" data-icon="https://static.wikia.nocookie.net/rocketleague/images/d/d2/Grand_champion1_rank_icon.png">Grand Champion</option>
-                    <option value="SSL" data-icon="https://static.wikia.nocookie.net/rocketleague/images/3/30/Supersonic_Legend_rank_icon.png">SSL</option>
-                </select>
-
-                <div class="modal-footer">
-                    <button type="submit" class="submit-btn">Publish</button>
-                    <button type="button" id="closeBtn" class="cancel-btn">Cancel</button>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Année du compte</label>
+                        <input type="number" id="year" value="2026" min="2015" max="2026">
+                    </div>
+                    <div class="input-group">
+                        <label>Rang actuel</label>
+                        <select id="rankSelect">
+                            <option value="Bronze" data-icon="https://i.imgur.com/vHqQ8r6.png">Bronze</option>
+                            <option value="Argent" data-icon="https://i.imgur.com/O6Sj9rF.png">Argent</option>
+                            <option value="Or" data-icon="https://i.imgur.com/p0Xf01Z.png">Or</option>
+                            <option value="Platine" data-icon="https://i.imgur.com/u74j7M0.png">Platine</option>
+                            <option value="Diamant" data-icon="https://i.imgur.com/U8I2Z9v.png">Diamant</option>
+                            <option value="Champion" data-icon="https://i.imgur.com/vN5N6V5.png">Champion</option>
+                            <option value="Grand Champion" data-icon="https://i.imgur.com/Xw0GkGz.png">Grand Champion</option>
+                            <option value="SSL" data-icon="https://i.imgur.com/T09zK7N.png">Supersonic Legend</option>
+                        </select>
+                    </div>
                 </div>
+
+                <button type="submit" class="publish-btn">PUBLIER L'OFFRE</button>
             </form>
         </div>
     </div>
